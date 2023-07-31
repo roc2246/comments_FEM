@@ -1,3 +1,17 @@
+@use 'utilities/variables';
+@use 'utilities/functions';
+@use 'utilities/mixins';
+
 @use 'base/base';
 @use 'base/reset';
 @use 'base/typography';
+
+@use 'components/avatars';
+@use 'components/buttons';
+@use 'components/comments';
+@use 'components/forms';
+
+@use 'layouts/flex';
+@use 'layouts/grid';
+
+@use 'vendors/google-fonts';

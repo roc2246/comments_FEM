@@ -213,9 +213,9 @@ for (var comment in _data.default.comments) {
   var post = _data.default.comments[comment];
   if (post.replies.length > 0) {
     console.log(post);
-    container.innerHTML += "".concat(post.content, " <br><br>");
+    container.innerHTML += "".concat(post.content, " <br><br><br>");
     for (var reply in post.replies) {
-      container.innerHTML += "".concat(post.replies[reply].content, " <br><br><br>");
+      container.innerHTML += "".concat(post.replies[reply].content, " <br><br>");
     }
   } else {
     container.innerHTML += "".concat(post.content, " <br><br>");
@@ -246,7 +246,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62762" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64648" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

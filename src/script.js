@@ -29,9 +29,9 @@ for (let comment in data.comments) {
   
     if (post.replies.length > 0) {
     console.log(post);
-      container.innerHTML += `${post.content} <br><br>`;
+      container.innerHTML += `${post.content} <br><br><br>`;
       for (let reply in post.replies) {
-        container.innerHTML += `${post.replies[reply].content} <br><br><br>`;
+        container.innerHTML += `${post.replies[reply].content} <br><br>`;
       }
     } else {
       container.innerHTML += `${post.content} <br><br>`;

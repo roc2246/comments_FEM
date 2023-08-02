@@ -1,1 +1,1 @@
-{"version":3,"sources":["scss\\base\\_reset.scss","scss\\utilities\\_variables.scss"],"names":[],"mappings":"AAGA;EACI,kBCJI","file":"main.77bb5cfd.css","sourceRoot":"..\\src","sourcesContent":["@use \"utilities/variables\" as *;\n\n\nbody{\n    background-color:$color;\n}","$color: blue;"]}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"main.77bb5cfd.css","sourceRoot":"..\\src"}

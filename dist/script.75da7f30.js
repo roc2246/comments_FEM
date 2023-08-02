@@ -187,7 +187,6 @@ var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // Delete once data is on server
 
-console.log(_data.default);
 // ///////////////////////////////////
 
 // async function fetchData() {
@@ -209,6 +208,19 @@ console.log(_data.default);
 
 //   // Call the function to retrieve the data
 //   fetchData();
+for (var comment in _data.default.comments) {
+  var container = document.querySelector("main");
+  var post = _data.default.comments[comment];
+  if (post.replies.length > 0) {
+    console.log(post);
+    container.innerHTML += "".concat(post.content, " <br><br>");
+    for (var reply in post.replies) {
+      container.innerHTML += "".concat(post.replies[reply].content, " <br><br><br>");
+    }
+  } else {
+    container.innerHTML += "".concat(post.content, " <br><br>");
+  }
+}
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -234,7 +246,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60456" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62762" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

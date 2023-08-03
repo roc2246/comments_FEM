@@ -3,7 +3,7 @@
 
 .comment {
   display: grid;
-  // grid-template-columns: rem(32px) repeat(6, auto);
+  grid-template-columns: rem(32px) repeat(6, auto);
   row-gap: rem(20px);
   align-items: center;
 
@@ -17,7 +17,7 @@
   }
  
   &__createdAt {
-    grid-column: 3/5;
+    grid-column: 3/6;
     grid-row: 1/2;
   }
   &__content {

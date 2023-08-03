@@ -76,6 +76,7 @@ main {
 
 .comment {
   padding: clamp(1rem, 4.2666666667vw, 1.5625rem);
+  border-radius: 0.5rem;
 }
 
 .vote {

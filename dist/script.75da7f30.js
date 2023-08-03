@@ -203,14 +203,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   }
 //   // Call the function to retrieve the data
 //   fetchData();
-var _loop = function _loop() {
+var _loop = function _loop(comment) {
   var container = document.querySelector("main");
   var post = _data.default.comments[comment];
-  function postCont(type) {
+  function postCont(type, counter) {
+    var post;
     var container = document.createElement("div");
     container.classList.add("comment");
     if (type === "reply") {
       container.classList.add("comment--reply");
+      post = _data.default.comments[comment].replies[counter];
+    } else if (type === "comment") {
+      post = _data.default.comments[comment];
+      counter = null;
     }
     var avatar = document.createElement("img");
     avatar.classList.add("comment__avatar");
@@ -226,23 +231,33 @@ var _loop = function _loop() {
     container.appendChild(createdAt);
     var content = document.createElement("p");
     content.classList.add("comment__content");
-    content.innerText = post.content;
-    container.classList.add("comment__content");
     container.appendChild(content);
+    var message = document.createElement("span");
+    message.innerText = post.content;
+    message.classList.add("comment__message");
+    if (type === "reply") {
+      var replyingTo = document.createElement("span");
+      replyingTo.innerText = "@".concat(post.replyingTo, " ");
+      replyingTo.classList.add("comment__replyingTo");
+      content.appendChild(replyingTo);
+      content.appendChild(message);
+    } else if (type === "comment") {
+      content.appendChild(message);
+    }
     return container;
   }
   if (post.replies.length > 0) {
-    console.log(post);
+    console.log(post.replies);
     container.appendChild(postCont("comment"));
     for (var reply in post.replies) {
-      container.innerHTML += "<br><br>".concat(post.replies[reply].content, " <br><br>");
+      container.appendChild(postCont("reply", reply));
     }
   } else {
     container.appendChild(postCont("comment"));
   }
 };
 for (var comment in _data.default.comments) {
-  _loop();
+  _loop(comment);
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

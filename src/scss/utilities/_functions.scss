@@ -1,0 +1,9 @@
+@use "utilities/variables" as *;
+
+@function rem($value){
+    @return calc($value / map-get($font, size) * 1rem)
+};
+
+@function vw($value){
+    @return calc($value / map-get($layout, mobile) * 100vw)
+}

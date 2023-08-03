@@ -1,3 +1,6 @@
+@use "utilities/functions" as *;
+
 main{
-    
+    margin:clamp(rem(30px), vw(30px), rem(60px)) auto;
+    width: clamp(rem(345px), vw(345px), rem(730px)); 
 }

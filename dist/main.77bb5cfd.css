@@ -43,4 +43,9 @@ textarea {
   resize: none;
 }
 
+main {
+  margin: clamp(1.875rem, 8vw, 3.75rem) auto;
+  width: clamp(21.5625rem, 92vw, 45.625rem);
+}
+
 /*# sourceMappingURL=/main.77bb5cfd.css.map */

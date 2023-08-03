@@ -136,6 +136,11 @@ main {
   gap: 0.75rem;
 }
 
+.CRUD {
+  display: flex;
+  gap: 0.25rem;
+}
+
 .comment {
   display: grid;
   grid-template-columns: 2rem repeat(6, auto);

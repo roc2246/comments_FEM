@@ -1,8 +1,8 @@
 @use "utilities/functions" as *;
+@use "utilities/variables" as *;
 
-// .reply-wrapper{
-//     &__ruler{
-        
-//         height: auto;
-//     }
-// }
+.reply-wrapper__ruler {
+  @media (min-width: $ruler-break) {
+  margin-left: auto;
+  }
+}

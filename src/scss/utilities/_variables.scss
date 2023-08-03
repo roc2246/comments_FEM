@@ -1,3 +1,4 @@
+// For Custom Properties
 $layout: (
   mobile: 375px,
   desktop: 1440px,
@@ -29,3 +30,7 @@ $font-weight: (
   bold: 500,
   bolder: 700,
 );
+
+// For partials
+$ruler-break: 500px;
+

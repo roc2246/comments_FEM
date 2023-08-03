@@ -38,6 +38,10 @@ p {
   margin: 0;
 }
 
+hr {
+  margin: 0;
+}
+
 textarea {
   cursor: pointer;
   resize: none;
@@ -57,6 +61,12 @@ textarea {
 
 .CRUD-container {
   width: max-content;
+}
+
+@media (min-width: 500px) {
+  .reply-wrapper__ruler {
+    margin-left: auto;
+  }
 }
 
 main {
@@ -107,8 +117,14 @@ main {
 
 .reply-wrapper {
   display: grid;
-  gap: clamp(1rem, 4.2666666667vw, 1.5rem);
+  row-gap: clamp(1rem, 4.2666666667vw, 1.5rem);
+  column-gap: clamp(1rem, 4.2666666667vw, 2.625rem);
   grid-template-rows: repeat(2, auto);
+}
+@media (min-width: 500px) {
+  .reply-wrapper {
+    grid-template-columns: clamp(1rem, 4.2666666667vw, 2.625rem) auto;
+  }
 }
 .reply-wrapper__ruler {
   grid-column: 1/2;

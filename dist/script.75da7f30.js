@@ -256,6 +256,7 @@ var _loop = function _loop(comment) {
     var message = document.createElement("span");
     message.innerText = post.content;
     message.classList.add("comment__message");
+    container.appendChild(content);
 
     // Creates who reply is replying to
     if (type === "reply") {
@@ -265,7 +266,6 @@ var _loop = function _loop(comment) {
       content.appendChild(replyingTo);
     }
     content.appendChild(message);
-    container.appendChild(content);
 
     // Creates form to update comment or reply
     if (post.user.username === currentUser.username) {
@@ -285,79 +285,57 @@ var _loop = function _loop(comment) {
     // Creates form to vote on comment or reply
     var vote = document.createElement("form");
     vote.classList.add("vote");
+    container.appendChild(vote);
     var upvote = document.createElement("button");
     upvote.classList.add("vote__btn");
     upvote.classList.add("vote__btn--upvote");
+    vote.appendChild(upvote);
     var plus = document.createElement("img");
     plus.classList.add("vote__img");
     plus.classList.add("vote__img--plus");
     plus.src = "./images/icon-plus.svg";
+    upvote.appendChild(plus);
     var score = document.createElement("span");
     score.classList.add("vote__score");
     score.innerText = post.score;
+    vote.appendChild(score);
     var downvote = document.createElement("button");
     downvote.classList.add("vote__btn");
     downvote.classList.add("vote__btn--downvote");
+    vote.appendChild(downvote);
     var minus = document.createElement("img");
     minus.classList.add("vote__img");
     minus.classList.add("vote__img--minus");
     minus.src = "./images/icon-minus.svg";
-    container.appendChild(vote);
-    vote.appendChild(upvote);
-    upvote.appendChild(plus);
-    vote.appendChild(score);
-    vote.appendChild(downvote);
     downvote.appendChild(minus);
 
     // Creates CRUD buttons
     var CRUD = document.createElement("div");
     CRUD.classList.add("CRUD-container");
-    if (post.user.username === currentUser.username) {
-      var deleteBtn = document.createElement("button");
-      deleteBtn.classList.add("CRUD");
-      deleteBtn.classList.add("CRUD--delete");
-      var deleteBtnIcon = document.createElement("img");
-      deleteBtnIcon.classList.add("CRUD__icon");
-      deleteBtnIcon.classList.add("CRUD__icon--delete");
-      deleteBtn.src = "./images/icon-delete.svg";
-      deleteBtn.appendChild(deleteBtnIcon);
-      var deleteBtnTxt = document.createElement("span");
-      deleteBtnTxt.classList.add("CRUD__text");
-      deleteBtnTxt.classList.add("CRUD__text--delete");
-      deleteBtnTxt.innerText = "Delete";
-      var editBtn = document.createElement("button");
-      editBtn.classList.add("CRUD");
-      editBtn.classList.add("CRUD--edit");
-      var editBtnIcon = document.createElement("img");
-      editBtnIcon.classList.add("CRUD__icon");
-      editBtnIcon.classList.add("CRUD__icon--edit");
-      editBtn.src = "./images/icon-edit.svg";
-      editBtn.appendChild(editBtnIcon);
-      var editBtnTxt = document.createElement("span");
-      editBtnTxt.classList.add("CRUD__text");
-      editBtnTxt.classList.add("CRUD__text--edit");
-      editBtnTxt.innerText = "Edit";
-      deleteBtn.appendChild(deleteBtnTxt);
-      editBtn.appendChild(editBtnTxt);
-      CRUD.appendChild(deleteBtn);
-      CRUD.appendChild(editBtn);
-    } else {
-      var replyBtn = document.createElement("button");
-      replyBtn.classList.add("CRUD");
-      replyBtn.classList.add("CRUD--reply");
-      var replyBtnIcon = document.createElement("img");
-      replyBtnIcon.classList.add("CRUD__icon");
-      replyBtnIcon.classList.add("CRUD__icon--reply");
-      replyBtn.src = "./images/icon-reply.svg";
-      replyBtn.appendChild(replyBtnIcon);
-      var replyBtnTxt = document.createElement("span");
-      replyBtnTxt.classList.add("CRUD__text");
-      replyBtnTxt.classList.add("CRUD__text--reply");
-      replyBtnTxt.innerText = "Reply";
-      replyBtn.appendChild(replyBtnTxt);
-      CRUD.appendChild(replyBtn);
-    }
     container.appendChild(CRUD);
+    function createCRUDbtn(type) {
+      var btn = document.createElement("button");
+      btn.classList.add("CRUD");
+      btn.classList.add("CRUD--".concat(type));
+      CRUD.appendChild(btn);
+      var btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add("CRUD__icon--".concat(type));
+      btnIcon.src = "./images/icon-".concat(type, ".svg");
+      btn.appendChild(btnIcon);
+      var btnTxt = document.createElement("span");
+      btnTxt.classList.add("CRUD__text");
+      btnTxt.classList.add("CRUD__text--".concat(type));
+      btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
+      btn.appendChild(btnTxt);
+      return btn;
+    }
+    if (post.user.username === currentUser.username) {
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
+    } else {
+      CRUD.appendChild(createCRUDbtn("reply"));
+    }
     return container;
   }
   function createReplyForm() {
@@ -418,7 +396,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52251" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56183" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

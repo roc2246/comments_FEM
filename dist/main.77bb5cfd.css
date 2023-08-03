@@ -116,20 +116,27 @@ main {
   gap: clamp(1rem, 4.2666666667vw, 1.5rem);
 }
 
+.username {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
 .comment {
   display: grid;
   row-gap: 1.25rem;
+  align-items: center;
 }
 .comment .avatar--comment {
   grid-column: 1/2;
   grid-row: 1/2;
 }
-.comment__username {
+.comment .username {
   grid-column: 2/3;
   grid-row: 1/2;
 }
 .comment__createdAt {
-  grid-column: 3/6;
+  grid-column: 3/5;
   grid-row: 1/2;
 }
 .comment__content {
@@ -141,7 +148,7 @@ main {
   grid-row: 3/4;
 }
 .comment .CRUD-container {
-  grid-column: 5/6;
+  grid-column: 4/6;
   grid-row: 3/4;
 }
 

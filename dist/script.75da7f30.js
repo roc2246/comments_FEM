@@ -231,14 +231,17 @@ var _loop = function _loop(comment) {
 
     // Creates username
     var username = document.createElement("span");
-    username.classList.add("comment__username");
-    username.innerText = post.user.username;
+    username.classList.add("username");
     container.appendChild(username);
+    var name = document.createElement("span");
+    name.classList.add("username__name");
+    name.innerText = post.user.username;
+    username.appendChild(name);
 
     // Creates indicator for current user
     if (post.user.username === currentUser.username) {
       var indicator = document.createElement("span");
-      indicator.classList.add("comment__you");
+      indicator.classList.add("username__you");
       indicator.innerText = "you";
       username.appendChild(indicator);
     }
@@ -397,7 +400,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62911" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63111" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

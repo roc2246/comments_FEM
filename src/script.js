@@ -52,14 +52,18 @@ for (let comment in data.comments) {
 
     // Creates username
     const username = document.createElement("span");
-    username.classList.add("comment__username");
-    username.innerText = post.user.username;
+    username.classList.add("username");
     container.appendChild(username);
+
+    const name = document.createElement("span")
+    name.classList.add("username__name")
+    name.innerText = post.user.username;
+    username.appendChild(name)
 
     // Creates indicator for current user
     if (post.user.username === currentUser.username) {
       const indicator = document.createElement("span");
-      indicator.classList.add("comment__you");
+      indicator.classList.add("username__you");
       indicator.innerText = "you";
       username.appendChild(indicator);
     }

@@ -55,4 +55,16 @@ main {
   width: clamp(21.5625rem, 92vw, 45.625rem);
 }
 
+body {
+  background-color: var(--color-very-light-gray);
+}
+
+.new-comment {
+  background-color: var(--color-white);
+}
+
+.comment {
+  background-color: var(--color-white);
+}
+
 /*# sourceMappingURL=/main.77bb5cfd.css.map */

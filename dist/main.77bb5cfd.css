@@ -1,7 +1,21 @@
+body {
+  margin: 0;
+}
+
 button {
+  cursor: pointer;
   border: none;
   background-color: transparent;
   padding: 0;
+}
+
+p {
+  margin: 0;
+}
+
+textarea {
+  cursor: pointer;
+  resize: none;
 }
 
 /*# sourceMappingURL=/main.77bb5cfd.css.map */

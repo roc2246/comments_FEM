@@ -27,6 +27,8 @@ for (let comment in data.comments) {
   const { currentUser, comments } = data;
   const post = comments[comment];
 
+  document.getElementsByClassName("avatar--new-comment")[0].src = currentUser.image.png
+
   function postCont(type, counter) {
     let post;
     const container = document.createElement("div");

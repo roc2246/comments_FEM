@@ -1,0 +1,9 @@
+@use "utilities/functions" as *;
+.avatar{
+    &--comment{
+        width: rem(32px);
+    }
+    &--new-comment{
+        width: clamp(rem(32px), vw(32px), rem(40px));
+    }
+}

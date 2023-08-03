@@ -43,6 +43,13 @@ textarea {
   resize: none;
 }
 
+.avatar--comment {
+  width: 2rem;
+}
+.avatar--new-comment {
+  width: clamp(2rem, 8.5333333333vw, 2.5rem);
+}
+
 main {
   margin: clamp(1.875rem, 8vw, 3.75rem) auto;
   width: clamp(21.5625rem, 92vw, 45.625rem);

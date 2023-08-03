@@ -208,6 +208,7 @@ var _loop = function _loop(comment) {
   var currentUser = _data.default.currentUser,
     comments = _data.default.comments;
   var post = comments[comment];
+  document.getElementsByClassName("avatar--new-comment")[0].src = currentUser.image.png;
   function postCont(type, counter) {
     var post;
     var container = document.createElement("div");

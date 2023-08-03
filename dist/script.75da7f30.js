@@ -214,9 +214,9 @@ var _loop = function _loop(comment) {
     container.classList.add("comment");
     if (type === "reply") {
       container.classList.add("comment--reply");
-      post = _data.default.comments[comment].replies[counter];
+      post = comments[comment].replies[counter];
     } else if (type === "comment") {
-      post = _data.default.comments[comment];
+      post = comments[comment];
       counter = null;
     }
     var avatar = document.createElement("img");

@@ -35,9 +35,9 @@ for (let comment in data.comments) {
 
     if (type === "reply") {
       container.classList.add("comment--reply");
-      post = data.comments[comment].replies[counter];
+      post = comments[comment].replies[counter];
     } else if (type === "comment") {
-      post = data.comments[comment];
+      post = comments[comment];
       counter = null;
     }
 
@@ -83,7 +83,7 @@ for (let comment in data.comments) {
     const hr = document.createElement("hr")
     hr.classList.add("reply-divide")
     container.appendChild(hr)
-    
+
     for (let reply in post.replies) {
       container.appendChild(postCont("reply", reply));
     }

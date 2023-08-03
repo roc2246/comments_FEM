@@ -227,13 +227,18 @@ var _loop = function _loop(comment) {
     username.classList.add("comment__username");
     username.innerText = post.user.username;
     container.appendChild(username);
+    if (post.user.username === currentUser.username) {
+      var indicator = document.createElement("span");
+      indicator.classList.add("comment__you");
+      indicator.innerText = "you";
+      container.appendChild(indicator);
+    }
     var createdAt = document.createElement("span");
     createdAt.classList.add("comment__createdAt");
     createdAt.innerText = post.createdAt;
     container.appendChild(createdAt);
     var content = document.createElement("p");
     content.classList.add("comment__content");
-    container.appendChild(content);
     var message = document.createElement("span");
     message.innerText = post.content;
     message.classList.add("comment__message");
@@ -242,19 +247,67 @@ var _loop = function _loop(comment) {
       replyingTo.innerText = "@".concat(post.replyingTo, " ");
       replyingTo.classList.add("comment__replyingTo");
       content.appendChild(replyingTo);
-      content.appendChild(message);
-    } else if (type === "comment") {
-      content.appendChild(message);
     }
+    content.appendChild(message);
+    container.appendChild(content);
+    var vote = document.createElement("div");
+    vote.classList.add("vote");
+    container.appendChild(vote);
+    var upvote = document.createElement("button");
+    upvote.classList.add("vote__btn");
+    upvote.classList.add("vote__btn--upvote");
+    vote.appendChild(upvote);
+    var plus = document.createElement("img");
+    plus.classList.add("vote__img");
+    plus.classList.add("vote__img--plus");
+    plus.src = "./images/icon-plus.svg";
+    upvote.appendChild(plus);
+    var score = document.createElement("span");
+    score.classList.add("vote__score");
+    score.innerText = post.score;
+    vote.appendChild(score);
+    var downvote = document.createElement("button");
+    downvote.classList.add("vote__btn");
+    downvote.classList.add("vote__btn--downvote");
+    vote.appendChild(downvote);
+    var minus = document.createElement("img");
+    minus.classList.add("vote__img");
+    minus.classList.add("vote__img--minus");
+    minus.src = "./images/icon-minus.svg";
+    downvote.appendChild(minus);
+    var CRUD = document.createElement("div");
+    CRUD.classList.add("CRUD-container");
+    if (post.user.username === currentUser.username) {
+      var deleteBtn = document.createElement("button");
+      deleteBtn.innerText = "Delete";
+      deleteBtn.classList.add("CRUD");
+      deleteBtn.classList.add("CRUD--delete");
+      CRUD.appendChild(deleteBtn);
+      var editBtn = document.createElement("button");
+      editBtn.innerText = "edit";
+      editBtn.classList.add("CRUD");
+      editBtn.classList.add("CRUD--edit");
+      CRUD.appendChild(editBtn);
+    } else {
+      var replyBtn = document.createElement("button");
+      replyBtn.innerText = "reply";
+      replyBtn.classList.add("CRUD");
+      replyBtn.classList.add("CRUD--reply");
+      CRUD.appendChild(replyBtn);
+    }
+    container.appendChild(CRUD);
     return container;
   }
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
+    var replyCont = document.createElement("div");
+    replyCont.classList.add("reply-wrapper");
+    container.appendChild(replyCont);
     var hr = document.createElement("hr");
     hr.classList.add("reply-divide");
-    container.appendChild(hr);
+    replyCont.appendChild(hr);
     for (var reply in post.replies) {
-      container.appendChild(postCont("reply", reply));
+      replyCont.appendChild(postCont("reply", reply));
     }
   } else {
     container.appendChild(postCont("comment"));
@@ -288,7 +341,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49755" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52251" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -51,6 +51,15 @@ textarea {
   margin-left: 0.875rem;
 }
 
+.comment__content {
+  line-height: 1.5rem;
+}
+@media (min-width: 600px) {
+  .comment__content {
+    margin-top: 0.9375rem;
+  }
+}
+
 .avatar--comment {
   width: 2rem;
 }
@@ -87,6 +96,11 @@ main {
   width: max-content;
   border-radius: 0.75rem;
 }
+@media (min-width: 600px) {
+  .vote {
+    margin-right: 1rem;
+  }
+}
 
 .new-comment--reply {
   display: none;
@@ -111,6 +125,11 @@ main {
   align-items: center;
   justify-content: center;
 }
+@media (min-width: 600px) {
+  .vote {
+    flex-direction: column;
+  }
+}
 
 main {
   display: flex;
@@ -127,7 +146,7 @@ main {
 .username {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .CRUD-container {
@@ -143,33 +162,72 @@ main {
 
 .comment {
   display: grid;
-  grid-template-columns: 2rem repeat(6, auto);
+  grid-template-columns: 2rem 7.8125rem repeat(5, auto);
   row-gap: 1.25rem;
   align-items: center;
+}
+@media (min-width: 600px) {
+  .comment {
+    grid-template-columns: auto 2rem 7.8125rem repeat(4, auto);
+    grid-template-rows: 2rem 4.1875rem auto;
+    row-gap: unset;
+  }
 }
 .comment .avatar--comment {
   grid-column: 1/2;
   grid-row: 1/2;
 }
+@media (min-width: 600px) {
+  .comment .avatar--comment {
+    grid-column: 2/3;
+  }
+}
 .comment .username {
   grid-column: 2/3;
   grid-row: 1/2;
+}
+@media (min-width: 600px) {
+  .comment .username {
+    grid-column: 3/4;
+  }
 }
 .comment__createdAt {
   grid-column: 3/6;
   grid-row: 1/2;
 }
+@media (min-width: 600px) {
+  .comment__createdAt {
+    grid-column: 4/5;
+  }
+}
 .comment__content {
   grid-column: 1/6;
   grid-row: 2/3;
+}
+@media (min-width: 600px) {
+  .comment__content {
+    grid-column: 2/6;
+    grid-row: 2/4;
+  }
 }
 .comment .vote {
   grid-column: 1/3;
   grid-row: 3/4;
 }
+@media (min-width: 600px) {
+  .comment .vote {
+    grid-column: 1/2;
+    grid-row: 1/3;
+  }
+}
 .comment .CRUD-container {
   grid-column: 4/6;
   grid-row: 3/4;
+}
+@media (min-width: 600px) {
+  .comment .CRUD-container {
+    grid-row: 1/2;
+  }
 }
 
 .reply-wrapper {

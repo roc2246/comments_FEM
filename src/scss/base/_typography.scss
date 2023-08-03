@@ -4,3 +4,9 @@
 .username{
     margin-left: rem(14px);
 }
+.comment__content{
+    line-height: 1.5rem;
+    @media (min-width:600px) {
+        margin-top: rem(15px);
+    }
+}

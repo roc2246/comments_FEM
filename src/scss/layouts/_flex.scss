@@ -11,6 +11,9 @@
         align-items: center;
         justify-content: center;
     }
+    @media (min-width: 600px) {
+        flex-direction: column;
+      }
 }
 
 main{
@@ -29,7 +32,7 @@ main{
 .username {
     display: flex;
     flex-direction: row;
-    gap: .5rem;
+    gap: .25rem;
 }
 
 .CRUD-container{

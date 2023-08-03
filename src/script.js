@@ -78,6 +78,23 @@ for (let comment in data.comments) {
     content.appendChild(message);
     container.appendChild(content);
 
+    if (post.user.username === currentUser.username) {
+      const updateForm = document.createElement("form");
+      updateForm.classList.add("new-comment");
+      updateForm.classList.add("new-comment--update");
+  
+      const updateInput = document.createElement("textarea");
+      updateInput.classList.add("new-comment__input");
+      updateForm.appendChild(updateInput);
+  
+      const updateSend = document.createElement("button")
+      updateSend.classList.add("new-comment__send")
+      updateSend.innerText = "UPDATE"
+      updateForm.appendChild(updateSend)
+
+      container.appendChild(updateForm)
+    } 
+
     const vote = document.createElement("div");
     vote.classList.add("vote");
     container.appendChild(vote);

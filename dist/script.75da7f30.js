@@ -251,6 +251,19 @@ var _loop = function _loop(comment) {
     }
     content.appendChild(message);
     container.appendChild(content);
+    if (post.user.username === currentUser.username) {
+      var updateForm = document.createElement("form");
+      updateForm.classList.add("new-comment");
+      updateForm.classList.add("new-comment--update");
+      var updateInput = document.createElement("textarea");
+      updateInput.classList.add("new-comment__input");
+      updateForm.appendChild(updateInput);
+      var updateSend = document.createElement("button");
+      updateSend.classList.add("new-comment__send");
+      updateSend.innerText = "UPDATE";
+      updateForm.appendChild(updateSend);
+      container.appendChild(updateForm);
+    }
     var vote = document.createElement("div");
     vote.classList.add("vote");
     container.appendChild(vote);

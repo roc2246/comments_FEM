@@ -83,6 +83,7 @@ for (let comment in data.comments) {
     const hr = document.createElement("hr")
     hr.classList.add("reply-divide")
     container.appendChild(hr)
+    
     for (let reply in post.replies) {
       container.appendChild(postCont("reply", reply));
     }

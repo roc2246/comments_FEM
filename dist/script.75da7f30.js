@@ -223,7 +223,7 @@ var _loop = function _loop(comment) {
     // Creates avatar
     var avatar = document.createElement("img");
     avatar.classList.add("avatar");
-    avatar.classList.add("comment__avatar");
+    avatar.classList.add("avatar--comment");
     avatar.src = post.user.image.png;
     avatar.alt = post.user.username;
     container.appendChild(avatar);

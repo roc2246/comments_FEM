@@ -61,7 +61,7 @@ for (let comment in data.comments) {
       const indicator = document.createElement("span");
       indicator.classList.add("comment__you");
       indicator.innerText = "you";
-      container.appendChild(indicator);
+      username.appendChild(indicator);
     }
 
     // Creates when post was created at

@@ -128,12 +128,8 @@ main {
   grid-column: 2/3;
   grid-row: 1/2;
 }
-.comment__you {
-  grid-column: 3/4;
-  grid-row: 1/2;
-}
 .comment__createdAt {
-  grid-column: 4/6;
+  grid-column: 3/6;
   grid-row: 1/2;
 }
 .comment__content {

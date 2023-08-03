@@ -1,2 +1,7 @@
 @use "utilities/variables" as *;
 
+button{
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}

@@ -1,1 +1,1 @@
-{"version":3,"sources":[],"names":[],"mappings":"","file":"main.77bb5cfd.css","sourceRoot":"..\\src"}
+{"version":3,"sources":["scss\\base\\_reset.scss"],"names":[],"mappings":"AAEA;EACI;EACA;EACA","file":"main.77bb5cfd.css","sourceRoot":"..\\src","sourcesContent":["@use \"utilities/variables\" as *;\n\nbutton{\n    border: none;\n    background-color: transparent;\n    padding: 0;\n}"]}

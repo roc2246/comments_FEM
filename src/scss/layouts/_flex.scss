@@ -1,3 +1,5 @@
+@use "utilities/functions" as *;
+
 .vote{
     display: flex;
     flex-direction: row;
@@ -9,4 +11,17 @@
         align-items: center;
         justify-content: center;
     }
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    gap: clamp(rem(16px), vw(16px), rem(24px));
+
+}
+
+#comment-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: clamp(rem(16px), vw(16px), rem(24px));
 }

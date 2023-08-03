@@ -55,6 +55,10 @@ textarea {
   height: 2.5rem;
 }
 
+.CRUD-container {
+  width: max-content;
+}
+
 main {
   margin: clamp(1.875rem, 8vw, 3.75rem) auto;
   width: clamp(21.5625rem, 92vw, 45.625rem);
@@ -66,6 +70,14 @@ main {
 
 .vote {
   width: max-content;
+  border-radius: 0.75rem;
+}
+
+.new-comment--reply {
+  display: none;
+}
+.new-comment--update {
+  display: none;
 }
 
 .vote {
@@ -79,6 +91,31 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 4.2666666667vw, 1.5rem);
+}
+
+#comment-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 4.2666666667vw, 1.5rem);
+}
+
+.reply-wrapper {
+  display: grid;
+  gap: clamp(1rem, 4.2666666667vw, 1.5rem);
+  grid-template-rows: repeat(2, auto);
+}
+.reply-wrapper__ruler {
+  grid-column: 1/2;
+  grid-row: 1/-1;
+}
+.reply-wrapper .comment--reply {
+  grid-column: 2/3;
 }
 
 body {

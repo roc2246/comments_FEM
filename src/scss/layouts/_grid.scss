@@ -1,0 +1,15 @@
+@use "utilities/functions" as *;
+
+.reply-wrapper {
+  display: grid;
+  gap: clamp(rem(16px), vw(16px), rem(24px));
+grid-template-rows: repeat(2, auto);
+
+  &__ruler {
+    grid-column: 1/2;
+    grid-row: 1/ -1;
+  }
+  .comment--reply {
+      grid-column: 2/3;
+  }
+}

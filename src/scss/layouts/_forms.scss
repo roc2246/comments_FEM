@@ -1,0 +1,13 @@
+.vote{
+    width: max-content;
+    border-radius: .75rem;
+}
+
+.new-comment{
+    &--reply{
+        display: none;
+    }
+    &--update{
+        display: none;
+    }
+}

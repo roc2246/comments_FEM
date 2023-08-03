@@ -18,6 +18,11 @@
   --font-weight-bolder: 700;
 }
 
+html {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+}
+
 body {
   margin: 0;
 }

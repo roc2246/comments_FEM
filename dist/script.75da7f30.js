@@ -204,7 +204,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   // Call the function to retrieve the data
 //   fetchData();
 var _loop = function _loop(comment) {
-  var container = document.querySelector("main");
+  var container = document.getElementById("comment-wrapper");
   var currentUser = _data.default.currentUser,
     comments = _data.default.comments;
   var post = comments[comment];
@@ -220,6 +220,7 @@ var _loop = function _loop(comment) {
       counter = null;
     }
     var avatar = document.createElement("img");
+    avatar.classList.add("avatar");
     avatar.classList.add("comment__avatar");
     avatar.src = post.user.image.png;
     container.appendChild(avatar);
@@ -298,19 +299,34 @@ var _loop = function _loop(comment) {
     container.appendChild(CRUD);
     return container;
   }
+  function createReplyForm() {
+    var replyForm = document.createElement("form");
+    replyForm.classList.add("new-comment");
+    replyForm.classList.add("new-comment--reply");
+    var replyInput = document.createElement("textarea");
+    replyInput.classList.add("new-comment__input");
+    replyForm.appendChild(replyInput);
+    var replySend = document.createElement("button");
+    replySend.classList.add("new-comment__send");
+    replySend.innerText = "REPLY";
+    replyForm.appendChild(replySend);
+    return replyForm;
+  }
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
     var replyCont = document.createElement("div");
     replyCont.classList.add("reply-wrapper");
     container.appendChild(replyCont);
     var hr = document.createElement("hr");
-    hr.classList.add("reply-divide");
+    hr.classList.add("reply-wrapper__ruler");
     replyCont.appendChild(hr);
     for (var reply in post.replies) {
       replyCont.appendChild(postCont("reply", reply));
     }
+    container.appendChild(createReplyForm());
   } else {
     container.appendChild(postCont("comment"));
+    container.appendChild(createReplyForm());
   }
 };
 for (var comment in _data.default.comments) {

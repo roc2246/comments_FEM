@@ -25,7 +25,8 @@ import data from "./data.json";
 for (let comment in data.comments) {
   const container = document.querySelector("main");
 
-  const post = data.comments[comment];
+  const { currentUser, comments } = data;
+  const post = comments[comment];
 
   function postCont(type, counter) {
     let post;
@@ -37,7 +38,7 @@ for (let comment in data.comments) {
       post = data.comments[comment].replies[counter];
     } else if (type === "comment") {
       post = data.comments[comment];
-      counter = null
+      counter = null;
     }
 
     const avatar = document.createElement("img");
@@ -59,18 +60,17 @@ for (let comment in data.comments) {
     content.classList.add("comment__content");
     container.appendChild(content);
 
-    const message = document.createElement("span")
+    const message = document.createElement("span");
     message.innerText = post.content;
     message.classList.add("comment__message");
 
-
-    if(type === "reply") {
-      const replyingTo = document.createElement("span")
-      replyingTo.innerText = `@${post.replyingTo} `
-      replyingTo.classList.add("comment__replyingTo")
-      content.appendChild(replyingTo)
+    if (type === "reply") {
+      const replyingTo = document.createElement("span");
+      replyingTo.innerText = `@${post.replyingTo} `;
+      replyingTo.classList.add("comment__replyingTo");
+      content.appendChild(replyingTo);
       content.appendChild(message);
-    } else if (type ==="comment") {
+    } else if (type === "comment") {
       content.appendChild(message);
     }
 
@@ -78,7 +78,6 @@ for (let comment in data.comments) {
   }
 
   if (post.replies.length > 0) {
-    console.log(post.replies);
     container.appendChild(postCont("comment"));
     for (let reply in post.replies) {
       container.appendChild(postCont("reply", reply));

@@ -205,7 +205,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   fetchData();
 var _loop = function _loop(comment) {
   var container = document.querySelector("main");
-  var post = _data.default.comments[comment];
+  var currentUser = _data.default.currentUser,
+    comments = _data.default.comments;
+  var post = comments[comment];
   function postCont(type, counter) {
     var post;
     var container = document.createElement("div");
@@ -247,7 +249,6 @@ var _loop = function _loop(comment) {
     return container;
   }
   if (post.replies.length > 0) {
-    console.log(post.replies);
     container.appendChild(postCont("comment"));
     for (var reply in post.replies) {
       container.appendChild(postCont("reply", reply));

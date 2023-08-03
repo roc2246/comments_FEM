@@ -219,30 +219,45 @@ var _loop = function _loop(comment) {
       post = comments[comment];
       counter = null;
     }
+
+    // Creates avatar
     var avatar = document.createElement("img");
     avatar.classList.add("avatar");
     avatar.classList.add("comment__avatar");
     avatar.src = post.user.image.png;
+    avatar.alt = post.user.username;
     container.appendChild(avatar);
+
+    // Creates username
     var username = document.createElement("span");
     username.classList.add("comment__username");
     username.innerText = post.user.username;
     container.appendChild(username);
+
+    // Creates indicator for current user
     if (post.user.username === currentUser.username) {
       var indicator = document.createElement("span");
       indicator.classList.add("comment__you");
       indicator.innerText = "you";
       container.appendChild(indicator);
     }
+
+    // Creates when post was created at
     var createdAt = document.createElement("span");
     createdAt.classList.add("comment__createdAt");
     createdAt.innerText = post.createdAt;
     container.appendChild(createdAt);
+
+    // Created container for content
     var content = document.createElement("p");
     content.classList.add("comment__content");
+
+    // Creates message for content
     var message = document.createElement("span");
     message.innerText = post.content;
     message.classList.add("comment__message");
+
+    // Creates who reply is replying to
     if (type === "reply") {
       var replyingTo = document.createElement("span");
       replyingTo.innerText = "@".concat(post.replyingTo, " ");
@@ -251,6 +266,8 @@ var _loop = function _loop(comment) {
     }
     content.appendChild(message);
     container.appendChild(content);
+
+    // Creates form to update comment or reply
     if (post.user.username === currentUser.username) {
       var updateForm = document.createElement("form");
       updateForm.classList.add("new-comment");
@@ -264,49 +281,80 @@ var _loop = function _loop(comment) {
       updateForm.appendChild(updateSend);
       container.appendChild(updateForm);
     }
-    var vote = document.createElement("div");
+
+    // Creates form to vote on comment or reply
+    var vote = document.createElement("form");
     vote.classList.add("vote");
-    container.appendChild(vote);
     var upvote = document.createElement("button");
     upvote.classList.add("vote__btn");
     upvote.classList.add("vote__btn--upvote");
-    vote.appendChild(upvote);
     var plus = document.createElement("img");
     plus.classList.add("vote__img");
     plus.classList.add("vote__img--plus");
     plus.src = "./images/icon-plus.svg";
-    upvote.appendChild(plus);
     var score = document.createElement("span");
     score.classList.add("vote__score");
     score.innerText = post.score;
-    vote.appendChild(score);
     var downvote = document.createElement("button");
     downvote.classList.add("vote__btn");
     downvote.classList.add("vote__btn--downvote");
-    vote.appendChild(downvote);
     var minus = document.createElement("img");
     minus.classList.add("vote__img");
     minus.classList.add("vote__img--minus");
     minus.src = "./images/icon-minus.svg";
+    container.appendChild(vote);
+    vote.appendChild(upvote);
+    upvote.appendChild(plus);
+    vote.appendChild(score);
+    vote.appendChild(downvote);
     downvote.appendChild(minus);
+
+    // Creates CRUD buttons
     var CRUD = document.createElement("div");
     CRUD.classList.add("CRUD-container");
     if (post.user.username === currentUser.username) {
       var deleteBtn = document.createElement("button");
-      deleteBtn.innerText = "Delete";
       deleteBtn.classList.add("CRUD");
       deleteBtn.classList.add("CRUD--delete");
-      CRUD.appendChild(deleteBtn);
+      var deleteBtnIcon = document.createElement("img");
+      deleteBtnIcon.classList.add("CRUD__icon");
+      deleteBtnIcon.classList.add("CRUD__icon--delete");
+      deleteBtn.src = "./images/icon-delete.svg";
+      deleteBtn.appendChild(deleteBtnIcon);
+      var deleteBtnTxt = document.createElement("span");
+      deleteBtnTxt.classList.add("CRUD__text");
+      deleteBtnTxt.classList.add("CRUD__text--delete");
+      deleteBtnTxt.innerText = "Delete";
       var editBtn = document.createElement("button");
-      editBtn.innerText = "edit";
       editBtn.classList.add("CRUD");
       editBtn.classList.add("CRUD--edit");
+      var editBtnIcon = document.createElement("img");
+      editBtnIcon.classList.add("CRUD__icon");
+      editBtnIcon.classList.add("CRUD__icon--edit");
+      editBtn.src = "./images/icon-edit.svg";
+      editBtn.appendChild(editBtnIcon);
+      var editBtnTxt = document.createElement("span");
+      editBtnTxt.classList.add("CRUD__text");
+      editBtnTxt.classList.add("CRUD__text--edit");
+      editBtnTxt.innerText = "Edit";
+      deleteBtn.appendChild(deleteBtnTxt);
+      editBtn.appendChild(editBtnTxt);
+      CRUD.appendChild(deleteBtn);
       CRUD.appendChild(editBtn);
     } else {
       var replyBtn = document.createElement("button");
-      replyBtn.innerText = "reply";
       replyBtn.classList.add("CRUD");
       replyBtn.classList.add("CRUD--reply");
+      var replyBtnIcon = document.createElement("img");
+      replyBtnIcon.classList.add("CRUD__icon");
+      replyBtnIcon.classList.add("CRUD__icon--reply");
+      replyBtn.src = "./images/icon-reply.svg";
+      replyBtn.appendChild(replyBtnIcon);
+      var replyBtnTxt = document.createElement("span");
+      replyBtnTxt.classList.add("CRUD__text");
+      replyBtnTxt.classList.add("CRUD__text--reply");
+      replyBtnTxt.innerText = "Reply";
+      replyBtn.appendChild(replyBtnTxt);
       CRUD.appendChild(replyBtn);
     }
     container.appendChild(CRUD);

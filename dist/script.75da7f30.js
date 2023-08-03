@@ -186,17 +186,13 @@ module.exports = {
 var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // Delete once data is on server
-
 // ///////////////////////////////////
-
 // async function fetchData() {
 //     try {
 //       const response = await fetch('data.json');
-
 //       if (!response.ok) {
 //         throw new Error('Network response was not ok');
 //       }
-
 //       const data = await response.json();
 //       // Use the fetched data here
 //       console.log(data);
@@ -205,21 +201,48 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //       console.error('Fetch error:', error);
 //     }
 //   }
-
 //   // Call the function to retrieve the data
 //   fetchData();
-for (var comment in _data.default.comments) {
+var _loop = function _loop() {
   var container = document.querySelector("main");
   var post = _data.default.comments[comment];
+  function postCont(type) {
+    var container = document.createElement("div");
+    container.classList.add("comment");
+    if (type === "reply") {
+      container.classList.add("comment--reply");
+    }
+    var avatar = document.createElement("img");
+    avatar.classList.add("comment__avatar");
+    avatar.src = post.user.image.png;
+    container.appendChild(avatar);
+    var username = document.createElement("span");
+    username.classList.add("comment__username");
+    username.innerText = post.user.username;
+    container.appendChild(username);
+    var createdAt = document.createElement("span");
+    createdAt.classList.add("comment__createdAt");
+    createdAt.innerText = post.createdAt;
+    container.appendChild(createdAt);
+    var content = document.createElement("p");
+    content.classList.add("comment__content");
+    content.innerText = post.content;
+    container.classList.add("comment__content");
+    container.appendChild(content);
+    return container;
+  }
   if (post.replies.length > 0) {
     console.log(post);
-    container.innerHTML += "".concat(post.content, " <br><br><br>");
+    container.appendChild(postCont("comment"));
     for (var reply in post.replies) {
-      container.innerHTML += "".concat(post.replies[reply].content, " <br><br>");
+      container.innerHTML += "<br><br>".concat(post.replies[reply].content, " <br><br>");
     }
   } else {
-    container.innerHTML += "".concat(post.content, " <br><br>");
+    container.appendChild(postCont("comment"));
   }
+};
+for (var comment in _data.default.comments) {
+  _loop();
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -246,7 +269,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64907" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49755" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

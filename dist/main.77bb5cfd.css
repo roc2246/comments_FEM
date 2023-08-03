@@ -50,12 +50,42 @@ textarea {
   width: clamp(2rem, 8.5333333333vw, 2.5rem);
 }
 
+.vote__btn {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 main {
   margin: clamp(1.875rem, 8vw, 3.75rem) auto;
   width: clamp(21.5625rem, 92vw, 45.625rem);
 }
 
+.comment {
+  padding: clamp(1rem, 4.2666666667vw, 1.5625rem);
+}
+
+.vote {
+  width: max-content;
+}
+
+.vote {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.vote__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 body {
+  background-color: var(--color-very-light-gray);
+}
+
+.vote {
   background-color: var(--color-very-light-gray);
 }
 

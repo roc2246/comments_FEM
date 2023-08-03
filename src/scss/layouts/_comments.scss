@@ -1,0 +1,5 @@
+@use "utilities/functions" as *;
+
+.comment{
+    padding: clamp(rem(16px), vw(16px), rem(25px));
+}

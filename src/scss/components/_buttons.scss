@@ -1,0 +1,8 @@
+@use "utilities/functions" as *;
+
+.vote{
+    &__btn{
+        width: rem(40px);
+        height: rem(40px);
+    }
+}

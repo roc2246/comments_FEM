@@ -1,4 +1,18 @@
 @use "utilities/variables" as *;
-:root{
-
+:root {
+  @each $type, $size in $layout {
+    --layout-#{$type}: #{$size};
+  }
+  @each $color, $name in map-get($color, primary) {
+    --color-#{$color}: #{$name};
+  }
+  @each $color, $name in map-get($color, neutral) {
+    --color-#{$color}: #{$name};
+  }
+  @each $cat, $value in $font {
+    --font-#{$cat}: #{$value};
+  }
+  @each $cat, $value in $font-weight {
+    --font-weight-#{$cat}: #{$value};
+  }
 }

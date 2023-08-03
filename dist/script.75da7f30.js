@@ -250,6 +250,9 @@ var _loop = function _loop(comment) {
   }
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
+    var hr = document.createElement("hr");
+    hr.classList.add("reply-divide");
+    container.appendChild(hr);
     for (var reply in post.replies) {
       container.appendChild(postCont("reply", reply));
     }

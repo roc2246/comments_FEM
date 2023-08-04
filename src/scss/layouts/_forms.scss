@@ -10,10 +10,8 @@
 
 .new-comment{
     padding: clamp(rem(16px), vw(16px), rem(24px));
-    &--reply{
-        display: none;
-    }
     &--update{
-        display: none;
+        padding: 0;
+        margin-top: rem(10px);
     }
 }

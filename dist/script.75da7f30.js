@@ -346,6 +346,12 @@ var _loop = function _loop(comment) {
     var replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
+    var avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--new-reply");
+    avatar.src = currentUser.image.png;
+    avatar.alt = post.user.username;
+    replyForm.appendChild(avatar);
     var replyInput = document.createElement("textarea");
     replyInput.classList.add("new-comment__input");
     replyForm.appendChild(replyInput);
@@ -400,7 +406,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64548" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51682" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

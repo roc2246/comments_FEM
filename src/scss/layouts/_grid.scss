@@ -81,3 +81,19 @@ $ruler-column-size: clamp(rem(16px), vw(16px), rem(42px));
     grid-column: 2/3;
   }
 }
+
+.new-comment{
+  display: grid;
+  row-gap: rem(17px);
+  &__input{
+    grid-column: 1/3;
+    grid-row: 1/2;
+  }
+  .avatar--new-comment{
+    grid-column: 1/2;
+  }
+
+  &__submit{
+    grid-column: 2/3;
+  }
+}

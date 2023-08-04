@@ -4,6 +4,13 @@
         width: rem(32px);
     }
     &--new-comment{
+        margin-top: auto;
+        margin-bottom: auto;
+        width: clamp(rem(32px), vw(32px), rem(40px));
+    }
+    &--new-reply{
+        margin-top: auto;
+        margin-bottom: auto;
         width: clamp(rem(32px), vw(32px), rem(40px));
     }
 }

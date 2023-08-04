@@ -10,3 +10,10 @@
 .CRUD-container{
     width: max-content;
 }
+
+.new-comment{
+    &__send{
+        border: solid;
+        height: 4rem;
+    }
+}

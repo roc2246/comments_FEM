@@ -27,7 +27,8 @@ for (let comment in data.comments) {
   const { currentUser, comments } = data;
   const post = comments[comment];
 
-  document.getElementsByClassName("avatar--new-comment")[0].src = currentUser.image.png
+  document.getElementsByClassName("avatar--new-comment")[0].src =
+    currentUser.image.png;
 
   function postCont(type, counter) {
     let post;
@@ -55,10 +56,10 @@ for (let comment in data.comments) {
     username.classList.add("username");
     container.appendChild(username);
 
-    const name = document.createElement("span")
-    name.classList.add("username__name")
+    const name = document.createElement("span");
+    name.classList.add("username__name");
     name.innerText = post.user.username;
-    username.appendChild(name)
+    username.appendChild(name);
 
     // Creates indicator for current user
     if (post.user.username === currentUser.username) {
@@ -84,7 +85,6 @@ for (let comment in data.comments) {
     message.classList.add("comment__message");
 
     container.appendChild(content);
-
 
     // Creates who reply is replying to
     if (type === "reply") {
@@ -150,17 +150,17 @@ for (let comment in data.comments) {
     CRUD.classList.add("CRUD-container");
     container.appendChild(CRUD);
 
-    function createCRUDbtn(type){
+    function createCRUDbtn(type) {
       const btn = document.createElement("button");
       btn.classList.add("CRUD");
       btn.classList.add(`CRUD--${type}`);
       CRUD.appendChild(btn);
 
-      const btnIcon = document.createElement("img")
-      btnIcon.classList.add("CRUD__icon")
-      btnIcon.classList.add(`CRUD__icon--${type}`)
+      const btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add(`CRUD__icon--${type}`);
       btnIcon.src = `./images/icon-${type}.svg`;
-      btn.appendChild(btnIcon)
+      btn.appendChild(btnIcon);
 
       const btnTxt = document.createElement("span");
       btnTxt.classList.add("CRUD__text");
@@ -172,10 +172,10 @@ for (let comment in data.comments) {
     }
 
     if (post.user.username === currentUser.username) {
-      CRUD.appendChild(createCRUDbtn("delete"))
-      CRUD.appendChild(createCRUDbtn("edit"))
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
     } else {
-      CRUD.appendChild(createCRUDbtn("reply"))
+      CRUD.appendChild(createCRUDbtn("reply"));
     }
 
     return container;
@@ -185,6 +185,13 @@ for (let comment in data.comments) {
     const replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
+
+    const avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--new-reply");
+    avatar.src = currentUser.image.png;
+    avatar.alt = post.user.username;
+    replyForm.appendChild(avatar);
 
     const replyInput = document.createElement("textarea");
     replyInput.classList.add("new-comment__input");

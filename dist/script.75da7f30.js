@@ -281,6 +281,7 @@ var _loop = function _loop(comment) {
       updateForm.appendChild(updateInput);
       var updateSend = document.createElement("button");
       updateSend.classList.add("new-comment__send");
+      updateSend.classList.add("new-comment__send--update");
       updateSend.innerText = "UPDATE";
       updateForm.appendChild(updateSend);
       container.appendChild(updateForm);

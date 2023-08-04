@@ -107,6 +107,7 @@ for (let comment in data.comments) {
 
       const updateSend = document.createElement("button");
       updateSend.classList.add("new-comment__send");
+      updateSend.classList.add("new-comment__send--update");
       updateSend.innerText = "UPDATE";
       updateForm.appendChild(updateSend);
 

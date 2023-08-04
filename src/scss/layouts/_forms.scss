@@ -11,9 +11,9 @@
 .new-comment{
     padding: clamp(rem(16px), vw(16px), rem(24px));
     &--reply{
-        // display: none;
+        display: none;
     }
     &--update{
-        // display: none;
+        display: none;
     }
 }

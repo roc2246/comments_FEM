@@ -315,3 +315,32 @@ for (
     }
   });
 }
+
+// Toggles delete modal
+for (
+  let x = 0;
+  x < document.getElementsByClassName("CRUD--delete").length;
+  x++
+) {
+  const deleteBtn = document.getElementsByClassName("CRUD--delete")[x];
+  const deleteModal = document.getElementsByClassName("modal")[0];
+
+  deleteBtn.addEventListener("click", () => {
+    if (
+      deleteModal.style.display === "none" ||
+      deleteModal.style.display === ""
+    ) {
+      deleteModal.style.display = "block";
+    }
+  });
+}
+
+// Closes delete modal
+document
+  .getElementsByClassName("modal__btn-box--cancel")[0]
+  .addEventListener("click", () => {
+    const deleteModal = document.getElementsByClassName("modal")[0];
+    if ((deleteModal.style.display === "block")) {
+      deleteModal.style.display = "none";
+    }
+  });

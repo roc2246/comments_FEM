@@ -452,6 +452,28 @@ var _loop4 = function _loop4() {
 for (var _x2 = 0; _x2 < document.querySelectorAll(".comment--reply:not(.comment--you)").length; _x2++) {
   _loop4();
 }
+
+// Toggles delete modal
+var _loop5 = function _loop5() {
+  var deleteBtn = document.getElementsByClassName("CRUD--delete")[_x3];
+  var deleteModal = document.getElementsByClassName("modal")[0];
+  deleteBtn.addEventListener("click", function () {
+    if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
+      deleteModal.style.display = "block";
+    }
+  });
+};
+for (var _x3 = 0; _x3 < document.getElementsByClassName("CRUD--delete").length; _x3++) {
+  _loop5();
+}
+
+// Closes delete modal
+document.getElementsByClassName("modal__btn-box--cancel")[0].addEventListener("click", function () {
+  var deleteModal = document.getElementsByClassName("modal")[0];
+  if (deleteModal.style.display === "block") {
+    deleteModal.style.display = "none";
+  }
+});
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

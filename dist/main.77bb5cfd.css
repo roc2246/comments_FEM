@@ -127,6 +127,9 @@ main {
 .new-comment {
   padding: clamp(1rem, 4.2666666667vw, 1.5rem);
 }
+.new-comment__input {
+  padding: 1rem;
+}
 .new-comment--update {
   padding: 0;
   margin-top: 0.625rem;

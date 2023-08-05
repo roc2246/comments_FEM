@@ -103,6 +103,7 @@ for (let comment in data.comments) {
 
       const updateInput = document.createElement("textarea");
       updateInput.classList.add("new-comment__input");
+     updateInput.value = `@${post.replyingTo} ${post.content}`
       updateForm.appendChild(updateInput);
 
       const updateSend = document.createElement("button");

@@ -100,7 +100,7 @@ $ruler-column-size: clamp(rem(16px), vw(16px), rem(42px));
     column-gap: 1rem;
   }
   &--update {
-    display: none;
+    // display: none;
     grid-template-columns: unset;
   }
   &--reply{

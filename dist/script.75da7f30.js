@@ -278,6 +278,7 @@ var _loop = function _loop(comment) {
       updateForm.classList.add("new-comment--update");
       var updateInput = document.createElement("textarea");
       updateInput.classList.add("new-comment__input");
+      updateInput.value = "@".concat(post.replyingTo, " ").concat(post.content);
       updateForm.appendChild(updateInput);
       var updateSend = document.createElement("button");
       updateSend.classList.add("new-comment__send");

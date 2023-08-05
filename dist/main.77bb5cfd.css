@@ -286,7 +286,6 @@ main {
   }
 }
 .new-comment--update {
-  display: none;
   grid-template-columns: unset;
 }
 .new-comment--reply {

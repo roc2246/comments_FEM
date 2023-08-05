@@ -85,7 +85,9 @@ textarea {
 
 .new-comment__send {
   border: solid;
-  height: 2rem;
+  width: 6.5rem;
+  height: 3rem;
+  margin-left: auto;
 }
 
 @media (min-width: 500px) {
@@ -278,7 +280,7 @@ main {
 }
 @media (min-width: 600px) {
   .new-comment {
-    grid-template-columns: 2rem auto auto;
+    grid-template-columns: 2rem auto 6.5rem;
     row-gap: unset;
     column-gap: 1rem;
   }

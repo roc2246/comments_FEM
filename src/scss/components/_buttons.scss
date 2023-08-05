@@ -1,19 +1,22 @@
 @use "utilities/functions" as *;
 
-.vote{
-    &__btn{
-        width: rem(40px);
-        height: rem(40px);
-    }
+.vote {
+  &__btn {
+    width: rem(40px);
+    height: rem(40px);
+  }
 }
 
-.CRUD-container{
-    width: max-content;
+.CRUD-container {
+  width: max-content;
 }
 
-.new-comment{
-    &__send{
-        border: solid;
-        height: 2rem;
-    }
+.new-comment {
+  &__send {
+    border: solid;
+    width: rem(104px);
+    height: rem(48px);
+
+    margin-left: auto;
+  }
 }

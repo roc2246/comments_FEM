@@ -13,8 +13,8 @@
     }
 }
 
-.new-comment--update{
-    & > .new-comment__input{
+.new-comment{
+    &__input{
         font-size: rem(16px);
     }
 }

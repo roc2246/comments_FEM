@@ -64,7 +64,7 @@ textarea {
   }
 }
 
-.new-comment--update > .new-comment__input {
+.new-comment__input {
   font-size: 1rem;
 }
 
@@ -191,7 +191,7 @@ main {
 }
 @media (min-width: 600px) {
   .comment {
-    grid-template-columns: auto 2rem 7.8125rem repeat(4, auto);
+    grid-template-columns: 3.5rem 2rem 7.8125rem repeat(4, auto);
     grid-template-rows: 2rem 4.1875rem auto;
     row-gap: unset;
   }

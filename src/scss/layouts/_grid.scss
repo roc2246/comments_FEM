@@ -6,7 +6,7 @@
   grid-template-columns: rem(32px) rem(125px) repeat(5, auto);
   row-gap: rem(20px);
   @media (min-width: 600px) {
-    grid-template-columns: auto rem(32px) rem(125px) repeat(4, auto);
+    grid-template-columns: rem(56px) rem(32px) rem(125px) repeat(4, auto);
     grid-template-rows: rem(32px) rem(67px) auto;
     row-gap: unset;
   }

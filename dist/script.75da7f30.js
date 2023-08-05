@@ -220,6 +220,9 @@ var _loop = function _loop(comment) {
       post = comments[comment];
       counter = null;
     }
+    if (currentUser.username === post.user.username) {
+      container.classList.add("comment--you");
+    }
 
     // Creates avatar
     var avatar = document.createElement("img");
@@ -383,6 +386,23 @@ var _loop = function _loop(comment) {
 };
 for (var comment in _data.default.comments) {
   _loop(comment);
+}
+
+// Toggles edit mode
+var _loop2 = function _loop2() {
+  var editForm = document.getElementsByClassName("new-comment--update")[x];
+  var comments = document.getElementsByClassName("comment--you")[x];
+  var editBtn = document.getElementsByClassName("CRUD--edit")[x];
+  editBtn.addEventListener("click", function () {
+    if (!comments.classList.contains("comment--edit")) {
+      comments.classList.add("comment--edit");
+    } else {
+      comments.classList.remove("comment--edit");
+    }
+  });
+};
+for (var x = 0; x < document.getElementsByClassName("comment--you").length; x++) {
+  _loop2();
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

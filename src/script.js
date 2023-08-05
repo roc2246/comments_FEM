@@ -43,6 +43,10 @@ for (let comment in data.comments) {
       counter = null;
     }
 
+    if(currentUser.username === post.user.username){
+      container.classList.add("comment--you")
+    }
+
     // Creates avatar
     const avatar = document.createElement("img");
     avatar.classList.add("avatar");
@@ -103,7 +107,7 @@ for (let comment in data.comments) {
 
       const updateInput = document.createElement("textarea");
       updateInput.classList.add("new-comment__input");
-     updateInput.value = `@${post.replyingTo} ${post.content}`
+      updateInput.value = `@${post.replyingTo} ${post.content}`;
       updateForm.appendChild(updateInput);
 
       const updateSend = document.createElement("button");
@@ -197,7 +201,7 @@ for (let comment in data.comments) {
 
     const replyInput = document.createElement("textarea");
     replyInput.classList.add("new-comment__input");
-    replyInput.placeholder="...Add a reply"
+    replyInput.placeholder = "...Add a reply";
     replyForm.appendChild(replyInput);
 
     const replySend = document.createElement("button");
@@ -228,4 +232,20 @@ for (let comment in data.comments) {
     container.appendChild(postCont("comment"));
     container.appendChild(createReplyForm());
   }
+}
+
+// Toggles edit mode
+for (let x = 0; x < document.getElementsByClassName("comment--you").length; x++) {
+  const editForm = document.getElementsByClassName("new-comment--update")[x];
+  const comments = document.getElementsByClassName("comment--you")[x];
+  const editBtn = document.getElementsByClassName("CRUD--edit")[x];
+
+  editBtn.addEventListener("click", () => {
+    if (!comments.classList.contains("comment--edit")) {
+      comments.classList.add("comment--edit");
+    } else{
+      comments.classList.remove("comment--edit");
+    }
+ 
+  });
 }

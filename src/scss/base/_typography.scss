@@ -1,6 +1,8 @@
 @use "utilities/functions" as *;
 
-
+::placeholder{
+    font-size: rem(16px);
+}
 .username{
     margin-left: rem(14px);
 }
@@ -8,5 +10,11 @@
     line-height: 1.5rem;
     @media (min-width:600px) {
         margin-top: rem(15px);
+    }
+}
+
+.new-comment--update{
+    & > .new-comment__input{
+        font-size: rem(16px);
     }
 }

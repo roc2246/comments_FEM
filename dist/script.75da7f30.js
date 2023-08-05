@@ -305,11 +305,6 @@ var _loop = function _loop(comment) {
     plus.classList.add("vote__img--plus");
     plus.src = "./images/icon-plus.svg";
     upvote.appendChild(plus);
-    var plusHover = document.createElement("img");
-    plusHover.classList.add("vote__img");
-    plusHover.classList.add("vote__img--plusHover");
-    plusHover.src = "./images/icon-plus-hover.svg";
-    upvote.appendChild(plusHover);
     var score = document.createElement("span");
     score.classList.add("vote__score");
     score.innerText = post.score;
@@ -506,7 +501,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59915" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60582" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

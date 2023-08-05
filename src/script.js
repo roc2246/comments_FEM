@@ -135,12 +135,6 @@ for (let comment in data.comments) {
     plus.classList.add("vote__img--plus");
     plus.src = "./images/icon-plus.svg";
     upvote.appendChild(plus);
-    
-    const plusHover = document.createElement("img");
-    plusHover.classList.add("vote__img");
-    plusHover.classList.add("vote__img--plusHover");
-    plusHover.src = "./images/icon-plus-hover.svg";
-    upvote.appendChild(plusHover);
 
     const score = document.createElement("span");
     score.classList.add("vote__score");

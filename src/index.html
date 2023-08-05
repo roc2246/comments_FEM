@@ -19,9 +19,19 @@
   <form action="" class="new-comment">
     <img src="" alt="" class="avatar avatar--new-comment">
     <textarea name="" id="" cols="30" rows="10" class="new-comment__input" placeholder="Add a comment..."></textarea>
-    <button class="new-comment__send">SUBMIT</button>
+    <button class="btn new-comment__send">SUBMIT</button>
   </form>
 </main>
+
+<section class="modal">
+  <div class="modal-content">
+    <h1 class="modal__heading">Are you sure</h1>
+    <div class="modal__btn-box">
+      <button class="btn modal__btn-box--delete">DELETE</button>
+      <button class="btn modal__btn-box--cancel">cancel</button>
+    </div>
+  </div>
+</section>
 
 <!-- Remove type="module" once api endpoint is established -->
   <script type="module" src="script.js"></script>

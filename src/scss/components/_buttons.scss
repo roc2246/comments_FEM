@@ -11,12 +11,16 @@
   width: max-content;
 }
 
+.btn{
+  border: solid;
+  width: rem(104px);
+  height: rem(48px);
+
+}
+
 .new-comment {
   &__send {
-    border: solid;
-    width: rem(104px);
-    height: rem(48px);
-
+ 
     margin-left: auto;
   }
 }

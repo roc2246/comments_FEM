@@ -111,6 +111,7 @@ for (let comment in data.comments) {
       updateForm.appendChild(updateInput);
 
       const updateSend = document.createElement("button");
+      updateSend.classList.add("btn");
       updateSend.classList.add("new-comment__send");
       updateSend.classList.add("new-comment__send--update");
       updateSend.innerText = "UPDATE";
@@ -214,6 +215,7 @@ for (let comment in data.comments) {
     replyForm.appendChild(replyInput);
 
     const replySend = document.createElement("button");
+    replySend.classList.add("btn");
     replySend.classList.add("new-comment__send");
     replySend.innerText = "REPLY";
     replyForm.appendChild(replySend);
@@ -276,7 +278,9 @@ for (
     .length;
   x++
 ) {
-  const replyForm = document.querySelectorAll(".new-comment--reply:not(.new-comment--replytoreply)")[x];
+  const replyForm = document.querySelectorAll(
+    ".new-comment--reply:not(.new-comment--replytoreply)"
+  )[x];
   const replyBtn = document.querySelectorAll(
     ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply"
   )[x];
@@ -293,12 +297,12 @@ for (
 // Toggles reply form for Replies
 for (
   let x = 0;
-  x <
-  document.querySelectorAll(".comment--reply:not(.comment--you)")
-    .length;
+  x < document.querySelectorAll(".comment--reply:not(.comment--you)").length;
   x++
 ) {
-  const replyForm = document.getElementsByClassName("new-comment--replytoreply")[x];
+  const replyForm = document.getElementsByClassName(
+    "new-comment--replytoreply"
+  )[x];
   const replyBtn = document.querySelectorAll(
     ".CRUD-container--reply > .CRUD--reply"
   )[x];

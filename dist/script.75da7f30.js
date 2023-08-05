@@ -284,6 +284,7 @@ var _loop = function _loop(comment) {
       updateInput.value = "@".concat(post.replyingTo, " ").concat(post.content);
       updateForm.appendChild(updateInput);
       var updateSend = document.createElement("button");
+      updateSend.classList.add("btn");
       updateSend.classList.add("new-comment__send");
       updateSend.classList.add("new-comment__send--update");
       updateSend.innerText = "UPDATE";
@@ -370,6 +371,7 @@ var _loop = function _loop(comment) {
     replyInput.placeholder = "...Add a reply";
     replyForm.appendChild(replyInput);
     var replySend = document.createElement("button");
+    replySend.classList.add("btn");
     replySend.classList.add("new-comment__send");
     replySend.innerText = "REPLY";
     replyForm.appendChild(replySend);
@@ -475,7 +477,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53199" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55792" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

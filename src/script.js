@@ -43,8 +43,8 @@ for (let comment in data.comments) {
       counter = null;
     }
 
-    if(currentUser.username === post.user.username){
-      container.classList.add("comment--you")
+    if (currentUser.username === post.user.username) {
+      container.classList.add("comment--you");
     }
 
     // Creates avatar
@@ -154,6 +154,9 @@ for (let comment in data.comments) {
     // Creates CRUD buttons
     const CRUD = document.createElement("div");
     CRUD.classList.add("CRUD-container");
+    if (type === "reply") {
+      CRUD.classList.add("CRUD-container--reply");
+    }
     container.appendChild(CRUD);
 
     function createCRUDbtn(type) {
@@ -187,10 +190,16 @@ for (let comment in data.comments) {
     return container;
   }
 
-  function createReplyForm() {
+  function createReplyForm(type) {
     const replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
+
+    if (type === "reply") {
+      replyForm.classList.add("new-comment--replytoreply");
+    } else {
+      type = null;
+    }
 
     const avatar = document.createElement("img");
     avatar.classList.add("avatar");
@@ -225,27 +234,80 @@ for (let comment in data.comments) {
 
     for (let reply in post.replies) {
       replyCont.appendChild(postCont("reply", reply));
+      if (post.replies[reply].user.username !== currentUser.username) {
+        replyCont.appendChild(createReplyForm("reply"));
+      }
     }
 
-    container.appendChild(createReplyForm());
+    if (post.user.username !== currentUser.username) {
+      container.appendChild(createReplyForm());
+    }
   } else {
     container.appendChild(postCont("comment"));
-    container.appendChild(createReplyForm());
+    if (post.user.username !== currentUser.username) {
+      container.appendChild(createReplyForm());
+    }
   }
 }
 
 // Toggles edit mode
-for (let x = 0; x < document.getElementsByClassName("comment--you").length; x++) {
-  const editForm = document.getElementsByClassName("new-comment--update")[x];
+for (
+  let x = 0;
+  x < document.getElementsByClassName("comment--you").length;
+  x++
+) {
   const comments = document.getElementsByClassName("comment--you")[x];
   const editBtn = document.getElementsByClassName("CRUD--edit")[x];
 
   editBtn.addEventListener("click", () => {
     if (!comments.classList.contains("comment--edit")) {
       comments.classList.add("comment--edit");
-    } else{
+    } else {
       comments.classList.remove("comment--edit");
     }
- 
+  });
+}
+
+// Toggles reply form for Comments
+for (
+  let x = 0;
+  x <
+  document.querySelectorAll(".comment:not(.comment--you):not(.comment--reply)")
+    .length;
+  x++
+) {
+  const replyForm = document.querySelectorAll(".new-comment--reply:not(.new-comment--replytoreply)")[x];
+  const replyBtn = document.querySelectorAll(
+    ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply"
+  )[x];
+
+  replyBtn.addEventListener("click", () => {
+    if (replyForm.style.display === "") {
+      replyForm.style.display = "grid";
+    } else {
+      replyForm.style.display = "";
+    }
+  });
+}
+
+// Toggles reply form for Replies
+for (
+  let x = 0;
+  x <
+  document.querySelectorAll(".comment--reply:not(.comment--you)")
+    .length;
+  x++
+) {
+  const replyForm = document.getElementsByClassName("new-comment--replytoreply")[x];
+  const replyBtn = document.querySelectorAll(
+    ".CRUD-container--reply > .CRUD--reply"
+  )[x];
+
+  replyBtn.addEventListener("click", () => {
+    if (replyForm.style.display === "") {
+      replyForm.style.display = "grid";
+    } else {
+      replyForm.style.display = "";
+    }
   });
 }

@@ -321,6 +321,9 @@ var _loop = function _loop(comment) {
     // Creates CRUD buttons
     var CRUD = document.createElement("div");
     CRUD.classList.add("CRUD-container");
+    if (type === "reply") {
+      CRUD.classList.add("CRUD-container--reply");
+    }
     container.appendChild(CRUD);
     function createCRUDbtn(type) {
       var btn = document.createElement("button");
@@ -347,10 +350,15 @@ var _loop = function _loop(comment) {
     }
     return container;
   }
-  function createReplyForm() {
+  function createReplyForm(type) {
     var replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
+    if (type === "reply") {
+      replyForm.classList.add("new-comment--replytoreply");
+    } else {
+      type = null;
+    }
     var avatar = document.createElement("img");
     avatar.classList.add("avatar");
     avatar.classList.add("avatar--new-reply");
@@ -377,11 +385,18 @@ var _loop = function _loop(comment) {
     replyCont.appendChild(hr);
     for (var reply in post.replies) {
       replyCont.appendChild(postCont("reply", reply));
+      if (post.replies[reply].user.username !== currentUser.username) {
+        replyCont.appendChild(createReplyForm("reply"));
+      }
     }
-    container.appendChild(createReplyForm());
+    if (post.user.username !== currentUser.username) {
+      container.appendChild(createReplyForm());
+    }
   } else {
     container.appendChild(postCont("comment"));
-    container.appendChild(createReplyForm());
+    if (post.user.username !== currentUser.username) {
+      container.appendChild(createReplyForm());
+    }
   }
 };
 for (var comment in _data.default.comments) {
@@ -390,7 +405,6 @@ for (var comment in _data.default.comments) {
 
 // Toggles edit mode
 var _loop2 = function _loop2() {
-  var editForm = document.getElementsByClassName("new-comment--update")[x];
   var comments = document.getElementsByClassName("comment--you")[x];
   var editBtn = document.getElementsByClassName("CRUD--edit")[x];
   editBtn.addEventListener("click", function () {
@@ -403,6 +417,38 @@ var _loop2 = function _loop2() {
 };
 for (var x = 0; x < document.getElementsByClassName("comment--you").length; x++) {
   _loop2();
+}
+
+// Toggles reply form for Comments
+var _loop3 = function _loop3() {
+  var replyForm = document.querySelectorAll(".new-comment--reply:not(.new-comment--replytoreply)")[_x];
+  var replyBtn = document.querySelectorAll(".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply")[_x];
+  replyBtn.addEventListener("click", function () {
+    if (replyForm.style.display === "") {
+      replyForm.style.display = "grid";
+    } else {
+      replyForm.style.display = "";
+    }
+  });
+};
+for (var _x = 0; _x < document.querySelectorAll(".comment:not(.comment--you):not(.comment--reply)").length; _x++) {
+  _loop3();
+}
+
+// Toggles reply form for Replies
+var _loop4 = function _loop4() {
+  var replyForm = document.getElementsByClassName("new-comment--replytoreply")[_x2];
+  var replyBtn = document.querySelectorAll(".CRUD-container--reply > .CRUD--reply")[_x2];
+  replyBtn.addEventListener("click", function () {
+    if (replyForm.style.display === "") {
+      replyForm.style.display = "grid";
+    } else {
+      replyForm.style.display = "";
+    }
+  });
+};
+for (var _x2 = 0; _x2 < document.querySelectorAll(".comment--reply:not(.comment--you)").length; _x2++) {
+  _loop4();
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

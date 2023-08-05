@@ -355,6 +355,7 @@ var _loop = function _loop(comment) {
     replyForm.appendChild(avatar);
     var replyInput = document.createElement("textarea");
     replyInput.classList.add("new-comment__input");
+    replyInput.placeholder = "...Add a reply";
     replyForm.appendChild(replyInput);
     var replySend = document.createElement("button");
     replySend.classList.add("new-comment__send");

@@ -196,6 +196,7 @@ for (let comment in data.comments) {
 
     const replyInput = document.createElement("textarea");
     replyInput.classList.add("new-comment__input");
+    replyInput.placeholder="...Add a reply"
     replyForm.appendChild(replyInput);
 
     const replySend = document.createElement("button");

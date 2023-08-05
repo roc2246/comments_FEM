@@ -394,6 +394,8 @@ var _loop = function _loop(comment) {
     if (post.user.username !== currentUser.username) {
       container.appendChild(createReplyForm());
     }
+    var replyWrapper = document.getElementsByClassName("reply-wrapper")[0];
+    replyWrapper.style.gridTemplateRows = "repeat(".concat(replyWrapper.childElementCount, ", auto)");
   } else {
     container.appendChild(postCont("comment"));
     if (post.user.username !== currentUser.username) {
@@ -499,7 +501,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55792" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56698" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

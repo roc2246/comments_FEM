@@ -244,6 +244,10 @@ for (let comment in data.comments) {
     if (post.user.username !== currentUser.username) {
       container.appendChild(createReplyForm());
     }
+
+    const replyWrapper = document.getElementsByClassName("reply-wrapper")[0];
+    replyWrapper.style.gridTemplateRows = `repeat(${replyWrapper.childElementCount}, auto)`;
+
   } else {
     container.appendChild(postCont("comment"));
     if (post.user.username !== currentUser.username) {
@@ -340,7 +344,7 @@ document
   .getElementsByClassName("modal__btn-box--cancel")[0]
   .addEventListener("click", () => {
     const deleteModal = document.getElementsByClassName("modal")[0];
-    if ((deleteModal.style.display === "block")) {
+    if (deleteModal.style.display === "block") {
       deleteModal.style.display = "none";
     }
   });

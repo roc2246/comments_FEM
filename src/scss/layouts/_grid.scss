@@ -114,7 +114,7 @@ $ruler-column-size: clamp(rem(16px), vw(16px), rem(42px));
   display: grid;
   row-gap: clamp(rem(16px), vw(16px), rem(24px));
   column-gap: $ruler-column-size;
-  grid-template-rows: repeat(2, auto);
+  // grid-template-rows: repeat(2, auto);
   @media (min-width: $ruler-break) {
     grid-template-columns: $ruler-column-size auto;
   }
@@ -124,6 +124,9 @@ $ruler-column-size: clamp(rem(16px), vw(16px), rem(42px));
     grid-row: 1/ -1;
   }
   .comment--reply {
+    grid-column: 2/3;
+  }
+  .new-comment--reply{
     grid-column: 2/3;
   }
 }

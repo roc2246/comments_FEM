@@ -319,7 +319,6 @@ main {
   display: grid;
   row-gap: clamp(1rem, 4.2666666667vw, 1.5rem);
   column-gap: clamp(1rem, 4.2666666667vw, 2.625rem);
-  grid-template-rows: repeat(2, auto);
 }
 @media (min-width: 500px) {
   .reply-wrapper {
@@ -331,6 +330,9 @@ main {
   grid-row: 1/-1;
 }
 .reply-wrapper .comment--reply {
+  grid-column: 2/3;
+}
+.reply-wrapper .new-comment--reply {
   grid-column: 2/3;
 }
 

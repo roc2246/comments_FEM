@@ -86,7 +86,12 @@ textarea {
   width: 2.5rem;
   height: 2.5rem;
 }
-
+.vote__btn--upvote:hover > .vote__img--plusHover {
+  display: block;
+}
+.vote__btn--upvote:hover > .vote__img--plus {
+  display: none;
+}
 .CRUD-container {
   width: max-content;
 }

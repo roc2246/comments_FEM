@@ -4,6 +4,20 @@
   &__btn {
     width: rem(40px);
     height: rem(40px);
+    &--upvote:hover{
+        & > .vote__img--plusHover{
+          display: block;
+        }
+        & > .vote__img--plus{
+          display: none;
+        }
+    }
+  }
+  &__img{
+    // &--plusHover{
+    //   display: none;
+    // }
+
   }
 }
 

@@ -1,28 +1,68 @@
-body{
-    background-color: var(--color-very-light-gray);
+body {
+  background-color: var(--color-very-light-gray);
 }
 
-.vote{
-    background-color: var(--color-very-light-gray);
-    &__btn{
-         &--upvote:hover {
-        & .vote__img--plus {
-          filter: hue-rotate(238deg) saturate(40%) brightness(52%);
-        }
+.vote {
+  background-color: var(--color-very-light-gray);
+  &__btn {
+    &--upvote:hover {
+      & .vote__img--plus {
+        filter: hue-rotate(238deg) saturate(40%) brightness(52%);
       }
-      &--downvote:hover {
-        & .vote__img--minus {
-          filter: hue-rotate(238deg) saturate(40%) brightness(52%);
-        }
-      }  
     }
+    &--downvote:hover {
+      & .vote__img--minus {
+        filter: hue-rotate(238deg) saturate(40%) brightness(52%);
+      }
+    }
+  }
+  &__score {
+    color: var(--color-light-grayish-blue);
+  }
 }
 
-.new-comment{
-    background-color: var(--color-white);
+.new-comment {
+  background-color: var(--color-white);
 }
 
-.comment{
-    background-color: var(--color-white);
+.comment {
+  background-color: var(--color-white);
 }
 
+.CRUD {
+  &__text {
+    &--reply {
+      color: var(--color-moderate-blue);
+    }
+    &--delete {
+      color: var(--color-soft-red);
+    }
+    &--edit {
+      color: var(--color-moderate-blue);
+    }
+  }
+  &--reply:hover{
+    & > .CRUD__text--reply{
+        color: var(--color-very-light-gray);
+    }
+    & > .CRUD__icon--reply{
+        filter: hue-rotate(228deg) saturate(33%) brightness(97%);
+    }
+  }
+  &--edit:hover{
+    & > .CRUD__text--edit{
+        color: var(--color-very-light-gray);
+    }
+    & > .CRUD__icon--edit{
+        filter: hue-rotate(228deg) saturate(33%) brightness(97%);
+    }
+  }
+  &--delete:hover{
+    & > .CRUD__text--delete{
+        color: var(--color-pale-red);
+    }
+    & > .CRUD__icon--delete{
+        filter: hue-rotate(357deg) saturate(100%) brightness(86%);
+    }
+  }
+}

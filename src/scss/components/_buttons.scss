@@ -13,9 +13,10 @@
 }
 
 .btn {
-  border: solid;
   width: rem(104px);
   height: rem(48px);
+
+  border-radius: .5rem;
 }
 
 .new-comment {

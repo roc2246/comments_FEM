@@ -92,9 +92,9 @@ textarea {
 }
 
 .btn {
-  border: solid;
   width: 6.5rem;
   height: 3rem;
+  border-radius: 0.5rem;
 }
 
 .new-comment__send {
@@ -134,10 +134,17 @@ main {
   padding: 1rem;
   border-radius: 0.75rem;
   outline: none;
+  height: 3.75rem;
 }
 .new-comment--update {
   padding: 0;
   margin-top: 0.625rem;
+}
+.new-comment--reply .new-comment__input {
+  height: 5.5rem;
+}
+.new-comment--update .new-comment__input {
+  height: 5.75rem;
 }
 
 .modal {

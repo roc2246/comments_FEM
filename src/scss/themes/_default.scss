@@ -4,6 +4,18 @@ body{
 
 .vote{
     background-color: var(--color-very-light-gray);
+    &__btn{
+         &--upvote:hover {
+        & .vote__img--plus {
+          filter: hue-rotate(238deg) saturate(40%) brightness(52%);
+        }
+      }
+      &--downvote:hover {
+        & .vote__img--minus {
+          filter: hue-rotate(238deg) saturate(40%) brightness(52%);
+        }
+      }  
+    }
 }
 
 .new-comment{

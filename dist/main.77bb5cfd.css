@@ -132,6 +132,8 @@ main {
 }
 .new-comment__input {
   padding: 1rem;
+  border-radius: 0.75rem;
+  outline: none;
 }
 .new-comment--update {
   padding: 0;
@@ -441,6 +443,9 @@ body {
   filter: hue-rotate(357deg) saturate(100%) brightness(86%);
 }
 
+.new-comment__input:focus {
+  border-color: var(--color-moderate-blue);
+}
 .new-comment__send {
   color: var(--color-white);
   background-color: var(--color-moderate-blue);

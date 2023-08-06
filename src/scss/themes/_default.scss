@@ -41,38 +41,41 @@ body {
       color: var(--color-moderate-blue);
     }
   }
-  &--reply:hover{
-    & > .CRUD__text--reply{
-        color: var(--color-very-light-gray);
+  &--reply:hover {
+    & > .CRUD__text--reply {
+      color: var(--color-very-light-gray);
     }
-    & > .CRUD__icon--reply{
-        filter: hue-rotate(228deg) saturate(33%) brightness(97%);
-    }
-  }
-  &--edit:hover{
-    & > .CRUD__text--edit{
-        color: var(--color-very-light-gray);
-    }
-    & > .CRUD__icon--edit{
-        filter: hue-rotate(228deg) saturate(33%) brightness(97%);
+    & > .CRUD__icon--reply {
+      filter: hue-rotate(228deg) saturate(33%) brightness(97%);
     }
   }
-  &--delete:hover{
-    & > .CRUD__text--delete{
-        color: var(--color-pale-red);
+  &--edit:hover {
+    & > .CRUD__text--edit {
+      color: var(--color-very-light-gray);
     }
-    & > .CRUD__icon--delete{
-        filter: hue-rotate(357deg) saturate(100%) brightness(86%);
+    & > .CRUD__icon--edit {
+      filter: hue-rotate(228deg) saturate(33%) brightness(97%);
+    }
+  }
+  &--delete:hover {
+    & > .CRUD__text--delete {
+      color: var(--color-pale-red);
+    }
+    & > .CRUD__icon--delete {
+      filter: hue-rotate(357deg) saturate(100%) brightness(86%);
     }
   }
 }
 
-.new-comment{
-    &__send{
-        color: var(--color-white);
-        background-color: var(--color-moderate-blue);
-    &:hover{
-        background-color: var(--color-light-grayish-blue);
+.new-comment {
+    &__input:focus{
+        border-color: var(--color-moderate-blue);
     }
+  &__send {
+    color: var(--color-white);
+    background-color: var(--color-moderate-blue);
+    &:hover {
+      background-color: var(--color-light-grayish-blue);
     }
   }
+}

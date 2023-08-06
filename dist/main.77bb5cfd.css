@@ -441,4 +441,12 @@ body {
   filter: hue-rotate(357deg) saturate(100%) brightness(86%);
 }
 
+.new-comment__send {
+  color: var(--color-white);
+  background-color: var(--color-moderate-blue);
+}
+.new-comment__send:hover {
+  background-color: var(--color-light-grayish-blue);
+}
+
 /*# sourceMappingURL=/main.77bb5cfd.css.map */

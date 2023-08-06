@@ -66,3 +66,13 @@ body {
     }
   }
 }
+
+.new-comment{
+    &__send{
+        color: var(--color-white);
+        background-color: var(--color-moderate-blue);
+    &:hover{
+        background-color: var(--color-light-grayish-blue);
+    }
+    }
+  }

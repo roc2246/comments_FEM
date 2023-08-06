@@ -406,20 +406,31 @@ var _loop = function _loop(comment) {
 for (var comment in _data.default.comments) {
   _loop(comment);
 }
+var container = {
+  replies: document.querySelectorAll(".comment--reply:not(.comment--you)"),
+  comments: document.querySelectorAll(".comment:not(.comment--you):not(.comment--reply)"),
+  userComments: document.getElementsByClassName("comment--you"),
+  modal: document.getElementsByClassName("modal__btn-box--cancel")[0]
+};
+var CRUD = {
+  edit: document.getElementsByClassName("CRUD--edit"),
+  delete: document.getElementsByClassName("CRUD--delete"),
+  reply: document.getElementsByClassName("CRUD--reply")
+};
 
 // Toggles edit mode
 var _loop2 = function _loop2() {
-  var comments = document.getElementsByClassName("comment--you")[x];
+  var comment = container.userComments[x];
   var editBtn = document.getElementsByClassName("CRUD--edit")[x];
   editBtn.addEventListener("click", function () {
-    if (!comments.classList.contains("comment--edit")) {
-      comments.classList.add("comment--edit");
+    if (!comment.classList.contains("comment--edit")) {
+      comment.classList.add("comment--edit");
     } else {
-      comments.classList.remove("comment--edit");
+      comment.classList.remove("comment--edit");
     }
   });
 };
-for (var x = 0; x < document.getElementsByClassName("comment--you").length; x++) {
+for (var x = 0; x < container.userComments.length; x++) {
   _loop2();
 }
 
@@ -435,7 +446,7 @@ var _loop3 = function _loop3() {
     }
   });
 };
-for (var _x = 0; _x < document.querySelectorAll(".comment:not(.comment--you):not(.comment--reply)").length; _x++) {
+for (var _x = 0; _x < container.comments.length; _x++) {
   _loop3();
 }
 
@@ -451,13 +462,13 @@ var _loop4 = function _loop4() {
     }
   });
 };
-for (var _x2 = 0; _x2 < document.querySelectorAll(".comment--reply:not(.comment--you)").length; _x2++) {
+for (var _x2 = 0; _x2 < container.replies.length; _x2++) {
   _loop4();
 }
 
 // Toggles delete modal
 var _loop5 = function _loop5() {
-  var deleteBtn = document.getElementsByClassName("CRUD--delete")[_x3];
+  var deleteBtn = CRUD.delete[_x3];
   var deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", function () {
     if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
@@ -465,12 +476,12 @@ var _loop5 = function _loop5() {
     }
   });
 };
-for (var _x3 = 0; _x3 < document.getElementsByClassName("CRUD--delete").length; _x3++) {
+for (var _x3 = 0; _x3 < CRUD.delete.length; _x3++) {
   _loop5();
 }
 
 // Closes delete modal
-document.getElementsByClassName("modal__btn-box--cancel")[0].addEventListener("click", function () {
+container.modal.addEventListener("click", function () {
   var deleteModal = document.getElementsByClassName("modal")[0];
   if (deleteModal.style.display === "block") {
     deleteModal.style.display = "none";
@@ -501,7 +512,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60582" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61368" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

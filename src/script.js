@@ -247,7 +247,6 @@ for (let comment in data.comments) {
 
     const replyWrapper = document.getElementsByClassName("reply-wrapper")[0];
     replyWrapper.style.gridTemplateRows = `repeat(${replyWrapper.childElementCount}, auto)`;
-
   } else {
     container.appendChild(postCont("comment"));
     if (post.user.username !== currentUser.username) {
@@ -256,32 +255,38 @@ for (let comment in data.comments) {
   }
 }
 
+
+const container = {
+  replies: document.querySelectorAll(".comment--reply:not(.comment--you)"),
+  comments: document.querySelectorAll(
+    ".comment:not(.comment--you):not(.comment--reply)"
+  ),
+  userComments: document.getElementsByClassName("comment--you"),
+  modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
+};
+
+const CRUD = {
+  edit: document.getElementsByClassName("CRUD--edit"),
+  delete: document.getElementsByClassName("CRUD--delete"),
+  reply: document.getElementsByClassName("CRUD--reply"),
+};
+
 // Toggles edit mode
-for (
-  let x = 0;
-  x < document.getElementsByClassName("comment--you").length;
-  x++
-) {
-  const comments = document.getElementsByClassName("comment--you")[x];
+for (let x = 0; x < container.userComments.length; x++) {
+  const comment = container.userComments[x];
   const editBtn = document.getElementsByClassName("CRUD--edit")[x];
 
   editBtn.addEventListener("click", () => {
-    if (!comments.classList.contains("comment--edit")) {
-      comments.classList.add("comment--edit");
+    if (!comment.classList.contains("comment--edit")) {
+      comment.classList.add("comment--edit");
     } else {
-      comments.classList.remove("comment--edit");
+      comment.classList.remove("comment--edit");
     }
   });
 }
 
 // Toggles reply form for Comments
-for (
-  let x = 0;
-  x <
-  document.querySelectorAll(".comment:not(.comment--you):not(.comment--reply)")
-    .length;
-  x++
-) {
+for (let x = 0; x < container.comments.length; x++) {
   const replyForm = document.querySelectorAll(
     ".new-comment--reply:not(.new-comment--replytoreply)"
   )[x];
@@ -299,11 +304,7 @@ for (
 }
 
 // Toggles reply form for Replies
-for (
-  let x = 0;
-  x < document.querySelectorAll(".comment--reply:not(.comment--you)").length;
-  x++
-) {
+for (let x = 0; x < container.replies.length; x++) {
   const replyForm = document.getElementsByClassName(
     "new-comment--replytoreply"
   )[x];
@@ -321,12 +322,8 @@ for (
 }
 
 // Toggles delete modal
-for (
-  let x = 0;
-  x < document.getElementsByClassName("CRUD--delete").length;
-  x++
-) {
-  const deleteBtn = document.getElementsByClassName("CRUD--delete")[x];
+for (let x = 0; x < CRUD.delete.length; x++) {
+  const deleteBtn = CRUD.delete[x];
   const deleteModal = document.getElementsByClassName("modal")[0];
 
   deleteBtn.addEventListener("click", () => {
@@ -340,11 +337,9 @@ for (
 }
 
 // Closes delete modal
-document
-  .getElementsByClassName("modal__btn-box--cancel")[0]
-  .addEventListener("click", () => {
-    const deleteModal = document.getElementsByClassName("modal")[0];
-    if (deleteModal.style.display === "block") {
-      deleteModal.style.display = "none";
-    }
-  });
+container.modal.addEventListener("click", () => {
+  const deleteModal = document.getElementsByClassName("modal")[0];
+  if (deleteModal.style.display === "block") {
+    deleteModal.style.display = "none";
+  }
+});

@@ -17,7 +17,7 @@ body {
     }
   }
   &__score {
-    color: var(--color-light-grayish-blue);
+    color: var(--color-moderate-blue);
   }
 }
 
@@ -27,6 +27,9 @@ body {
 
 .comment {
   background-color: var(--color-white);
+&__replyingTo{
+color:var(--color-moderate-blue);
+}
 }
 
 .CRUD {

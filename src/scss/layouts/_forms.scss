@@ -9,26 +9,31 @@
 }
 
 .new-comment {
+  
   padding: clamp(rem(16px), vw(16px), rem(24px));
+ 
   &__input {
     padding: 1rem;
     border-radius: 0.75rem;
     outline: none;
     height: 3.75rem;
   }
+
   &--update {
     padding: 0;
     margin-top: rem(10px);
   }
 
-  &--reply{
-.new-comment__input{
-    height: 5.5rem;
-}
-  }
-  &--update{
-    .new-comment__input{
-        height: 5.75rem;
+  &--reply {
+    .new-comment__input {
+      height: 5.5rem;
     }
   }
+
+  &--update {
+    .new-comment__input {
+      height: 5.75rem;
+    }
+  }
+
 }

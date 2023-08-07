@@ -1,20 +1,51 @@
 @use "utilities/functions" as *;
 
-::placeholder{
-    font-size: rem(16px);
+::placeholder {
+  font-size: rem(16px);
 }
-.username{
-    margin-left: rem(14px);
+.username {
+  margin-left: rem(14px);
+  font-weight: var(--font-weight-bold);
 }
-.comment__content{
+.comment {
+  &__content {
     line-height: 1.5rem;
-    @media (min-width:600px) {
-        margin-top: rem(15px);
+    @media (min-width: 600px) {
+      margin-top: rem(15px);
     }
+  }
+  &__replyingTo{
+    font-weight: var(--font-weight-bolder);
+  }
 }
 
-.new-comment{
-    &__input{
-        font-size: rem(16px);
+.new-comment {
+  &__input {
+    font-size: rem(16px);
+  }
+  &__send{
+    font-size: rem(16px);
+    font-weight: var(--font-weight-bolder);
+
+  }
+}
+
+.vote {
+  &__score {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.CRUD {
+  &__text {
+    &--reply {
+      font-weight: var(--font-weight-bolder);
     }
+    &--edit {
+      font-weight: var(--font-weight-bolder);
+    }
+    &--delete {
+      font-weight: var(--font-weight-bolder);
+    }
+  }
 }

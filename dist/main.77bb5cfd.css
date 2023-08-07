@@ -53,6 +53,7 @@ textarea {
 
 .username {
   margin-left: 0.875rem;
+  font-weight: var(--font-weight-bold);
 }
 
 .comment__content {
@@ -63,9 +64,30 @@ textarea {
     margin-top: 0.9375rem;
   }
 }
+.comment__replyingTo {
+  font-weight: var(--font-weight-bolder);
+}
 
 .new-comment__input {
   font-size: 1rem;
+}
+.new-comment__send {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bolder);
+}
+
+.vote__score {
+  font-weight: var(--font-weight-bold);
+}
+
+.CRUD__text--reply {
+  font-weight: var(--font-weight-bolder);
+}
+.CRUD__text--edit {
+  font-weight: var(--font-weight-bolder);
+}
+.CRUD__text--delete {
+  font-weight: var(--font-weight-bolder);
 }
 
 .avatar--comment {
@@ -411,7 +433,7 @@ body {
   filter: hue-rotate(238deg) saturate(40%) brightness(52%);
 }
 .vote__score {
-  color: var(--color-light-grayish-blue);
+  color: var(--color-moderate-blue);
 }
 
 .new-comment {
@@ -420,6 +442,9 @@ body {
 
 .comment {
   background-color: var(--color-white);
+}
+.comment__replyingTo {
+  color: var(--color-moderate-blue);
 }
 
 .CRUD__text--reply {

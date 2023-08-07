@@ -55,6 +55,9 @@ textarea {
   margin-left: 0.875rem;
   font-weight: var(--font-weight-bold);
 }
+.username__you {
+  font-size: 0.75rem;
+}
 
 .comment__content {
   line-height: 1.5rem;
@@ -66,6 +69,9 @@ textarea {
 }
 .comment__replyingTo {
   font-weight: var(--font-weight-bolder);
+}
+.comment--you > .comment__createdAt {
+  margin-left: 1rem;
 }
 
 .new-comment__input {
@@ -137,6 +143,10 @@ main {
 .comment {
   padding: clamp(1rem, 4.2666666667vw, 1.5625rem);
   border-radius: 0.5rem;
+}
+
+.username__you {
+  padding: 0.125rem 0.375rem;
 }
 
 .vote {
@@ -223,7 +233,7 @@ main {
   gap: clamp(1rem, 4.2666666667vw, 1.5rem);
 }
 
-.username {
+.username--you {
   display: flex;
   flex-direction: row;
   gap: 0.25rem;
@@ -484,6 +494,11 @@ body {
 }
 .new-comment__send:hover {
   background-color: var(--color-light-grayish-blue);
+}
+
+.username__you {
+  background-color: var(--color-moderate-blue);
+  color: var(--color-white);
 }
 
 /*# sourceMappingURL=/main.77bb5cfd.css.map */

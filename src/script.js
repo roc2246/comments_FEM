@@ -60,17 +60,20 @@ for (let comment in data.comments) {
     username.classList.add("username");
     container.appendChild(username);
 
-    const name = document.createElement("span");
-    name.classList.add("username__name");
-    name.innerText = post.user.username;
-    username.appendChild(name);
-
-    // Creates indicator for current user
+    // Creates indicator/name for current user
     if (post.user.username === currentUser.username) {
+      username.classList.add("username--you")
+      const name = document.createElement("span");
+      name.classList.add("username__name");
+      name.innerText = post.user.username;
+      username.appendChild(name);
+
       const indicator = document.createElement("span");
       indicator.classList.add("username__you");
       indicator.innerText = "you";
       username.appendChild(indicator);
+    } else {
+      username.innerText = post.user.username;
     }
 
     // Creates when post was created at
@@ -254,7 +257,6 @@ for (let comment in data.comments) {
     }
   }
 }
-
 
 const container = {
   replies: document.querySelectorAll(".comment--reply:not(.comment--you)"),

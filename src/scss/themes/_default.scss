@@ -82,3 +82,10 @@ color:var(--color-moderate-blue);
     }
   }
 }
+
+.username{
+  &__you{
+    background-color: var(--color-moderate-blue);
+    color: var(--color-white);
+  }
+}

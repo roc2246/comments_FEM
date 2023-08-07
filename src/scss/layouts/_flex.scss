@@ -29,7 +29,7 @@ main{
     gap: clamp(rem(16px), vw(16px), rem(24px));
 }
 
-.username {
+.username--you {
     display: flex;
     flex-direction: row;
     gap: .25rem;

@@ -4,3 +4,9 @@
   padding: clamp(rem(16px), vw(16px), rem(25px));
   border-radius: 0.5rem;
 }
+
+.username{
+  &__you{
+    padding: rem(2px) rem(6px);
+  }
+}

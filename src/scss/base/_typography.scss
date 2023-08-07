@@ -6,7 +6,11 @@
 .username {
   margin-left: rem(14px);
   font-weight: var(--font-weight-bold);
+&__you{
+  font-size: rem(12px);
 }
+}
+
 .comment {
   &__content {
     line-height: 1.5rem;
@@ -16,6 +20,12 @@
   }
   &__replyingTo{
     font-weight: var(--font-weight-bolder);
+  }
+
+  &--you{
+    & >   .comment__createdAt{
+      margin-left: 1rem;
+    }
   }
 }
 

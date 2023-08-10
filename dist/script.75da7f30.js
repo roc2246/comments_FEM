@@ -203,6 +203,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   }
 //   // Call the function to retrieve the data
 //   fetchData();
+// COMMENT GENERATION 
 var _loop = function _loop(comment) {
   var container = document.getElementById("comment-wrapper");
   var currentUser = _data.default.currentUser,
@@ -421,6 +422,8 @@ var CRUD = {
   reply: document.getElementsByClassName("CRUD--reply")
 };
 
+// TOGGLES
+
 // Toggles edit mode
 var _loop2 = function _loop2() {
   var comment = container.userComments[x];
@@ -490,6 +493,8 @@ container.modal.addEventListener("click", function () {
     deleteModal.style.display = "none";
   }
 });
+
+// CRUD
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

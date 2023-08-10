@@ -22,6 +22,9 @@ import data from "./data.json";
 //   // Call the function to retrieve the data
 //   fetchData();
 
+
+// COMMENT GENERATION 
+
 for (let comment in data.comments) {
   const container = document.getElementById("comment-wrapper");
   const { currentUser, comments } = data;
@@ -273,6 +276,8 @@ const CRUD = {
   reply: document.getElementsByClassName("CRUD--reply"),
 };
 
+// TOGGLES
+
 // Toggles edit mode
 for (let x = 0; x < container.userComments.length; x++) {
   const comment = container.userComments[x];
@@ -345,3 +350,6 @@ container.modal.addEventListener("click", () => {
     deleteModal.style.display = "none";
   }
 });
+
+
+// CRUD

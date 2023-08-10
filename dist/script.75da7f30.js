@@ -475,7 +475,7 @@ var _loop5 = function _loop5() {
   var deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", function () {
     if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
-      deleteModal.style.display = "block";
+      deleteModal.style.display = "flex";
     }
   });
 };
@@ -486,7 +486,7 @@ for (var _x3 = 0; _x3 < CRUD.delete.length; _x3++) {
 // Closes delete modal
 container.modal.addEventListener("click", function () {
   var deleteModal = document.getElementsByClassName("modal")[0];
-  if (deleteModal.style.display === "block") {
+  if (deleteModal.style.display === "flex") {
     deleteModal.style.display = "none";
   }
 });
@@ -515,7 +515,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50307" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52647" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

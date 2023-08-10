@@ -6,9 +6,9 @@
 .username {
   margin-left: rem(14px);
   font-weight: var(--font-weight-bold);
-&__you{
-  font-size: rem(12px);
-}
+  &__you {
+    font-size: rem(12px);
+  }
 }
 
 .comment {
@@ -18,12 +18,12 @@
       margin-top: rem(15px);
     }
   }
-  &__replyingTo{
+  &__replyingTo {
     font-weight: var(--font-weight-bolder);
   }
 
-  &--you{
-    & >   .comment__createdAt{
+  &--you {
+    & > .comment__createdAt {
       margin-left: 1rem;
     }
   }
@@ -33,10 +33,9 @@
   &__input {
     font-size: rem(16px);
   }
-  &__send{
+  &__send {
     font-size: rem(16px);
     font-weight: var(--font-weight-bolder);
-
   }
 }
 
@@ -55,6 +54,18 @@
       font-weight: var(--font-weight-bolder);
     }
     &--delete {
+      font-weight: var(--font-weight-bolder);
+    }
+  }
+}
+
+.modal {
+  &__paragraph {
+    line-height: 1.5rem;
+    max-width: rem(306px);
+  }
+  &__btn-box {
+    & > * {
       font-weight: var(--font-weight-bolder);
     }
   }

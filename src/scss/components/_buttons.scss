@@ -24,3 +24,11 @@
     margin-left: auto;
   }
 }
+
+.modal{
+  &__btn-box{
+    & > *{
+      width: 50%;
+    }
+  }
+}

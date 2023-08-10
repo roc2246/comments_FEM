@@ -71,8 +71,11 @@ color:var(--color-moderate-blue);
 }
 
 .new-comment {
-    &__input:focus{
+    &__input{
+      border-color: var(--color-very-light-gray);
+      &:focus{
         border-color: var(--color-moderate-blue);
+    }
     }
   &__send {
     color: var(--color-white);
@@ -87,5 +90,25 @@ color:var(--color-moderate-blue);
   &__you{
     background-color: var(--color-moderate-blue);
     color: var(--color-white);
+  }
+}
+
+.reply-wrapper__ruler{
+  border-color: var(--color-light-gray);
+}
+
+.modal{
+  &__paragraph{
+    color: var(--color-grayish-blue);
+  }
+  &__btn-box{
+    &--delete{
+      color: var(--color-white);
+      background-color: var(--color-soft-red);
+    }
+    &--cancel{
+      color: var(--color-white);
+      background-color: var(--color-grayish-blue);
+    }
   }
 }

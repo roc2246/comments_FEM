@@ -1,47 +1,61 @@
 @use "utilities/functions" as *;
 
-.vote{
+.vote {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  &__btn {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    &__btn{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    @media (min-width: 600px) {
-        flex-direction: column;
-      }
+  }
+  @media (min-width: 600px) {
+    flex-direction: column;
+  }
 }
 
-main{
-    display: flex;
-    flex-direction: column;
-    gap: clamp(rem(16px), vw(16px), rem(24px));
-
+main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(rem(16px), vw(16px), rem(24px));
 }
 
-#comment-wrapper{
-    display: flex;
-    flex-direction: column;
-    gap: clamp(rem(16px), vw(16px), rem(24px));
+#comment-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(rem(16px), vw(16px), rem(24px));
 }
 
 .username--you {
-    display: flex;
-    flex-direction: row;
-    gap: .25rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
 }
 
-.CRUD-container{
-    display: flex;
-    flex-direction: row;
-    gap: .75rem;
+.CRUD-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
 }
 
-.CRUD{
+.CRUD {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.modal {
+    justify-content: center;
+    align-items: center;
+  &__btn-box {
     display: flex;
-    gap: .25rem;
+    gap: rem(12px);
+  }
+}
+
+.modal-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

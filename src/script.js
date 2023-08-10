@@ -333,7 +333,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
       deleteModal.style.display === "none" ||
       deleteModal.style.display === ""
     ) {
-      deleteModal.style.display = "block";
+      deleteModal.style.display = "flex";
     }
   });
 }
@@ -341,7 +341,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
 // Closes delete modal
 container.modal.addEventListener("click", () => {
   const deleteModal = document.getElementsByClassName("modal")[0];
-  if (deleteModal.style.display === "block") {
+  if (deleteModal.style.display === "flex") {
     deleteModal.style.display = "none";
   }
 });

@@ -22,8 +22,7 @@ import data from "./data.json";
 //   // Call the function to retrieve the data
 //   fetchData();
 
-
-// COMMENT GENERATION 
+// COMMENT GENERATION
 
 for (let comment in data.comments) {
   const container = document.getElementById("comment-wrapper");
@@ -65,7 +64,7 @@ for (let comment in data.comments) {
 
     // Creates indicator/name for current user
     if (post.user.username === currentUser.username) {
-      username.classList.add("username--you")
+      username.classList.add("username--you");
       const name = document.createElement("span");
       name.classList.add("username__name");
       name.innerText = post.user.username;
@@ -269,8 +268,10 @@ const container = {
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
   form: {
-    comment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)")
-  }
+    comment: document.querySelector(
+      ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
+    ),
+  },
 };
 
 const CRUD = {
@@ -354,33 +355,43 @@ container.modal.addEventListener("click", () => {
   }
 });
 
-
 // CRUD
 
 // NEW COMMENT
-container.form.comment.addEventListener("submit", (e)=>{
-  e.preventDefault()
-  
-  const {comments, currentUser} = data
+container.form.comment.addEventListener("submit", (e) => {
+  e.preventDefault();
 
- const newComment = { 
+  const { comments, currentUser } = data;
+
+  const newComment = {
+    content: document.querySelector(
+      ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input"
+    ).value,
+    createdAt: "TEST",
     id: null,
-    primaryClass: "comment",
-    secondaryClass: "comment--you",
-    avatar: currentUser.image.png,
-    username: currentUser.username,
-    postDate: "TEST",
-    content: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input").value,
-    score : 0
-  }
+    replies: {},
+    score: 0,
+    user: {
+      image: {
+        png: currentUser.image.png,
+        webp: currentUser.image.webp,
+      },
+      username: currentUser.username,
+    }
+  };
 
-
-  let lastComment 
-  if(comments[comments.length - 1].replies.length > 0) {
-    lastComment = comments[comments.length - 1].replies[comments[comments.length - 1].replies.length-1]
+  let lastComment;
+  if (comments[comments.length - 1].replies.length > 0) {
+    lastComment =
+      comments[comments.length - 1].replies[
+        comments[comments.length - 1].replies.length - 1
+      ];
   } else {
-    lastComment = comments[comments.length - 1]
+    lastComment = comments[comments.length - 1];
   }
-  newComment.id = lastComment.id + 1
+  newComment.id = lastComment.id + 1;
 
-})
+  comments[newComment.id] = newComment
+
+  
+});

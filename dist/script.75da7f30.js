@@ -203,7 +203,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   }
 //   // Call the function to retrieve the data
 //   fetchData();
-// COMMENT GENERATION 
+// COMMENT GENERATION
 var _loop = function _loop(comment) {
   var container = document.getElementById("comment-wrapper");
   var currentUser = _data.default.currentUser,
@@ -505,14 +505,18 @@ container.form.comment.addEventListener("submit", function (e) {
   var comments = _data.default.comments,
     currentUser = _data.default.currentUser;
   var newComment = {
-    id: null,
-    primaryClass: "comment",
-    secondaryClass: "comment--you",
-    avatar: currentUser.image.png,
-    username: currentUser.username,
-    postDate: "TEST",
     content: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input").value,
-    score: 0
+    createdAt: "TEST",
+    id: null,
+    replies: {},
+    score: 0,
+    user: {
+      image: {
+        png: currentUser.image.png,
+        webp: currentUser.image.webp
+      },
+      username: currentUser.username
+    }
   };
   var lastComment;
   if (comments[comments.length - 1].replies.length > 0) {
@@ -521,6 +525,7 @@ container.form.comment.addEventListener("submit", function (e) {
     lastComment = comments[comments.length - 1];
   }
   newComment.id = lastComment.id + 1;
+  comments[newComment.id] = newComment;
 });
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -547,7 +552,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51731" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53383" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

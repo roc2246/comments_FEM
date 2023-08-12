@@ -268,6 +268,9 @@ const container = {
   ),
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
+  form: {
+    comment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)")
+  }
 };
 
 const CRUD = {
@@ -353,3 +356,31 @@ container.modal.addEventListener("click", () => {
 
 
 // CRUD
+
+// NEW COMMENT
+container.form.comment.addEventListener("submit", (e)=>{
+  e.preventDefault()
+  
+  const {comments, currentUser} = data
+
+ const newComment = { 
+    id: null,
+    primaryClass: "comment",
+    secondaryClass: "comment--you",
+    avatar: currentUser.image.png,
+    username: currentUser.username,
+    postDate: "TEST",
+    content: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input").value,
+    score : 0
+  }
+
+
+  let lastComment 
+  if(comments[comments.length - 1].replies.length > 0) {
+    lastComment = comments[comments.length - 1].replies[comments[comments.length - 1].replies.length-1]
+  } else {
+    lastComment = comments[comments.length - 1]
+  }
+  newComment.id = lastComment.id + 1
+
+})

@@ -186,23 +186,6 @@ module.exports = {
 var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // Delete once data is on server
-// ///////////////////////////////////
-// async function fetchData() {
-//     try {
-//       const response = await fetch('data.json');
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       const data = await response.json();
-//       // Use the fetched data here
-//       console.log(data);
-//     } catch (error) {
-//       // Handle errors
-//       console.error('Fetch error:', error);
-//     }
-//   }
-//   // Call the function to retrieve the data
-//   fetchData();
 // COMMENT GENERATION
 var _loop = function _loop(comment) {
   var container = document.getElementById("comment-wrapper");
@@ -498,12 +481,134 @@ container.modal.addEventListener("click", function () {
 });
 
 // CRUD
+// ADDS NEW COMMENT TO DOM
+function newPost(type, source) {
+  var container = document.createElement("div");
+  container.classList.add("comment");
+  if (type === "reply") {
+    container.classList.add("comment--reply");
+  } else if (type === "replytoreply") {
+    container.classList.add("comment--reply");
+    container.classList.add("comment--replytoreply");
+  }
+  container.classList.add("comment--you");
+
+  // Creates avatar
+  var avatar = document.createElement("img");
+  avatar.classList.add("avatar");
+  avatar.classList.add("avatar--comment");
+  avatar.src = source.user.image.png;
+  avatar.alt = source.user.username;
+  container.appendChild(avatar);
+
+  // Creates username
+  var username = document.createElement("span");
+  username.classList.add("username");
+  container.appendChild(username);
+
+  // Creates indicator/name for current user
+  username.classList.add("username--you");
+  var name = document.createElement("span");
+  name.classList.add("username__name");
+  name.innerText = source.user.username;
+  username.appendChild(name);
+  var indicator = document.createElement("span");
+  indicator.classList.add("username__you");
+  indicator.innerText = "you";
+  username.appendChild(indicator);
+
+  // Creates when post was created at
+  var createdAt = document.createElement("span");
+  createdAt.classList.add("comment__createdAt");
+  createdAt.innerText = source.createdAt;
+  container.appendChild(createdAt);
+
+  // Created container for content
+  var content = document.createElement("p");
+  content.classList.add("comment__content");
+
+  // Creates message for content
+  var message = document.createElement("span");
+  message.innerText = source.content;
+  message.classList.add("comment__message");
+  container.appendChild(content);
+  content.appendChild(message);
+
+  // Creates form to update comment or reply
+  var updateForm = document.createElement("form");
+  updateForm.classList.add("new-comment");
+  updateForm.classList.add("new-comment--update");
+  var updateInput = document.createElement("textarea");
+  updateInput.classList.add("new-comment__input");
+  updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+  updateForm.appendChild(updateInput);
+  var updateSend = document.createElement("button");
+  updateSend.classList.add("btn");
+  updateSend.classList.add("new-comment__send");
+  updateSend.classList.add("new-comment__send--update");
+  updateSend.innerText = "UPDATE";
+  updateForm.appendChild(updateSend);
+  container.appendChild(updateForm);
+
+  // Creates form to vote on comment or reply
+  var vote = document.createElement("form");
+  vote.classList.add("vote");
+  container.appendChild(vote);
+  var upvote = document.createElement("button");
+  upvote.classList.add("vote__btn");
+  upvote.classList.add("vote__btn--upvote");
+  vote.appendChild(upvote);
+  var plus = document.createElement("img");
+  plus.classList.add("vote__img");
+  plus.classList.add("vote__img--plus");
+  plus.src = "./images/icon-plus.svg";
+  upvote.appendChild(plus);
+  var score = document.createElement("span");
+  score.classList.add("vote__score");
+  score.innerText = source.score;
+  vote.appendChild(score);
+  var downvote = document.createElement("button");
+  downvote.classList.add("vote__btn");
+  downvote.classList.add("vote__btn--downvote");
+  vote.appendChild(downvote);
+  var minus = document.createElement("img");
+  minus.classList.add("vote__img");
+  minus.classList.add("vote__img--minus");
+  minus.src = "./images/icon-minus.svg";
+  downvote.appendChild(minus);
+
+  // Creates CRUD buttons
+  var CRUD = document.createElement("div");
+  CRUD.classList.add("CRUD-container");
+  container.appendChild(CRUD);
+  function createCRUDbtn(type) {
+    var btn = document.createElement("button");
+    btn.classList.add("CRUD");
+    btn.classList.add("CRUD--".concat(type));
+    CRUD.appendChild(btn);
+    var btnIcon = document.createElement("img");
+    btnIcon.classList.add("CRUD__icon");
+    btnIcon.classList.add("CRUD__icon--".concat(type));
+    btnIcon.src = "./images/icon-".concat(type, ".svg");
+    btn.appendChild(btnIcon);
+    var btnTxt = document.createElement("span");
+    btnTxt.classList.add("CRUD__text");
+    btnTxt.classList.add("CRUD__text--".concat(type));
+    btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
+    btn.appendChild(btnTxt);
+    return btn;
+  }
+  CRUD.appendChild(createCRUDbtn("delete"));
+  CRUD.appendChild(createCRUDbtn("edit"));
+  return container;
+}
 
 // NEW COMMENT
 container.form.comment.addEventListener("submit", function (e) {
   e.preventDefault();
   var comments = _data.default.comments,
     currentUser = _data.default.currentUser;
+  var wrapper = document.getElementById("comment-wrapper");
   var newComment = {
     content: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input").value,
     createdAt: "TEST",
@@ -526,6 +631,7 @@ container.form.comment.addEventListener("submit", function (e) {
   }
   newComment.id = lastComment.id + 1;
   comments[newComment.id] = newComment;
+  wrapper.appendChild(newPost("comment", newComment));
 });
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

@@ -172,38 +172,20 @@ for (let comment in data.comments) {
       container.classList.add("comment--you");
     }
 
-    // Creates avatar
-    const avatar = element.avatar(post);
-    container.appendChild(avatar);
-
-    // Creates username
-    const username = element.username(post);
-    container.appendChild(username);
-
-    // Creates when post was created at
-    const createdAt = element.createdAt(post);
-    container.appendChild(createdAt);
-
-    // Created container for content
-    const content = element.content(post);
-    container.appendChild(content);
-
-    // Creates form to update comment or reply
-    if (post.user.username === currentUser.username) {
-      const updateForm = element.updateForm(post);
-      container.appendChild(updateForm);
+    const newComment = {
+      avatar: element.avatar(post),
+      username: element.username(post),
+      createdAt: element.createdAt(post),
+      content: element.content(post),
+      vote: element.vote(post),
+      CRUD: element.CRUD(post),
+    };
+    for (let ele in newComment) {
+      container.append(newComment[ele]);
     }
-
-    // Creates form to vote on comment or reply
-    const vote = element.vote(post);
-    container.appendChild(vote);
-
-    // Creates CRUD buttons
-    const CRUD = element.CRUD(post);
     if (type === "reply") {
-      CRUD.classList.add("CRUD-container--reply");
+      newComment.CRUD.classList.add("CRUD-container--reply");
     }
-    container.appendChild(CRUD);
 
     return container;
   }
@@ -282,6 +264,9 @@ const container = {
   form: {
     comment: document.querySelector(
       ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
+    ),
+    reply: document.querySelectorAll(
+      ".new-comment--reply:not(.new-comment--replytoreply)"
     ),
   },
 };
@@ -381,38 +366,21 @@ function newPost(type, source) {
   }
   container.classList.add("comment--you");
 
-  // Creates avatar
-  const avatar = element.avatar(source);
-  container.appendChild(avatar);
+  const newComment = {
+    avatar: element.avatar(source),
+    username: element.username(source),
+    createdAt: element.createdAt(source),
+    content: element.content(source),
+    vote: element.vote(source),
+    CRUD: element.CRUD(source),
+  };
 
-  // Creates username
-  const username = element.username(source);
-  container.appendChild(username);
-
-  // Creates when post was created at
-  const createdAt = element.createdAt(source);
-  container.appendChild(createdAt);
-
-  // Created container for content
-  const content = element.content(source);
-  content.classList.add("comment__content");
-
-  container.appendChild(content);
-
-  // Creates form to update comment or reply
-  const updateForm = element.updateForm(source);
-  container.appendChild(updateForm);
-
-  // Creates form to vote on comment or reply
-  const vote = element.vote(source);
-  container.appendChild(vote);
-
-  // Creates CRUD buttons
-   const CRUD = element.CRUD(source);
-   if (type === "reply") {
-     CRUD.classList.add("CRUD-container--reply");
-   }
-   container.appendChild(CRUD);
+  for (let ele in newComment) {
+    container.append(newComment[ele]);
+  }
+  if (type === "reply") {
+    newComment.CRUD.classList.add("CRUD-container--reply");
+  }
 
   return container;
 }
@@ -455,3 +423,65 @@ container.form.comment.addEventListener("submit", (e) => {
 
   wrapper.appendChild(newPost("comment", newComment));
 });
+
+// NEW REPLY
+for (let x = 0; x < container.form.reply.length; x++) {
+  const reply = container.form.reply[x];
+  reply.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const { comments, currentUser } = data;
+    const replyingTo = document.querySelectorAll(
+      ".comment:not(.comment--reply) > .username"
+    )[x].innerText;
+    const commentWrapper = document.getElementById("comment-wrapper");
+    const replyWrapper = reply.previousElementSibling;
+    const newReply = {
+      id: null,
+      content: `${
+        document.querySelectorAll(
+          ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input"
+        )[x].value
+      }`,
+      createdAt: "TEST",
+      replyingTo: replyingTo,
+      replies: {},
+      score: 0,
+      user: {
+        image: {
+          png: currentUser.image.png,
+          webp: currentUser.image.webp,
+        },
+        username: currentUser.username,
+      },
+    };
+
+    let lastComment;
+    if (comments[comments.length - 1].replies.length > 0) {
+      lastComment =
+        comments[comments.length - 1].replies[
+          comments[comments.length - 1].replies.length - 1
+        ];
+    } else {
+      lastComment = comments[comments.length - 1];
+    }
+    newReply.id = lastComment.id + 1;
+
+    comments[x].replies[newReply.id] = newReply;
+
+    if (comments[x].replies.length === 0) {
+      // const replyCont = document.createElement("div");
+      // replyCont.classList.add("reply-wrapper");
+      // container.appendChild(replyCont);
+  
+      // const hr = document.createElement("hr");
+      // hr.classList.add("reply-wrapper__ruler");
+      // replyCont.appendChild(hr);
+  
+
+      replyWrapper.appendChild(newPost("reply", newReply));
+    } else {
+      replyWrapper.appendChild(newPost("reply", newReply));
+    }
+  });
+}

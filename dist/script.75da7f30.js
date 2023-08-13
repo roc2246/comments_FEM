@@ -336,39 +336,20 @@ var _loop = function _loop(comment) {
     if (currentUser.username === post.user.username) {
       container.classList.add("comment--you");
     }
-
-    // Creates avatar
-    var avatar = element.avatar(post);
-    container.appendChild(avatar);
-
-    // Creates username
-    var username = element.username(post);
-    container.appendChild(username);
-
-    // Creates when post was created at
-    var createdAt = element.createdAt(post);
-    container.appendChild(createdAt);
-
-    // Created container for content
-    var content = element.content(post);
-    container.appendChild(content);
-
-    // Creates form to update comment or reply
-    if (post.user.username === currentUser.username) {
-      var updateForm = element.updateForm(post);
-      container.appendChild(updateForm);
+    var newComment = {
+      avatar: element.avatar(post),
+      username: element.username(post),
+      createdAt: element.createdAt(post),
+      content: element.content(post),
+      vote: element.vote(post),
+      CRUD: element.CRUD(post)
+    };
+    for (var ele in newComment) {
+      container.append(newComment[ele]);
     }
-
-    // Creates form to vote on comment or reply
-    var vote = element.vote(post);
-    container.appendChild(vote);
-
-    // Creates CRUD buttons
-    var CRUD = element.CRUD(post);
     if (type === "reply") {
-      CRUD.classList.add("CRUD-container--reply");
+      newComment.CRUD.classList.add("CRUD-container--reply");
     }
-    container.appendChild(CRUD);
     return container;
   }
   function createReplyForm(type) {
@@ -432,7 +413,8 @@ var container = {
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
   form: {
-    comment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)")
+    comment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)"),
+    reply: document.querySelectorAll(".new-comment--reply:not(.new-comment--replytoreply)")
   }
 };
 var CRUD = {
@@ -525,38 +507,20 @@ function newPost(type, source) {
     container.classList.add("comment--replytoreply");
   }
   container.classList.add("comment--you");
-
-  // Creates avatar
-  var avatar = element.avatar(source);
-  container.appendChild(avatar);
-
-  // Creates username
-  var username = element.username(source);
-  container.appendChild(username);
-
-  // Creates when post was created at
-  var createdAt = element.createdAt(source);
-  container.appendChild(createdAt);
-
-  // Created container for content
-  var content = element.content(source);
-  content.classList.add("comment__content");
-  container.appendChild(content);
-
-  // Creates form to update comment or reply
-  var updateForm = element.updateForm(source);
-  container.appendChild(updateForm);
-
-  // Creates form to vote on comment or reply
-  var vote = element.vote(source);
-  container.appendChild(vote);
-
-  // Creates CRUD buttons
-  var CRUD = element.CRUD(source);
-  if (type === "reply") {
-    CRUD.classList.add("CRUD-container--reply");
+  var newComment = {
+    avatar: element.avatar(source),
+    username: element.username(source),
+    createdAt: element.createdAt(source),
+    content: element.content(source),
+    vote: element.vote(source),
+    CRUD: element.CRUD(source)
+  };
+  for (var ele in newComment) {
+    container.append(newComment[ele]);
   }
-  container.appendChild(CRUD);
+  if (type === "reply") {
+    newComment.CRUD.classList.add("CRUD-container--reply");
+  }
   return container;
 }
 
@@ -590,6 +554,58 @@ container.form.comment.addEventListener("submit", function (e) {
   comments[newComment.id] = newComment;
   wrapper.appendChild(newPost("comment", newComment));
 });
+
+// NEW REPLY
+var _loop6 = function _loop6(_x4) {
+  var reply = container.form.reply[_x4];
+  reply.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var comments = _data.default.comments,
+      currentUser = _data.default.currentUser;
+    var replyingTo = document.querySelectorAll(".comment:not(.comment--reply) > .username")[_x4].innerText;
+    var commentWrapper = document.getElementById("comment-wrapper");
+    var replyWrapper = reply.previousElementSibling;
+    var newReply = {
+      id: null,
+      content: "".concat(document.querySelectorAll(".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input")[_x4].value),
+      createdAt: "TEST",
+      replyingTo: replyingTo,
+      replies: {},
+      score: 0,
+      user: {
+        image: {
+          png: currentUser.image.png,
+          webp: currentUser.image.webp
+        },
+        username: currentUser.username
+      }
+    };
+    var lastComment;
+    if (comments[comments.length - 1].replies.length > 0) {
+      lastComment = comments[comments.length - 1].replies[comments[comments.length - 1].replies.length - 1];
+    } else {
+      lastComment = comments[comments.length - 1];
+    }
+    newReply.id = lastComment.id + 1;
+    comments[_x4].replies[newReply.id] = newReply;
+    if (comments[_x4].replies.length === 0) {
+      // const replyCont = document.createElement("div");
+      // replyCont.classList.add("reply-wrapper");
+      // container.appendChild(replyCont);
+
+      // const hr = document.createElement("hr");
+      // hr.classList.add("reply-wrapper__ruler");
+      // replyCont.appendChild(hr);
+
+      replyWrapper.appendChild(newPost("reply", newReply));
+    } else {
+      replyWrapper.appendChild(newPost("reply", newReply));
+    }
+  });
+};
+for (var _x4 = 0; _x4 < container.form.reply.length; _x4++) {
+  _loop6(_x4);
+}
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -615,7 +631,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53383" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58314" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

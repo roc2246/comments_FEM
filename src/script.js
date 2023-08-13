@@ -1,6 +1,80 @@
 // Delete once data is on server
 import data from "./data.json";
 
+
+// Generates elements for posts
+const element = {
+  avatar: function (source) {
+    const avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--comment");
+    avatar.src = source.user.image.png;
+    avatar.alt = source.user.username;
+    return avatar;
+  },
+  username: function (source) {
+    const { currentUser } = data;
+
+    const username = document.createElement("span");
+    username.classList.add("username");
+    // Creates indicator/name for current user
+    if (source.user.username === currentUser.username) {
+      username.classList.add("username--you");
+      const name = document.createElement("span");
+      name.classList.add("username__name");
+      name.innerText = source.user.username;
+      username.appendChild(name);
+
+      const indicator = document.createElement("span");
+      indicator.classList.add("username__you");
+      indicator.innerText = "you";
+      username.appendChild(indicator);
+    } else {
+      username.innerText = source.user.username;
+    }
+    return username;
+  },
+  createdAt: function (source) {
+    const createdAt = document.createElement("span");
+    createdAt.classList.add("comment__createdAt");
+    createdAt.innerText = source.createdAt;
+    return createdAt;
+  },
+  vote: function (source) {
+    const vote = document.createElement("form");
+    vote.classList.add("vote");
+
+    const upvote = document.createElement("button");
+    upvote.classList.add("vote__btn");
+    upvote.classList.add("vote__btn--upvote");
+    vote.appendChild(upvote);
+
+    const plus = document.createElement("img");
+    plus.classList.add("vote__img");
+    plus.classList.add("vote__img--plus");
+    plus.src = "./images/icon-plus.svg";
+    upvote.appendChild(plus);
+
+    const score = document.createElement("span");
+    score.classList.add("vote__score");
+    score.innerText = source.score;
+    vote.appendChild(score);
+
+    const downvote = document.createElement("button");
+    downvote.classList.add("vote__btn");
+    downvote.classList.add("vote__btn--downvote");
+    vote.appendChild(downvote);
+
+    const minus = document.createElement("img");
+    minus.classList.add("vote__img");
+    minus.classList.add("vote__img--minus");
+    minus.src = "./images/icon-minus.svg";
+    downvote.appendChild(minus);
+
+    return vote;
+  },
+};
+
 // COMMENT GENERATION
 for (let comment in data.comments) {
   const container = document.getElementById("comment-wrapper");
@@ -28,40 +102,18 @@ for (let comment in data.comments) {
     }
 
     // Creates avatar
-    const avatar = document.createElement("img");
-    avatar.classList.add("avatar");
-    avatar.classList.add("avatar--comment");
-    avatar.src = post.user.image.png;
-    avatar.alt = post.user.username;
+    const avatar = element.avatar(post);
     container.appendChild(avatar);
 
     // Creates username
-    const username = document.createElement("span");
-    username.classList.add("username");
+    const username = element.username(post);
     container.appendChild(username);
 
-    // Creates indicator/name for current user
-    if (post.user.username === currentUser.username) {
-      username.classList.add("username--you");
-      const name = document.createElement("span");
-      name.classList.add("username__name");
-      name.innerText = post.user.username;
-      username.appendChild(name);
-
-      const indicator = document.createElement("span");
-      indicator.classList.add("username__you");
-      indicator.innerText = "you";
-      username.appendChild(indicator);
-    } else {
-      username.innerText = post.user.username;
-    }
-
     // Creates when post was created at
-    const createdAt = document.createElement("span");
-    createdAt.classList.add("comment__createdAt");
-    createdAt.innerText = post.createdAt;
+    const createdAt = element.createdAt(post);
     container.appendChild(createdAt);
 
+    
     // Created container for content
     const content = document.createElement("p");
     content.classList.add("comment__content");
@@ -71,8 +123,6 @@ for (let comment in data.comments) {
     message.innerText = post.content;
     message.classList.add("comment__message");
 
-    container.appendChild(content);
-
     // Creates who reply is replying to
     if (type === "reply") {
       const replyingTo = document.createElement("span");
@@ -81,6 +131,8 @@ for (let comment in data.comments) {
       content.appendChild(replyingTo);
     }
     content.appendChild(message);
+    container.appendChild(content);
+
 
     // Creates form to update comment or reply
     if (post.user.username === currentUser.username) {
@@ -104,36 +156,8 @@ for (let comment in data.comments) {
     }
 
     // Creates form to vote on comment or reply
-    const vote = document.createElement("form");
-    vote.classList.add("vote");
+    const vote = element.vote(post);
     container.appendChild(vote);
-
-    const upvote = document.createElement("button");
-    upvote.classList.add("vote__btn");
-    upvote.classList.add("vote__btn--upvote");
-    vote.appendChild(upvote);
-
-    const plus = document.createElement("img");
-    plus.classList.add("vote__img");
-    plus.classList.add("vote__img--plus");
-    plus.src = "./images/icon-plus.svg";
-    upvote.appendChild(plus);
-
-    const score = document.createElement("span");
-    score.classList.add("vote__score");
-    score.innerText = post.score;
-    vote.appendChild(score);
-
-    const downvote = document.createElement("button");
-    downvote.classList.add("vote__btn");
-    downvote.classList.add("vote__btn--downvote");
-    vote.appendChild(downvote);
-
-    const minus = document.createElement("img");
-    minus.classList.add("vote__img");
-    minus.classList.add("vote__img--minus");
-    minus.src = "./images/icon-minus.svg";
-    downvote.appendChild(minus);
 
     // Creates CRUD buttons
     const CRUD = document.createElement("div");
@@ -339,44 +363,24 @@ function newPost(type, source) {
   const container = document.createElement("div");
   container.classList.add("comment");
 
-  if(type === "reply"){
-    container.classList.add("comment--reply")
-  } else if (type === "replytoreply"){
-    container.classList.add("comment--reply")
-    container.classList.add("comment--replytoreply")
+  if (type === "reply") {
+    container.classList.add("comment--reply");
+  } else if (type === "replytoreply") {
+    container.classList.add("comment--reply");
+    container.classList.add("comment--replytoreply");
   }
   container.classList.add("comment--you");
 
-
   // Creates avatar
-  const avatar = document.createElement("img");
-  avatar.classList.add("avatar");
-  avatar.classList.add("avatar--comment");
-  avatar.src = source.user.image.png;
-  avatar.alt = source.user.username;
+  const avatar = element.avatar(source);
   container.appendChild(avatar);
 
   // Creates username
-  const username = document.createElement("span");
-  username.classList.add("username");
+  const username = element.username(source);
   container.appendChild(username);
 
-  // Creates indicator/name for current user
-  username.classList.add("username--you");
-  const name = document.createElement("span");
-  name.classList.add("username__name");
-  name.innerText = source.user.username;
-  username.appendChild(name);
-
-  const indicator = document.createElement("span");
-  indicator.classList.add("username__you");
-  indicator.innerText = "you";
-  username.appendChild(indicator);
-
   // Creates when post was created at
-  const createdAt = document.createElement("span");
-  createdAt.classList.add("comment__createdAt");
-  createdAt.innerText = source.createdAt;
+  const createdAt = element.createdAt(source);
   container.appendChild(createdAt);
 
   // Created container for content
@@ -411,36 +415,8 @@ function newPost(type, source) {
   container.appendChild(updateForm);
 
   // Creates form to vote on comment or reply
-  const vote = document.createElement("form");
-  vote.classList.add("vote");
+  const vote = element.vote(source);
   container.appendChild(vote);
-
-  const upvote = document.createElement("button");
-  upvote.classList.add("vote__btn");
-  upvote.classList.add("vote__btn--upvote");
-  vote.appendChild(upvote);
-
-  const plus = document.createElement("img");
-  plus.classList.add("vote__img");
-  plus.classList.add("vote__img--plus");
-  plus.src = "./images/icon-plus.svg";
-  upvote.appendChild(plus);
-
-  const score = document.createElement("span");
-  score.classList.add("vote__score");
-  score.innerText = source.score;
-  vote.appendChild(score);
-
-  const downvote = document.createElement("button");
-  downvote.classList.add("vote__btn");
-  downvote.classList.add("vote__btn--downvote");
-  vote.appendChild(downvote);
-
-  const minus = document.createElement("img");
-  minus.classList.add("vote__img");
-  minus.classList.add("vote__img--minus");
-  minus.src = "./images/icon-minus.svg";
-  downvote.appendChild(minus);
 
   // Creates CRUD buttons
   const CRUD = document.createElement("div");

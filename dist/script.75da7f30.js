@@ -192,6 +192,7 @@ var element = {
   content: function content(source) {
     // Creates message for content
     var content = document.createElement("p");
+    content.classList.add("comment__content");
     var message = document.createElement("span");
     message.innerText = source.content;
     message.classList.add("comment__message");
@@ -282,6 +283,35 @@ var element = {
     updateSend.innerText = "UPDATE";
     updateForm.appendChild(updateSend);
     return updateForm;
+  },
+  CRUD: function CRUD(source) {
+    var currentUser = _data.default.currentUser;
+    var CRUD = document.createElement("div");
+    CRUD.classList.add("CRUD-container");
+    function createCRUDbtn(type) {
+      var btn = document.createElement("button");
+      btn.classList.add("CRUD");
+      btn.classList.add("CRUD--".concat(type));
+      CRUD.appendChild(btn);
+      var btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add("CRUD__icon--".concat(type));
+      btnIcon.src = "./images/icon-".concat(type, ".svg");
+      btn.appendChild(btnIcon);
+      var btnTxt = document.createElement("span");
+      btnTxt.classList.add("CRUD__text");
+      btnTxt.classList.add("CRUD__text--".concat(type));
+      btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
+      btn.appendChild(btnTxt);
+      return btn;
+    }
+    if (source.user.username === currentUser.username) {
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
+    } else {
+      CRUD.appendChild(createCRUDbtn("reply"));
+    }
+    return CRUD;
   }
 };
 
@@ -321,7 +351,6 @@ var _loop = function _loop(comment) {
 
     // Created container for content
     var content = element.content(post);
-    content.classList.add("comment__content");
     container.appendChild(content);
 
     // Creates form to update comment or reply
@@ -335,35 +364,11 @@ var _loop = function _loop(comment) {
     container.appendChild(vote);
 
     // Creates CRUD buttons
-    var CRUD = document.createElement("div");
-    CRUD.classList.add("CRUD-container");
+    var CRUD = element.CRUD(post);
     if (type === "reply") {
       CRUD.classList.add("CRUD-container--reply");
     }
     container.appendChild(CRUD);
-    function createCRUDbtn(type) {
-      var btn = document.createElement("button");
-      btn.classList.add("CRUD");
-      btn.classList.add("CRUD--".concat(type));
-      CRUD.appendChild(btn);
-      var btnIcon = document.createElement("img");
-      btnIcon.classList.add("CRUD__icon");
-      btnIcon.classList.add("CRUD__icon--".concat(type));
-      btnIcon.src = "./images/icon-".concat(type, ".svg");
-      btn.appendChild(btnIcon);
-      var btnTxt = document.createElement("span");
-      btnTxt.classList.add("CRUD__text");
-      btnTxt.classList.add("CRUD__text--".concat(type));
-      btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
-      btn.appendChild(btnTxt);
-      return btn;
-    }
-    if (post.user.username === currentUser.username) {
-      CRUD.appendChild(createCRUDbtn("delete"));
-      CRUD.appendChild(createCRUDbtn("edit"));
-    } else {
-      CRUD.appendChild(createCRUDbtn("reply"));
-    }
     return container;
   }
   function createReplyForm(type) {
@@ -547,28 +552,11 @@ function newPost(type, source) {
   container.appendChild(vote);
 
   // Creates CRUD buttons
-  var CRUD = document.createElement("div");
-  CRUD.classList.add("CRUD-container");
-  container.appendChild(CRUD);
-  function createCRUDbtn(type) {
-    var btn = document.createElement("button");
-    btn.classList.add("CRUD");
-    btn.classList.add("CRUD--".concat(type));
-    CRUD.appendChild(btn);
-    var btnIcon = document.createElement("img");
-    btnIcon.classList.add("CRUD__icon");
-    btnIcon.classList.add("CRUD__icon--".concat(type));
-    btnIcon.src = "./images/icon-".concat(type, ".svg");
-    btn.appendChild(btnIcon);
-    var btnTxt = document.createElement("span");
-    btnTxt.classList.add("CRUD__text");
-    btnTxt.classList.add("CRUD__text--".concat(type));
-    btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
-    btn.appendChild(btnTxt);
-    return btn;
+  var CRUD = element.CRUD(source);
+  if (type === "reply") {
+    CRUD.classList.add("CRUD-container--reply");
   }
-  CRUD.appendChild(createCRUDbtn("delete"));
-  CRUD.appendChild(createCRUDbtn("edit"));
+  container.appendChild(CRUD);
   return container;
 }
 

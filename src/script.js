@@ -6,6 +6,7 @@ const element = {
   content: function (source) {
     // Creates message for content
     const content = document.createElement("p");
+    content.classList.add("comment__content");
     const message = document.createElement("span");
     message.innerText = source.content;
     message.classList.add("comment__message");
@@ -107,8 +108,42 @@ const element = {
     updateSend.innerText = "UPDATE";
     updateForm.appendChild(updateSend);
 
-    return updateForm
-  }
+    return updateForm;
+  },
+  CRUD: function (source) {
+    const { currentUser } = data;
+
+    const CRUD = document.createElement("div");
+    CRUD.classList.add("CRUD-container");
+
+    function createCRUDbtn(type) {
+      const btn = document.createElement("button");
+      btn.classList.add("CRUD");
+      btn.classList.add(`CRUD--${type}`);
+      CRUD.appendChild(btn);
+
+      const btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add(`CRUD__icon--${type}`);
+      btnIcon.src = `./images/icon-${type}.svg`;
+      btn.appendChild(btnIcon);
+
+      const btnTxt = document.createElement("span");
+      btnTxt.classList.add("CRUD__text");
+      btnTxt.classList.add(`CRUD__text--${type}`);
+      btnTxt.innerText = `${type.charAt(0).toUpperCase()}${type.slice(1)}`;
+      btn.appendChild(btnTxt);
+
+      return btn;
+    }
+    if (source.user.username === currentUser.username) {
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
+    } else {
+      CRUD.appendChild(createCRUDbtn("reply"));
+    }
+    return CRUD;
+  },
 };
 
 // COMMENT GENERATION
@@ -151,13 +186,11 @@ for (let comment in data.comments) {
 
     // Created container for content
     const content = element.content(post);
-    content.classList.add("comment__content");
-
     container.appendChild(content);
 
     // Creates form to update comment or reply
     if (post.user.username === currentUser.username) {
-     const updateForm = element.updateForm(post)
+      const updateForm = element.updateForm(post);
       container.appendChild(updateForm);
     }
 
@@ -166,40 +199,11 @@ for (let comment in data.comments) {
     container.appendChild(vote);
 
     // Creates CRUD buttons
-    const CRUD = document.createElement("div");
-    CRUD.classList.add("CRUD-container");
+    const CRUD = element.CRUD(post);
     if (type === "reply") {
       CRUD.classList.add("CRUD-container--reply");
     }
     container.appendChild(CRUD);
-
-    function createCRUDbtn(type) {
-      const btn = document.createElement("button");
-      btn.classList.add("CRUD");
-      btn.classList.add(`CRUD--${type}`);
-      CRUD.appendChild(btn);
-
-      const btnIcon = document.createElement("img");
-      btnIcon.classList.add("CRUD__icon");
-      btnIcon.classList.add(`CRUD__icon--${type}`);
-      btnIcon.src = `./images/icon-${type}.svg`;
-      btn.appendChild(btnIcon);
-
-      const btnTxt = document.createElement("span");
-      btnTxt.classList.add("CRUD__text");
-      btnTxt.classList.add(`CRUD__text--${type}`);
-      btnTxt.innerText = `${type.charAt(0).toUpperCase()}${type.slice(1)}`;
-      btn.appendChild(btnTxt);
-
-      return btn;
-    }
-
-    if (post.user.username === currentUser.username) {
-      CRUD.appendChild(createCRUDbtn("delete"));
-      CRUD.appendChild(createCRUDbtn("edit"));
-    } else {
-      CRUD.appendChild(createCRUDbtn("reply"));
-    }
 
     return container;
   }
@@ -389,14 +393,14 @@ function newPost(type, source) {
   const createdAt = element.createdAt(source);
   container.appendChild(createdAt);
 
- // Created container for content
- const content = element.content(source);
- content.classList.add("comment__content");
+  // Created container for content
+  const content = element.content(source);
+  content.classList.add("comment__content");
 
- container.appendChild(content);
+  container.appendChild(content);
 
   // Creates form to update comment or reply
-  const updateForm = element.updateForm(source)
+  const updateForm = element.updateForm(source);
   container.appendChild(updateForm);
 
   // Creates form to vote on comment or reply
@@ -404,33 +408,11 @@ function newPost(type, source) {
   container.appendChild(vote);
 
   // Creates CRUD buttons
-  const CRUD = document.createElement("div");
-  CRUD.classList.add("CRUD-container");
-  container.appendChild(CRUD);
-
-  function createCRUDbtn(type) {
-    const btn = document.createElement("button");
-    btn.classList.add("CRUD");
-    btn.classList.add(`CRUD--${type}`);
-    CRUD.appendChild(btn);
-
-    const btnIcon = document.createElement("img");
-    btnIcon.classList.add("CRUD__icon");
-    btnIcon.classList.add(`CRUD__icon--${type}`);
-    btnIcon.src = `./images/icon-${type}.svg`;
-    btn.appendChild(btnIcon);
-
-    const btnTxt = document.createElement("span");
-    btnTxt.classList.add("CRUD__text");
-    btnTxt.classList.add(`CRUD__text--${type}`);
-    btnTxt.innerText = `${type.charAt(0).toUpperCase()}${type.slice(1)}`;
-    btn.appendChild(btnTxt);
-
-    return btn;
-  }
-
-  CRUD.appendChild(createCRUDbtn("delete"));
-  CRUD.appendChild(createCRUDbtn("edit"));
+   const CRUD = element.CRUD(source);
+   if (type === "reply") {
+     CRUD.classList.add("CRUD-container--reply");
+   }
+   container.appendChild(CRUD);
 
   return container;
 }

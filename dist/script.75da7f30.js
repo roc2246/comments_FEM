@@ -189,33 +189,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Generates elements for posts
 var element = {
-  avatar: function avatar(source) {
-    var avatar = document.createElement("img");
-    avatar.classList.add("avatar");
-    avatar.classList.add("avatar--comment");
-    avatar.src = source.user.image.png;
-    avatar.alt = source.user.username;
-    return avatar;
-  },
-  username: function username(source) {
-    var currentUser = _data.default.currentUser;
-    var username = document.createElement("span");
-    username.classList.add("username");
-    // Creates indicator/name for current user
-    if (source.user.username === currentUser.username) {
-      username.classList.add("username--you");
-      var name = document.createElement("span");
-      name.classList.add("username__name");
-      name.innerText = source.user.username;
-      username.appendChild(name);
-      var indicator = document.createElement("span");
-      indicator.classList.add("username__you");
-      indicator.innerText = "you";
-      username.appendChild(indicator);
-    } else {
-      username.innerText = source.user.username;
+  content: function content(source) {
+    // Creates message for content
+    var content = document.createElement("p");
+    var message = document.createElement("span");
+    message.innerText = source.content;
+    message.classList.add("comment__message");
+
+    // Creates who reply is replying to
+    if (source.replyingTo !== undefined) {
+      var replyingTo = document.createElement("span");
+      replyingTo.innerText = "@".concat(source.replyingTo, " ");
+      replyingTo.classList.add("comment__replyingTo");
+      content.appendChild(replyingTo);
     }
-    return username;
+    content.appendChild(message);
+    return content;
   },
   createdAt: function createdAt(source) {
     var createdAt = document.createElement("span");
@@ -249,6 +238,50 @@ var element = {
     minus.src = "./images/icon-minus.svg";
     downvote.appendChild(minus);
     return vote;
+  },
+  avatar: function avatar(source) {
+    var avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--comment");
+    avatar.src = source.user.image.png;
+    avatar.alt = source.user.username;
+    return avatar;
+  },
+  username: function username(source) {
+    var currentUser = _data.default.currentUser;
+    var username = document.createElement("span");
+    username.classList.add("username");
+    // Creates indicator/name for current user
+    if (source.user.username === currentUser.username) {
+      username.classList.add("username--you");
+      var name = document.createElement("span");
+      name.classList.add("username__name");
+      name.innerText = source.user.username;
+      username.appendChild(name);
+      var indicator = document.createElement("span");
+      indicator.classList.add("username__you");
+      indicator.innerText = "you";
+      username.appendChild(indicator);
+    } else {
+      username.innerText = source.user.username;
+    }
+    return username;
+  },
+  updateForm: function updateForm(source) {
+    var updateForm = document.createElement("form");
+    updateForm.classList.add("new-comment");
+    updateForm.classList.add("new-comment--update");
+    var updateInput = document.createElement("textarea");
+    updateInput.classList.add("new-comment__input");
+    updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+    updateForm.appendChild(updateInput);
+    var updateSend = document.createElement("button");
+    updateSend.classList.add("btn");
+    updateSend.classList.add("new-comment__send");
+    updateSend.classList.add("new-comment__send--update");
+    updateSend.innerText = "UPDATE";
+    updateForm.appendChild(updateSend);
+    return updateForm;
   }
 };
 
@@ -287,39 +320,13 @@ var _loop = function _loop(comment) {
     container.appendChild(createdAt);
 
     // Created container for content
-    var content = document.createElement("p");
+    var content = element.content(post);
     content.classList.add("comment__content");
-
-    // Creates message for content
-    var message = document.createElement("span");
-    message.innerText = post.content;
-    message.classList.add("comment__message");
-
-    // Creates who reply is replying to
-    if (type === "reply") {
-      var replyingTo = document.createElement("span");
-      replyingTo.innerText = "@".concat(post.replyingTo, " ");
-      replyingTo.classList.add("comment__replyingTo");
-      content.appendChild(replyingTo);
-    }
-    content.appendChild(message);
     container.appendChild(content);
 
     // Creates form to update comment or reply
     if (post.user.username === currentUser.username) {
-      var updateForm = document.createElement("form");
-      updateForm.classList.add("new-comment");
-      updateForm.classList.add("new-comment--update");
-      var updateInput = document.createElement("textarea");
-      updateInput.classList.add("new-comment__input");
-      updateInput.value = "@".concat(post.replyingTo, " ").concat(post.content);
-      updateForm.appendChild(updateInput);
-      var updateSend = document.createElement("button");
-      updateSend.classList.add("btn");
-      updateSend.classList.add("new-comment__send");
-      updateSend.classList.add("new-comment__send--update");
-      updateSend.innerText = "UPDATE";
-      updateForm.appendChild(updateSend);
+      var updateForm = element.updateForm(post);
       container.appendChild(updateForm);
     }
 
@@ -527,30 +534,12 @@ function newPost(type, source) {
   container.appendChild(createdAt);
 
   // Created container for content
-  var content = document.createElement("p");
+  var content = element.content(source);
   content.classList.add("comment__content");
-
-  // Creates message for content
-  var message = document.createElement("span");
-  message.innerText = source.content;
-  message.classList.add("comment__message");
   container.appendChild(content);
-  content.appendChild(message);
 
   // Creates form to update comment or reply
-  var updateForm = document.createElement("form");
-  updateForm.classList.add("new-comment");
-  updateForm.classList.add("new-comment--update");
-  var updateInput = document.createElement("textarea");
-  updateInput.classList.add("new-comment__input");
-  updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
-  updateForm.appendChild(updateInput);
-  var updateSend = document.createElement("button");
-  updateSend.classList.add("btn");
-  updateSend.classList.add("new-comment__send");
-  updateSend.classList.add("new-comment__send--update");
-  updateSend.innerText = "UPDATE";
-  updateForm.appendChild(updateSend);
+  var updateForm = element.updateForm(source);
   container.appendChild(updateForm);
 
   // Creates form to vote on comment or reply

@@ -190,14 +190,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Generates elements for posts
 var element = {
   content: function content(source) {
-    // Creates message for content
     var content = document.createElement("p");
     content.classList.add("comment__content");
     var message = document.createElement("span");
     message.innerText = source.content;
     message.classList.add("comment__message");
-
-    // Creates who reply is replying to
     if (source.replyingTo !== undefined) {
       var replyingTo = document.createElement("span");
       replyingTo.innerText = "@".concat(source.replyingTo, " ");
@@ -252,7 +249,6 @@ var element = {
     var currentUser = _data.default.currentUser;
     var username = document.createElement("span");
     username.classList.add("username");
-    // Creates indicator/name for current user
     if (source.user.username === currentUser.username) {
       username.classList.add("username--you");
       var name = document.createElement("span");
@@ -321,11 +317,15 @@ var _loop = function _loop(comment) {
   var currentUser = _data.default.currentUser,
     comments = _data.default.comments;
   var post = comments[comment];
+
+  // SETS CURRENT USER'S AVATAR IN NEW COMMENT FORM
   document.getElementsByClassName("avatar--new-comment")[0].src = currentUser.image.png;
+
+  // FUNCTION FOR GENERATING COMMENTS AND REPLIES
   function postCont(type, counter) {
-    var post;
     var container = document.createElement("div");
     container.classList.add("comment");
+    var post;
     if (type === "reply") {
       container.classList.add("comment--reply");
       post = comments[comment].replies[counter];
@@ -352,6 +352,8 @@ var _loop = function _loop(comment) {
     }
     return container;
   }
+
+  // Function for creating reply form
   function createReplyForm(type) {
     var replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
@@ -378,6 +380,8 @@ var _loop = function _loop(comment) {
     replyForm.appendChild(replySend);
     return replyForm;
   }
+
+  // Generates comments
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
     var replyCont = document.createElement("div");
@@ -563,6 +567,7 @@ var _loop6 = function _loop6(_x4) {
     var comments = _data.default.comments,
       currentUser = _data.default.currentUser;
     var replyingTo = document.querySelectorAll(".comment:not(.comment--reply) > .username")[_x4].innerText;
+    var commentCont = document.querySelectorAll(".comment:not(.comment--reply)");
     var commentWrapper = document.getElementById("comment-wrapper");
     var replyWrapper = reply.previousElementSibling;
     var newReply = {
@@ -587,19 +592,21 @@ var _loop6 = function _loop6(_x4) {
       lastComment = comments[comments.length - 1];
     }
     newReply.id = lastComment.id + 1;
-    comments[_x4].replies[newReply.id] = newReply;
+    var replyWrapper2 = document.getElementsByClassName("reply-wrapper");
     if (comments[_x4].replies.length === 0) {
-      // const replyCont = document.createElement("div");
-      // replyCont.classList.add("reply-wrapper");
-      // container.appendChild(replyCont);
-
-      // const hr = document.createElement("hr");
-      // hr.classList.add("reply-wrapper__ruler");
-      // replyCont.appendChild(hr);
-
-      replyWrapper.appendChild(newPost("reply", newReply));
+      var replyCont = document.createElement("div");
+      replyCont.classList.add("reply-wrapper");
+      replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
+      commentCont[_x4].insertAdjacentElement("afterend", replyCont);
+      console.log(commentCont[_x4]);
+      var hr = document.createElement("hr");
+      hr.classList.add("reply-wrapper__ruler");
+      replyCont.appendChild(hr);
+      comments[_x4].replies[newReply.id] = newReply;
+      replyCont.appendChild(newPost("reply", newReply));
     } else {
-      replyWrapper.appendChild(newPost("reply", newReply));
+      comments[_x4].replies[newReply.id] = newReply;
+      replyWrapper2[_x4].appendChild(newPost("reply", newReply));
     }
   });
 };
@@ -631,7 +638,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58314" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63281" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

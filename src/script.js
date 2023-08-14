@@ -4,14 +4,12 @@ import data from "./data.json";
 // Generates elements for posts
 const element = {
   content: function (source) {
-    // Creates message for content
     const content = document.createElement("p");
     content.classList.add("comment__content");
     const message = document.createElement("span");
     message.innerText = source.content;
     message.classList.add("comment__message");
 
-    // Creates who reply is replying to
     if (source.replyingTo !== undefined) {
       const replyingTo = document.createElement("span");
       replyingTo.innerText = `@${source.replyingTo} `;
@@ -74,7 +72,7 @@ const element = {
 
     const username = document.createElement("span");
     username.classList.add("username");
-    // Creates indicator/name for current user
+
     if (source.user.username === currentUser.username) {
       username.classList.add("username--you");
       const name = document.createElement("span");
@@ -152,14 +150,16 @@ for (let comment in data.comments) {
   const { currentUser, comments } = data;
   const post = comments[comment];
 
+  // SETS CURRENT USER'S AVATAR IN NEW COMMENT FORM
   document.getElementsByClassName("avatar--new-comment")[0].src =
     currentUser.image.png;
 
+  // FUNCTION FOR GENERATING COMMENTS AND REPLIES
   function postCont(type, counter) {
-    let post;
     const container = document.createElement("div");
     container.classList.add("comment");
 
+    let post;
     if (type === "reply") {
       container.classList.add("comment--reply");
       post = comments[comment].replies[counter];
@@ -190,6 +190,7 @@ for (let comment in data.comments) {
     return container;
   }
 
+  // Function for creating reply form
   function createReplyForm(type) {
     const replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
@@ -222,6 +223,7 @@ for (let comment in data.comments) {
     return replyForm;
   }
 
+  // Generates comments
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
 
@@ -434,6 +436,9 @@ for (let x = 0; x < container.form.reply.length; x++) {
     const replyingTo = document.querySelectorAll(
       ".comment:not(.comment--reply) > .username"
     )[x].innerText;
+    const commentCont = document.querySelectorAll(
+      ".comment:not(.comment--reply)"
+    );
     const commentWrapper = document.getElementById("comment-wrapper");
     const replyWrapper = reply.previousElementSibling;
     const newReply = {
@@ -467,21 +472,23 @@ for (let x = 0; x < container.form.reply.length; x++) {
     }
     newReply.id = lastComment.id + 1;
 
-    comments[x].replies[newReply.id] = newReply;
-
+    const replyWrapper2 = document.getElementsByClassName("reply-wrapper");
     if (comments[x].replies.length === 0) {
-      // const replyCont = document.createElement("div");
-      // replyCont.classList.add("reply-wrapper");
-      // container.appendChild(replyCont);
-  
-      // const hr = document.createElement("hr");
-      // hr.classList.add("reply-wrapper__ruler");
-      // replyCont.appendChild(hr);
-  
+      const replyCont = document.createElement("div");
+      replyCont.classList.add("reply-wrapper");
+      replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
+      commentCont[x].insertAdjacentElement("afterend", replyCont);
+      console.log(commentCont[x]);
 
-      replyWrapper.appendChild(newPost("reply", newReply));
+      const hr = document.createElement("hr");
+      hr.classList.add("reply-wrapper__ruler");
+      replyCont.appendChild(hr);
+
+      comments[x].replies[newReply.id] = newReply;
+      replyCont.appendChild(newPost("reply", newReply));
     } else {
-      replyWrapper.appendChild(newPost("reply", newReply));
+      comments[x].replies[newReply.id] = newReply;
+      replyWrapper2[x].appendChild(newPost("reply", newReply));
     }
   });
 }

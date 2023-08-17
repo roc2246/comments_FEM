@@ -187,7 +187,7 @@ var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // Delete once data is on server
 
-// Generates elements for posts
+// Generates child elements for posts
 var element = {
   content: function content(source) {
     var content = document.createElement("p");
@@ -319,7 +319,8 @@ var _loop = function _loop(comment) {
   var post = comments[comment];
 
   // SETS CURRENT USER'S AVATAR IN NEW COMMENT FORM
-  document.getElementsByClassName("avatar--new-comment")[0].src = currentUser.image.png;
+  var newCommentAvatar = document.querySelector(".avatar--new-comment");
+  newCommentAvatar.src = currentUser.image.png;
 
   // FUNCTION FOR GENERATING COMMENTS AND REPLIES
   function postCont(type, counter) {
@@ -384,23 +385,30 @@ var _loop = function _loop(comment) {
   // Generates comments
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
+
+    // Creates container for replies
     var replyCont = document.createElement("div");
     replyCont.classList.add("reply-wrapper");
-    container.appendChild(replyCont);
     var hr = document.createElement("hr");
     hr.classList.add("reply-wrapper__ruler");
     replyCont.appendChild(hr);
+    container.appendChild(replyCont);
+
+    // Generates replies
     for (var reply in post.replies) {
       replyCont.appendChild(postCont("reply", reply));
       if (post.replies[reply].user.username !== currentUser.username) {
         replyCont.appendChild(createReplyForm("reply"));
       }
     }
+
+    // Generates hr hight for reply container
+    replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
+
+    // Generates reply forms
     if (post.user.username !== currentUser.username) {
       container.appendChild(createReplyForm());
     }
-    var replyWrapper = document.getElementsByClassName("reply-wrapper")[0];
-    replyWrapper.style.gridTemplateRows = "repeat(".concat(replyWrapper.childElementCount, ", auto)");
   } else {
     container.appendChild(postCont("comment"));
     if (post.user.username !== currentUser.username) {
@@ -425,7 +433,8 @@ var selectors = {
   },
   input: {
     comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
-    reply: ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input"
+    reply: ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
+    replyTo: ".comment:not(.comment--reply) > .username"
   }
 };
 var container = {
@@ -436,6 +445,10 @@ var container = {
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply)
+  },
+  input: {
+    replyTo: document.querySelectorAll(selectors.input.replyTo),
+    replyContent: document.querySelectorAll(selectors.input.reply)
   }
 };
 var CRUD = {
@@ -559,14 +572,20 @@ function generateID() {
   return ID;
 }
 
+// Gets reply count
+function replyCount(no) {
+  var replyCont = container.form.reply[no].previousElementSibling;
+  return replyCont.childElementCount;
+}
+
 // NEW COMMENT
 container.form.comment.addEventListener("submit", function (e) {
   e.preventDefault();
   var comments = _data.default.comments,
     currentUser = _data.default.currentUser;
-  var wrapper = document.getElementById("comment-wrapper");
+  var content = document.querySelector(selectors.input.comment).value;
   var newComment = {
-    content: document.querySelector(selectors.input.comment).value,
+    content: content,
     createdAt: "TEST",
     id: generateID(),
     replies: {},
@@ -580,23 +599,23 @@ container.form.comment.addEventListener("submit", function (e) {
     }
   };
   comments[newComment.id] = newComment;
+  var wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
 
 // NEW REPLY
 var _loop6 = function _loop6(_x4) {
-  var reply = container.form.reply[_x4];
-  reply.addEventListener("submit", function (e) {
+  container.form.reply[_x4].addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = _data.default.comments,
       currentUser = _data.default.currentUser;
-    var replyingTo = document.querySelectorAll(".comment:not(.comment--reply) > .username")[_x4].innerText;
-    var commentCont = document.querySelectorAll(".comment:not(.comment--reply)")[_x4];
+    var replyTo = container.input.replyTo[_x4].innerText;
+    var content = container.input.replyContent[_x4].value;
     var newReply = {
       id: generateID(),
-      content: "".concat(document.querySelectorAll(selectors.input.reply)[_x4].value),
+      content: content,
       createdAt: "TEST",
-      replyingTo: replyingTo,
+      replyingTo: replyTo,
       replies: {},
       score: 0,
       user: {
@@ -607,20 +626,28 @@ var _loop6 = function _loop6(_x4) {
         username: currentUser.username
       }
     };
-    var replyWrapper = document.getElementsByClassName("reply-wrapper");
     if (comments[_x4].replies.length === 0) {
+      // Creates container for replies
       var replyCont = document.createElement("div");
       replyCont.classList.add("reply-wrapper");
-      replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
-      commentCont.insertAdjacentElement("afterend", replyCont);
       var hr = document.createElement("hr");
       hr.classList.add("reply-wrapper__ruler");
       replyCont.appendChild(hr);
+      container.comments[_x4].insertAdjacentElement("afterend", replyCont);
+
+      // Adds new reply
       comments[_x4].replies[newReply.id] = newReply;
       replyCont.appendChild(newPost("reply", newReply));
+
+      // Generates hr height for reply container
+      replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x4), ", auto)");
     } else {
       comments[_x4].replies[newReply.id] = newReply;
+      var replyWrapper = container.form.reply[_x4].previousElementSibling;
       replyWrapper.appendChild(newPost("reply", newReply));
+
+      // Generates hr height for reply container
+      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4), ", auto)");
     }
   });
 };
@@ -652,7 +679,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53707" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56859" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

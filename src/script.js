@@ -1,7 +1,7 @@
 // Delete once data is on server
 import data from "./data.json";
 
-// Generates elements for posts
+// Generates child elements for posts
 const element = {
   content: function (source) {
     const content = document.createElement("p");
@@ -151,8 +151,8 @@ for (let comment in data.comments) {
   const post = comments[comment];
 
   // SETS CURRENT USER'S AVATAR IN NEW COMMENT FORM
-  document.getElementsByClassName("avatar--new-comment")[0].src =
-    currentUser.image.png;
+  const newCommentAvatar = document.querySelector(".avatar--new-comment");
+  newCommentAvatar.src = currentUser.image.png;
 
   // FUNCTION FOR GENERATING COMMENTS AND REPLIES
   function postCont(type, counter) {
@@ -227,14 +227,15 @@ for (let comment in data.comments) {
   if (post.replies.length > 0) {
     container.appendChild(postCont("comment"));
 
+    // Creates container for replies
     const replyCont = document.createElement("div");
     replyCont.classList.add("reply-wrapper");
-    container.appendChild(replyCont);
-
     const hr = document.createElement("hr");
     hr.classList.add("reply-wrapper__ruler");
     replyCont.appendChild(hr);
+    container.appendChild(replyCont);
 
+    // Generates replies
     for (let reply in post.replies) {
       replyCont.appendChild(postCont("reply", reply));
       if (post.replies[reply].user.username !== currentUser.username) {
@@ -242,12 +243,13 @@ for (let comment in data.comments) {
       }
     }
 
+    // Generates hr hight for reply container
+    replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
+
+    // Generates reply forms
     if (post.user.username !== currentUser.username) {
       container.appendChild(createReplyForm());
     }
-
-    const replyWrapper = document.getElementsByClassName("reply-wrapper")[0];
-    replyWrapper.style.gridTemplateRows = `repeat(${replyWrapper.childElementCount}, auto)`;
   } else {
     container.appendChild(postCont("comment"));
     if (post.user.username !== currentUser.username) {
@@ -273,6 +275,7 @@ const selectors = {
       ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
     reply:
       ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
+    replyTo: ".comment:not(.comment--reply) > .username",
   },
 };
 
@@ -284,6 +287,10 @@ const container = {
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
+  },
+  input: {
+    replyTo: document.querySelectorAll(selectors.input.replyTo),
+    replyContent: document.querySelectorAll(selectors.input.reply),
   },
 };
 
@@ -409,14 +416,21 @@ function generateID() {
   return ID;
 }
 
+// Gets reply count
+function replyCount(no) {
+  const replyCont = container.form.reply[no].previousElementSibling;
+  return replyCont.childElementCount;
+}
+
 // NEW COMMENT
 container.form.comment.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const { comments, currentUser } = data;
-  const wrapper = document.getElementById("comment-wrapper");
+  const content = document.querySelector(selectors.input.comment).value;
+
   const newComment = {
-    content: document.querySelector(selectors.input.comment).value,
+    content: content,
     createdAt: "TEST",
     id: generateID(),
     replies: {},
@@ -432,28 +446,24 @@ container.form.comment.addEventListener("submit", (e) => {
 
   comments[newComment.id] = newComment;
 
+  const wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
 
 // NEW REPLY
 for (let x = 0; x < container.form.reply.length; x++) {
-  const reply = container.form.reply[x];
-  reply.addEventListener("submit", (e) => {
+  container.form.reply[x].addEventListener("submit", (e) => {
     e.preventDefault();
 
     const { comments, currentUser } = data;
-    const replyingTo = document.querySelectorAll(
-      ".comment:not(.comment--reply) > .username"
-    )[x].innerText;
-    const commentCont = document.querySelectorAll(
-      ".comment:not(.comment--reply)"
-    )[x];
+    const replyTo = container.input.replyTo[x].innerText;
+    const content = container.input.replyContent[x].value;
 
     const newReply = {
       id: generateID(),
-      content: `${document.querySelectorAll(selectors.input.reply)[x].value}`,
+      content: content,
       createdAt: "TEST",
-      replyingTo: replyingTo,
+      replyingTo: replyTo,
       replies: {},
       score: 0,
       user: {
@@ -465,22 +475,29 @@ for (let x = 0; x < container.form.reply.length; x++) {
       },
     };
 
-    const replyWrapper = document.getElementsByClassName("reply-wrapper");
     if (comments[x].replies.length === 0) {
+      // Creates container for replies
       const replyCont = document.createElement("div");
       replyCont.classList.add("reply-wrapper");
-      replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
-      commentCont.insertAdjacentElement("afterend", replyCont);
-
       const hr = document.createElement("hr");
       hr.classList.add("reply-wrapper__ruler");
       replyCont.appendChild(hr);
+      container.comments[x].insertAdjacentElement("afterend", replyCont);
 
+      // Adds new reply
       comments[x].replies[newReply.id] = newReply;
       replyCont.appendChild(newPost("reply", newReply));
+
+      // Generates hr height for reply container
+      replyCont.style.gridTemplateRows = `repeat(${replyCount(x)}, auto)`;
     } else {
       comments[x].replies[newReply.id] = newReply;
+
+      const replyWrapper = container.form.reply[x].previousElementSibling;
       replyWrapper.appendChild(newPost("reply", newReply));
+
+      // Generates hr height for reply container
+      replyWrapper.style.gridTemplateRows = `repeat(${replyCount(x)}, auto)`;
     }
   });
 }

@@ -256,20 +256,34 @@ for (let comment in data.comments) {
   }
 }
 
+const selectors = {
+  reply: ".comment--reply:not(.comment--you)",
+  comment: ".comment:not(.comment--you):not(.comment--reply)",
+  form: {
+    comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update)",
+    reply: ".new-comment--reply:not(.new-comment--replytoreply)",
+    replyToReply: ".new-comment--replytoreply",
+  },
+  btn: {
+    reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
+    replyToReply: ".CRUD-container--reply > .CRUD--reply",
+  },
+  input: {
+    comment:
+      ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
+    reply:
+      ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
+  },
+};
+
 const container = {
-  replies: document.querySelectorAll(".comment--reply:not(.comment--you)"),
-  comments: document.querySelectorAll(
-    ".comment:not(.comment--you):not(.comment--reply)"
-  ),
+  replies: document.querySelectorAll(selectors.reply),
+  comments: document.querySelectorAll(selectors.comment),
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
   form: {
-    comment: document.querySelector(
-      ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
-    ),
-    reply: document.querySelectorAll(
-      ".new-comment--reply:not(.new-comment--replytoreply)"
-    ),
+    comment: document.querySelector(selectors.form.comment),
+    reply: document.querySelectorAll(selectors.form.reply),
   },
 };
 
@@ -284,7 +298,7 @@ const CRUD = {
 // Toggles edit mode
 for (let x = 0; x < container.userComments.length; x++) {
   const comment = container.userComments[x];
-  const editBtn = document.getElementsByClassName("CRUD--edit")[x];
+  const editBtn = CRUD.edit[x];
 
   editBtn.addEventListener("click", () => {
     if (!comment.classList.contains("comment--edit")) {
@@ -297,12 +311,8 @@ for (let x = 0; x < container.userComments.length; x++) {
 
 // Toggles reply form for Comments
 for (let x = 0; x < container.comments.length; x++) {
-  const replyForm = document.querySelectorAll(
-    ".new-comment--reply:not(.new-comment--replytoreply)"
-  )[x];
-  const replyBtn = document.querySelectorAll(
-    ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply"
-  )[x];
+  const replyForm = document.querySelectorAll(selectors.form.reply)[x];
+  const replyBtn = document.querySelectorAll(selectors.btn.reply)[x];
 
   replyBtn.addEventListener("click", () => {
     if (replyForm.style.display === "") {
@@ -315,12 +325,8 @@ for (let x = 0; x < container.comments.length; x++) {
 
 // Toggles reply form for Replies
 for (let x = 0; x < container.replies.length; x++) {
-  const replyForm = document.getElementsByClassName(
-    "new-comment--replytoreply"
-  )[x];
-  const replyBtn = document.querySelectorAll(
-    ".CRUD-container--reply > .CRUD--reply"
-  )[x];
+  const replyForm = document.querySelectorAll(selectors.form.replyToReply)[x];
+  const replyBtn = document.querySelectorAll(selectors.btn.replyToReply)[x];
 
   replyBtn.addEventListener("click", () => {
     if (replyForm.style.display === "") {
@@ -387,6 +393,22 @@ function newPost(type, source) {
   return container;
 }
 
+// ADDS NEW ID TO POST
+function generateID() {
+  const { comments } = data;
+
+  let IDarray = [];
+  for (let id in comments) {
+    IDarray.push(comments[id].id);
+    if (comments[id].replies.length > 0) {
+      for (let reply in comments[id].replies)
+        IDarray.push(comments[id].replies[reply].id);
+    }
+  }
+  const ID = Math.max(...IDarray) + 1;
+  return ID;
+}
+
 // NEW COMMENT
 container.form.comment.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -394,11 +416,9 @@ container.form.comment.addEventListener("submit", (e) => {
   const { comments, currentUser } = data;
   const wrapper = document.getElementById("comment-wrapper");
   const newComment = {
-    content: document.querySelector(
-      ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input"
-    ).value,
+    content: document.querySelector(selectors.input.comment).value,
     createdAt: "TEST",
-    id: null,
+    id: generateID(),
     replies: {},
     score: 0,
     user: {
@@ -409,17 +429,6 @@ container.form.comment.addEventListener("submit", (e) => {
       username: currentUser.username,
     },
   };
-
-  let lastComment;
-  if (comments[comments.length - 1].replies.length > 0) {
-    lastComment =
-      comments[comments.length - 1].replies[
-        comments[comments.length - 1].replies.length - 1
-      ];
-  } else {
-    lastComment = comments[comments.length - 1];
-  }
-  newComment.id = lastComment.id + 1;
 
   comments[newComment.id] = newComment;
 
@@ -438,16 +447,11 @@ for (let x = 0; x < container.form.reply.length; x++) {
     )[x].innerText;
     const commentCont = document.querySelectorAll(
       ".comment:not(.comment--reply)"
-    );
-    const commentWrapper = document.getElementById("comment-wrapper");
-    const replyWrapper = reply.previousElementSibling;
+    )[x];
+
     const newReply = {
-      id: null,
-      content: `${
-        document.querySelectorAll(
-          ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input"
-        )[x].value
-      }`,
+      id: generateID(),
+      content: `${document.querySelectorAll(selectors.input.reply)[x].value}`,
       createdAt: "TEST",
       replyingTo: replyingTo,
       replies: {},
@@ -461,24 +465,12 @@ for (let x = 0; x < container.form.reply.length; x++) {
       },
     };
 
-    let lastComment;
-    if (comments[comments.length - 1].replies.length > 0) {
-      lastComment =
-        comments[comments.length - 1].replies[
-          comments[comments.length - 1].replies.length - 1
-        ];
-    } else {
-      lastComment = comments[comments.length - 1];
-    }
-    newReply.id = lastComment.id + 1;
-
-    const replyWrapper2 = document.getElementsByClassName("reply-wrapper");
+    const replyWrapper = document.getElementsByClassName("reply-wrapper");
     if (comments[x].replies.length === 0) {
       const replyCont = document.createElement("div");
       replyCont.classList.add("reply-wrapper");
       replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
-      commentCont[x].insertAdjacentElement("afterend", replyCont);
-      console.log(commentCont[x]);
+      commentCont.insertAdjacentElement("afterend", replyCont);
 
       const hr = document.createElement("hr");
       hr.classList.add("reply-wrapper__ruler");
@@ -488,7 +480,7 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyCont.appendChild(newPost("reply", newReply));
     } else {
       comments[x].replies[newReply.id] = newReply;
-      replyWrapper2[x].appendChild(newPost("reply", newReply));
+      replyWrapper.appendChild(newPost("reply", newReply));
     }
   });
 }

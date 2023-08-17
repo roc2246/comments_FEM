@@ -275,7 +275,9 @@ const selectors = {
       ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
     reply:
       ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
+    replyToReply: ".new-comment--replytoreply> .new-comment__input",
     replyTo: ".comment:not(.comment--reply) > .username",
+    replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username",
   },
 };
 
@@ -287,10 +289,15 @@ const container = {
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
+    replyToReply: document.querySelectorAll(selectors.form.replyToReply),
   },
   input: {
     replyTo: document.querySelectorAll(selectors.input.replyTo),
+    replyReplyTo: document.querySelectorAll(selectors.input.replyReplyTo),
     replyContent: document.querySelectorAll(selectors.input.reply),
+    replyToReplyContent: document.querySelectorAll(
+      selectors.input.replyToReply
+    ),
   },
 };
 
@@ -417,8 +424,13 @@ function generateID() {
 }
 
 // Gets reply count
-function replyCount(no) {
-  const replyCont = container.form.reply[no].previousElementSibling;
+function replyCount(no, type) {
+  let replyCont;
+  if (type === "reply") {
+    replyCont = container.form.reply[no].previousElementSibling;
+  } else if (type === "replytoreply") {
+    replyCont = container.form.replyToReply[no].parentElement;
+  }
   return replyCont.childElementCount;
 }
 
@@ -489,7 +501,10 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyCont.style.gridTemplateRows = `repeat(${replyCount(x)}, auto)`;
+      replyCont.style.gridTemplateRows = `repeat(${replyCount(
+        x,
+        "reply"
+      )}, auto)`;
     } else {
       comments[x].replies[newReply.id] = newReply;
 
@@ -497,7 +512,56 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyWrapper.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyWrapper.style.gridTemplateRows = `repeat(${replyCount(x)}, auto)`;
+      replyWrapper.style.gridTemplateRows = `repeat(${replyCount(
+        x,
+        "reply"
+      )}, auto)`;
+    }
+  });
+}
+
+// NEW REPLY TO REPLY
+for (let x = 0; x < container.form.replyToReply.length; x++) {
+  container.form.replyToReply[x].addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const { comments, currentUser } = data;
+    const replyTo = container.input.replyReplyTo[x].innerText;
+    const content = container.input.replyToReplyContent[x].value;
+
+    const newReply = {
+      id: generateID(),
+      content: content,
+      createdAt: "TEST",
+      replyingTo: replyTo,
+      replies: {},
+      score: 0,
+      user: {
+        image: {
+          png: currentUser.image.png,
+          webp: currentUser.image.webp,
+        },
+        username: currentUser.username,
+      },
+    };
+
+    const replyWrapper = container.form.replyToReply[x].parentNode;
+    replyWrapper.appendChild(newPost("replytoreply", newReply));
+
+    // Generates hr height for reply container
+    replyWrapper.style.gridTemplateRows = `repeat(${replyCount(
+      x,
+      "replytoreply"
+    )}, auto)`;
+
+    const parentComment =
+      replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
+    for (let x in comments) {
+      if (comments[x].content === parentComment) {
+        const replies = comments[x].replies;
+        replies[replies.length] = newReply;
+        console.log(replies);
+      }
     }
   });
 }

@@ -434,7 +434,9 @@ var selectors = {
   input: {
     comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
     reply: ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
-    replyTo: ".comment:not(.comment--reply) > .username"
+    replyToReply: ".new-comment--replytoreply> .new-comment__input",
+    replyTo: ".comment:not(.comment--reply) > .username",
+    replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username"
   }
 };
 var container = {
@@ -444,11 +446,14 @@ var container = {
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
   form: {
     comment: document.querySelector(selectors.form.comment),
-    reply: document.querySelectorAll(selectors.form.reply)
+    reply: document.querySelectorAll(selectors.form.reply),
+    replyToReply: document.querySelectorAll(selectors.form.replyToReply)
   },
   input: {
     replyTo: document.querySelectorAll(selectors.input.replyTo),
-    replyContent: document.querySelectorAll(selectors.input.reply)
+    replyReplyTo: document.querySelectorAll(selectors.input.replyReplyTo),
+    replyContent: document.querySelectorAll(selectors.input.reply),
+    replyToReplyContent: document.querySelectorAll(selectors.input.replyToReply)
   }
 };
 var CRUD = {
@@ -573,8 +578,13 @@ function generateID() {
 }
 
 // Gets reply count
-function replyCount(no) {
-  var replyCont = container.form.reply[no].previousElementSibling;
+function replyCount(no, type) {
+  var replyCont;
+  if (type === "reply") {
+    replyCont = container.form.reply[no].previousElementSibling;
+  } else if (type === "replytoreply") {
+    replyCont = container.form.replyToReply[no].parentElement;
+  }
   return replyCont.childElementCount;
 }
 
@@ -640,19 +650,61 @@ var _loop6 = function _loop6(_x4) {
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x4), ", auto)");
+      replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "reply"), ", auto)");
     } else {
       comments[_x4].replies[newReply.id] = newReply;
       var replyWrapper = container.form.reply[_x4].previousElementSibling;
       replyWrapper.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4), ", auto)");
+      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "reply"), ", auto)");
     }
   });
 };
 for (var _x4 = 0; _x4 < container.form.reply.length; _x4++) {
   _loop6(_x4);
+}
+
+// NEW REPLY TO REPLY
+var _loop7 = function _loop7(_x5) {
+  container.form.replyToReply[_x5].addEventListener("submit", function (e) {
+    e.preventDefault();
+    var comments = _data.default.comments,
+      currentUser = _data.default.currentUser;
+    var replyTo = container.input.replyReplyTo[_x5].innerText;
+    var content = container.input.replyToReplyContent[_x5].value;
+    var newReply = {
+      id: generateID(),
+      content: content,
+      createdAt: "TEST",
+      replyingTo: replyTo,
+      replies: {},
+      score: 0,
+      user: {
+        image: {
+          png: currentUser.image.png,
+          webp: currentUser.image.webp
+        },
+        username: currentUser.username
+      }
+    };
+    var replyWrapper = container.form.replyToReply[_x5].parentNode;
+    replyWrapper.appendChild(newPost("replytoreply", newReply));
+
+    // Generates hr height for reply container
+    replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "replytoreply"), ", auto)");
+    var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
+    for (var _x6 in comments) {
+      if (comments[_x6].content === parentComment) {
+        var replies = comments[_x6].replies;
+        replies[replies.length] = newReply;
+        console.log(replies);
+      }
+    }
+  });
+};
+for (var _x5 = 0; _x5 < container.form.replyToReply.length; _x5++) {
+  _loop7(_x5);
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -679,7 +731,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61619" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62253" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

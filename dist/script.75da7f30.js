@@ -334,19 +334,23 @@ var _loop = function _loop(comment) {
       post = comments[comment];
       counter = null;
     }
-    if (currentUser.username === post.user.username) {
-      container.classList.add("comment--you");
-    }
     var newComment = {
       avatar: element.avatar(post),
       username: element.username(post),
       createdAt: element.createdAt(post),
       content: element.content(post),
+      updateForm: element.updateForm(post),
       vote: element.vote(post),
       CRUD: element.CRUD(post)
     };
     for (var ele in newComment) {
-      container.append(newComment[ele]);
+      if (newComment[ele] !== newComment.updateForm) {
+        container.append(newComment[ele]);
+      }
+    }
+    if (currentUser.username === post.user.username) {
+      container.append(newComment.updateForm);
+      container.classList.add("comment--you");
     }
     if (type === "reply") {
       newComment.CRUD.classList.add("CRUD-container--reply");
@@ -537,6 +541,7 @@ container.modal.addEventListener("click", function () {
 // CRUD
 // ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
+  var currentUser = _data.default.currentUser;
   var container = document.createElement("div");
   container.classList.add("comment");
   if (type === "reply") {
@@ -551,11 +556,17 @@ function newPost(type, source) {
     username: element.username(source),
     createdAt: element.createdAt(source),
     content: element.content(source),
+    updateForm: element.updateForm(source),
     vote: element.vote(source),
     CRUD: element.CRUD(source)
   };
   for (var ele in newComment) {
-    container.append(newComment[ele]);
+    if (newComment[ele] !== newComment.updateForm) {
+      container.append(newComment[ele]);
+    }
+  }
+  if (currentUser.username === source.user.username) {
+    container.append(newComment.updateForm);
   }
   if (type === "reply") {
     newComment.CRUD.classList.add("CRUD-container--reply");
@@ -730,7 +741,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62253" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49993" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

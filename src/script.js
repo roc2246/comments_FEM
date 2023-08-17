@@ -168,21 +168,25 @@ for (let comment in data.comments) {
       counter = null;
     }
 
-    if (currentUser.username === post.user.username) {
-      container.classList.add("comment--you");
-    }
-
     const newComment = {
       avatar: element.avatar(post),
       username: element.username(post),
       createdAt: element.createdAt(post),
       content: element.content(post),
+      updateForm: element.updateForm(post),
       vote: element.vote(post),
       CRUD: element.CRUD(post),
     };
     for (let ele in newComment) {
-      container.append(newComment[ele]);
+      if(newComment[ele] !== newComment.updateForm){
+        container.append(newComment[ele])
+      } 
     }
+    if (currentUser.username === post.user.username) {
+      container.append(newComment.updateForm)
+      container.classList.add("comment--you");
+    }
+
     if (type === "reply") {
       newComment.CRUD.classList.add("CRUD-container--reply");
     }
@@ -377,6 +381,8 @@ container.modal.addEventListener("click", () => {
 // CRUD
 // ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
+  const {currentUser} = data
+
   const container = document.createElement("div");
   container.classList.add("comment");
 
@@ -393,13 +399,21 @@ function newPost(type, source) {
     username: element.username(source),
     createdAt: element.createdAt(source),
     content: element.content(source),
+    updateForm: element.updateForm(source),
     vote: element.vote(source),
     CRUD: element.CRUD(source),
   };
 
   for (let ele in newComment) {
-    container.append(newComment[ele]);
+    if(newComment[ele] !== newComment.updateForm){
+      container.append(newComment[ele])
+    } 
   }
+
+  if (currentUser.username === source.user.username) {
+    container.append(newComment.updateForm)
+  }
+  
   if (type === "reply") {
     newComment.CRUD.classList.add("CRUD-container--reply");
   }

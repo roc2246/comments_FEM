@@ -385,7 +385,7 @@ main {
     grid-row: 1/2;
   }
 }
-.comment--you .CRUD-container {
+.comment--you:not(.comment--reply) .CRUD-container {
   grid-column: 7/8;
 }
 

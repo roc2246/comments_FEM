@@ -698,7 +698,6 @@ var _loop7 = function _loop7(_x5) {
       if (comments[_x6].content === parentComment) {
         var replies = comments[_x6].replies;
         replies[replies.length] = newReply;
-        console.log(replies);
       }
     }
   });

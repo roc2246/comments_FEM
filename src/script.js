@@ -560,7 +560,6 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
       if (comments[x].content === parentComment) {
         const replies = comments[x].replies;
         replies[replies.length] = newReply;
-        console.log(replies);
       }
     }
   });

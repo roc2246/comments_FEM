@@ -385,6 +385,9 @@ main {
     grid-row: 1/2;
   }
 }
+.comment--you .CRUD-container {
+  grid-column: 7/8;
+}
 
 .reply-wrapper {
   display: grid;

@@ -429,7 +429,8 @@ var selectors = {
   form: {
     comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update)",
     reply: ".new-comment--reply:not(.new-comment--replytoreply)",
-    replyToReply: ".new-comment--replytoreply"
+    replyToReply: ".new-comment--replytoreply",
+    update: ".new-comment--update"
   },
   btn: {
     reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
@@ -440,7 +441,8 @@ var selectors = {
     reply: ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
     replyToReply: ".new-comment--replytoreply> .new-comment__input",
     replyTo: ".comment:not(.comment--reply) > .username",
-    replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username"
+    replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username",
+    update: ".new-comment--update > .new-comment__input"
   }
 };
 var container = {
@@ -451,13 +453,15 @@ var container = {
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
-    replyToReply: document.querySelectorAll(selectors.form.replyToReply)
+    replyToReply: document.querySelectorAll(selectors.form.replyToReply),
+    update: document.querySelectorAll(selectors.form.update)
   },
   input: {
     replyTo: document.querySelectorAll(selectors.input.replyTo),
     replyReplyTo: document.querySelectorAll(selectors.input.replyReplyTo),
     replyContent: document.querySelectorAll(selectors.input.reply),
-    replyToReplyContent: document.querySelectorAll(selectors.input.replyToReply)
+    replyToReplyContent: document.querySelectorAll(selectors.input.replyToReply),
+    update: document.querySelectorAll(selectors.input.update)
   }
 };
 var CRUD = {
@@ -705,9 +709,9 @@ var _loop7 = function _loop7(_x5) {
     // Generates hr height for reply container
     replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "replytoreply"), ", auto)");
     var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-    for (var _x6 in comments) {
-      if (comments[_x6].content === parentComment) {
-        var replies = comments[_x6].replies;
+    for (var _x7 in comments) {
+      if (comments[_x7].content === parentComment) {
+        var replies = comments[_x7].replies;
         replies[replies.length] = newReply;
       }
     }
@@ -715,6 +719,31 @@ var _loop7 = function _loop7(_x5) {
 };
 for (var _x5 = 0; _x5 < container.form.replyToReply.length; _x5++) {
   _loop7(_x5);
+}
+
+// UPDATE
+var _loop8 = function _loop8(_x6) {
+  container.form.update[_x6].addEventListener("submit", function (e) {
+    e.preventDefault();
+    var comments = _data.default.comments;
+    var oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1];
+    var content = container.input.update[_x6].value;
+    for (var _x8 in comments) {
+      if (comments[_x8].content === oldContent.innerText) {
+        comments[_x8].content = content;
+      } else {
+        for (var y in comments[_x8].replies) {
+          if (comments[_x8].replies[y].content === oldContent.innerText) {
+            comments[_x8].replies[y].content = content;
+          }
+        }
+      }
+    }
+    oldContent.innerText = content;
+  });
+};
+for (var _x6 = 0; _x6 < container.form.update.length; _x6++) {
+  _loop8(_x6);
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -741,7 +770,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49993" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59218" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

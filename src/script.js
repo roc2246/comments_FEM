@@ -178,12 +178,12 @@ for (let comment in data.comments) {
       CRUD: element.CRUD(post),
     };
     for (let ele in newComment) {
-      if(newComment[ele] !== newComment.updateForm){
-        container.append(newComment[ele])
-      } 
+      if (newComment[ele] !== newComment.updateForm) {
+        container.append(newComment[ele]);
+      }
     }
     if (currentUser.username === post.user.username) {
-      container.append(newComment.updateForm)
+      container.append(newComment.updateForm);
       container.classList.add("comment--you");
     }
 
@@ -269,6 +269,7 @@ const selectors = {
     comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update)",
     reply: ".new-comment--reply:not(.new-comment--replytoreply)",
     replyToReply: ".new-comment--replytoreply",
+    update: ".new-comment--update",
   },
   btn: {
     reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
@@ -282,6 +283,7 @@ const selectors = {
     replyToReply: ".new-comment--replytoreply> .new-comment__input",
     replyTo: ".comment:not(.comment--reply) > .username",
     replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username",
+    update: ".new-comment--update > .new-comment__input",
   },
 };
 
@@ -294,6 +296,7 @@ const container = {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
     replyToReply: document.querySelectorAll(selectors.form.replyToReply),
+    update: document.querySelectorAll(selectors.form.update),
   },
   input: {
     replyTo: document.querySelectorAll(selectors.input.replyTo),
@@ -302,6 +305,7 @@ const container = {
     replyToReplyContent: document.querySelectorAll(
       selectors.input.replyToReply
     ),
+    update: document.querySelectorAll(selectors.input.update),
   },
 };
 
@@ -381,7 +385,7 @@ container.modal.addEventListener("click", () => {
 // CRUD
 // ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
-  const {currentUser} = data
+  const { currentUser } = data;
 
   const container = document.createElement("div");
   container.classList.add("comment");
@@ -405,15 +409,15 @@ function newPost(type, source) {
   };
 
   for (let ele in newComment) {
-    if(newComment[ele] !== newComment.updateForm){
-      container.append(newComment[ele])
-    } 
+    if (newComment[ele] !== newComment.updateForm) {
+      container.append(newComment[ele]);
+    }
   }
 
   if (currentUser.username === source.user.username) {
-    container.append(newComment.updateForm)
+    container.append(newComment.updateForm);
   }
-  
+
   if (type === "reply") {
     newComment.CRUD.classList.add("CRUD-container--reply");
   }
@@ -576,5 +580,32 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
         replies[replies.length] = newReply;
       }
     }
+  });
+}
+
+// UPDATE
+for (let x = 0; x < container.form.update.length; x++) {
+  container.form.update[x].addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const { comments } = data;
+    const oldContent =
+      container.input.update[x].parentElement.parentElement.childNodes[3]
+        .childNodes[1];
+    const content = container.input.update[x].value;
+
+    for (let x in comments) {
+      if (comments[x].content === oldContent.innerText) {
+        comments[x].content = content;
+      } else {
+        for (let y in comments[x].replies) {
+          if (comments[x].replies[y].content === oldContent.innerText) {
+            comments[x].replies[y].content = content;
+          }
+        }
+      }
+    }
+
+    oldContent.innerText = content;
   });
 }

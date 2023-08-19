@@ -686,6 +686,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
           }
         }
       }
+      
     });
   });
 }

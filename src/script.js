@@ -422,6 +422,27 @@ function newPost(type, source) {
     newComment.CRUD.classList.add("CRUD-container--reply");
   }
 
+  const deleteBtn = container.childNodes[5].childNodes[0];
+  const deleteModal = document.getElementsByClassName("modal")[0];
+
+  const editBtn = container.childNodes[5].childNodes[1];
+  editBtn.addEventListener("click", () => {
+    if (!container.classList.contains("comment--edit")) {
+      container.classList.add("comment--edit");
+    } else {
+      container.classList.remove("comment--edit");
+    }
+  });
+
+
+  deleteBtn.addEventListener("click", () => {
+    if (
+      deleteModal.style.display === "none" ||
+      deleteModal.style.display === ""
+    ) {
+      deleteModal.style.display = "flex";
+    }})
+
   return container;
 }
 

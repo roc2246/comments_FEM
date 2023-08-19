@@ -270,7 +270,11 @@ var element = {
     updateForm.classList.add("new-comment--update");
     var updateInput = document.createElement("textarea");
     updateInput.classList.add("new-comment__input");
-    updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+    if (source.replyingTo !== undefined) {
+      updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+    } else {
+      updateInput.value = "".concat(source.content);
+    }
     updateForm.appendChild(updateInput);
     var updateSend = document.createElement("button");
     updateSend.classList.add("btn");
@@ -434,7 +438,8 @@ var selectors = {
   },
   btn: {
     reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
-    replyToReply: ".CRUD-container--reply > .CRUD--reply"
+    replyToReply: ".CRUD-container--reply > .CRUD--reply",
+    deleteComment: "modal__btn-box--delete"
   },
   input: {
     comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
@@ -450,6 +455,9 @@ var container = {
   comments: document.querySelectorAll(selectors.comment),
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
+  btn: {
+    deleteComment: document.getElementsByClassName("modal__btn-box--delete")[0]
+  },
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
@@ -724,9 +732,9 @@ var _loop7 = function _loop7(_x5) {
     // Generates hr height for reply container
     replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "replytoreply"), ", auto)");
     var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-    for (var _x7 in comments) {
-      if (comments[_x7].content === parentComment) {
-        var replies = comments[_x7].replies;
+    for (var _x8 in comments) {
+      if (comments[_x8].content === parentComment) {
+        var replies = comments[_x8].replies;
         replies[replies.length] = newReply;
       }
     }
@@ -741,15 +749,21 @@ var _loop8 = function _loop8(_x6) {
   container.form.update[_x6].addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = _data.default.comments;
-    var oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1];
+    var oldContent;
+    if (container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1]) {
+      oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1];
+      console.log(oldContent);
+    } else {
+      oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[0];
+    }
     var content = container.input.update[_x6].value;
-    for (var _x8 in comments) {
-      if (comments[_x8].content === oldContent.innerText) {
-        comments[_x8].content = content;
+    for (var _x9 in comments) {
+      if (comments[_x9].content === oldContent.innerText) {
+        comments[_x9].content = content;
       } else {
-        for (var y in comments[_x8].replies) {
-          if (comments[_x8].replies[y].content === oldContent.innerText) {
-            comments[_x8].replies[y].content = content;
+        for (var y in comments[_x9].replies) {
+          if (comments[_x9].replies[y].content === oldContent.innerText) {
+            comments[_x9].replies[y].content = content;
           }
         }
       }
@@ -759,6 +773,45 @@ var _loop8 = function _loop8(_x6) {
 };
 for (var _x6 = 0; _x6 < container.form.update.length; _x6++) {
   _loop8(_x6);
+}
+
+// Deletes Post
+var _loop9 = function _loop9() {
+  var comments = _data.default.comments;
+  var deleteBtn = CRUD.delete[_x7];
+  var deleteComment = container.btn.deleteComment;
+  var chosen;
+  deleteBtn.addEventListener("click", function () {
+    chosen = deleteBtn.parentElement.parentElement;
+    var content;
+    if (chosen.childNodes[3].childNodes[1]) {
+      content = chosen.childNodes[3].childNodes[1].innerText;
+    } else {
+      content = chosen.childNodes[3].childNodes[0].innerText;
+    }
+    deleteComment.addEventListener("click", function () {
+      var comment = document.getElementsByClassName("comment");
+      for (var _x10 in comment) {
+        if (chosen === comment[_x10]) {
+          comment[_x10].remove();
+        }
+      }
+      for (var _x11 in comments) {
+        if (content === comments[_x11].content) {
+          delete comments[_x11];
+        } else {
+          for (var y in comments[_x11].replies) {
+            if (content === comments[_x11].replies[y].content) {
+              delete comments[_x11].replies[y];
+            }
+          }
+        }
+      }
+    });
+  });
+};
+for (var _x7 = 0; _x7 < CRUD.delete.length; _x7++) {
+  _loop9();
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -785,7 +838,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60590" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62137" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

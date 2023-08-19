@@ -96,7 +96,11 @@ const element = {
 
     const updateInput = document.createElement("textarea");
     updateInput.classList.add("new-comment__input");
-    updateInput.value = `@${source.replyingTo} ${source.content}`;
+    if(source.replyingTo !== undefined){
+      updateInput.value = `@${source.replyingTo} ${source.content}`;
+    } else {
+      updateInput.value = `${source.content}`;
+    }
     updateForm.appendChild(updateInput);
 
     const updateSend = document.createElement("button");
@@ -274,6 +278,7 @@ const selectors = {
   btn: {
     reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
     replyToReply: ".CRUD-container--reply > .CRUD--reply",
+    deleteComment: "modal__btn-box--delete",
   },
   input: {
     comment:
@@ -292,6 +297,9 @@ const container = {
   comments: document.querySelectorAll(selectors.comment),
   userComments: document.getElementsByClassName("comment--you"),
   modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
+  btn: {
+    deleteComment: document.getElementsByClassName("modal__btn-box--delete")[0],
+  },
   form: {
     comment: document.querySelector(selectors.form.comment),
     reply: document.querySelectorAll(selectors.form.reply),
@@ -434,14 +442,14 @@ function newPost(type, source) {
     }
   });
 
-
   deleteBtn.addEventListener("click", () => {
     if (
       deleteModal.style.display === "none" ||
       deleteModal.style.display === ""
     ) {
       deleteModal.style.display = "flex";
-    }})
+    }
+  });
 
   return container;
 }
@@ -610,9 +618,21 @@ for (let x = 0; x < container.form.update.length; x++) {
     e.preventDefault();
 
     const { comments } = data;
-    const oldContent =
+   
+    let oldContent;
+    if (
       container.input.update[x].parentElement.parentElement.childNodes[3]
-        .childNodes[1];
+        .childNodes[1]
+    ) {
+      oldContent =
+        container.input.update[x].parentElement.parentElement.childNodes[3]
+          .childNodes[1];
+      console.log(oldContent);
+    } else {
+      oldContent =
+        container.input.update[x].parentElement.parentElement.childNodes[3]
+          .childNodes[0];
+    }
     const content = container.input.update[x].value;
 
     for (let x in comments) {
@@ -628,5 +648,44 @@ for (let x = 0; x < container.form.update.length; x++) {
     }
 
     oldContent.innerText = content;
+  });
+}
+
+// Deletes Post
+for (let x = 0; x < CRUD.delete.length; x++) {
+  const { comments } = data;
+
+  const deleteBtn = CRUD.delete[x];
+  const deleteComment = container.btn.deleteComment;
+  let chosen;
+
+  deleteBtn.addEventListener("click", () => {
+    chosen = deleteBtn.parentElement.parentElement;
+    let content;
+    if (chosen.childNodes[3].childNodes[1]) {
+      content = chosen.childNodes[3].childNodes[1].innerText;
+    } else {
+      content = chosen.childNodes[3].childNodes[0].innerText;
+    }
+
+    deleteComment.addEventListener("click", () => {
+      const comment = document.getElementsByClassName("comment");
+      for (let x in comment) {
+        if (chosen === comment[x]) {
+          comment[x].remove();
+        }
+      }
+      for (let x in comments) {
+        if (content === comments[x].content) {
+          delete comments[x];
+        } else {
+          for (let y in comments[x].replies) {
+            if (content === comments[x].replies[y].content) {
+              delete comments[x].replies[y];
+            }
+          }
+        }
+      }
+    });
   });
 }

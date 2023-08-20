@@ -478,6 +478,37 @@ function newPost(type, source) {
     }
   });
 
+  const deleteComment = document.getElementsByClassName(
+    "modal__btn-box--delete"
+  )[0];
+  deleteComment.addEventListener("click", () => {
+    const comment = document.getElementsByClassName("comment");
+
+    for (let x in comment) {
+      if (container === comment[x]) {
+        comment[x].remove();
+      }
+    }
+
+    const chosen = deleteBtn.parentElement.parentElement;
+    let content;
+    if (chosen.childNodes[3].childNodes[1]) {
+      content = chosen.childNodes[3].childNodes[1].innerText;
+    } else {
+      content = chosen.childNodes[3].childNodes[0].innerText;
+    }
+    for (let x in comments) {
+      if (content === comments[x].content) {
+        delete comments[x];
+      } else {
+        for (let y in comments[x].replies) {
+          if (content === comments[x].replies[y].content) {
+            delete comments[x].replies[y];
+          }
+        }
+      }
+    }
+  });
 
   return container;
 }

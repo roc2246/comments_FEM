@@ -96,7 +96,7 @@ const element = {
 
     const updateInput = document.createElement("textarea");
     updateInput.classList.add("new-comment__input");
-    if(source.replyingTo !== undefined){
+    if (source.replyingTo !== undefined) {
       updateInput.value = `@${source.replyingTo} ${source.content}`;
     } else {
       updateInput.value = `${source.content}`;
@@ -393,7 +393,7 @@ container.modal.addEventListener("click", () => {
 // CRUD
 // ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
-  const { currentUser } = data;
+  const { comments, currentUser } = data;
 
   const container = document.createElement("div");
   container.classList.add("comment");
@@ -442,6 +442,33 @@ function newPost(type, source) {
     }
   });
 
+  const editForm = container.childNodes[6];
+  editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const newContent = editForm.childNodes[0].value;
+
+    let oldContent;
+    if (editForm.parentElement.childNodes[3].childNodes[1]) {
+      oldContent = editForm.parentElement.childNodes[3].childNodes[1];
+    } else {
+      oldContent = editForm.parentElement.childNodes[3].childNodes[0];
+    }
+    oldContent.innerText = newContent;
+
+    for (let x in comments) {
+      if (comments[x].content === oldContent.innerText) {
+        comments[x].content = newContent;
+      } else {
+        for (let y in comments[x].replies) {
+          if (comments[x].replies[y].content === oldContent.innerText) {
+            comments[x].replies[y].content = newContent;
+          }
+        }
+      }
+    }
+  });
+
   deleteBtn.addEventListener("click", () => {
     if (
       deleteModal.style.display === "none" ||
@@ -450,6 +477,7 @@ function newPost(type, source) {
       deleteModal.style.display = "flex";
     }
   });
+
 
   return container;
 }
@@ -618,7 +646,7 @@ for (let x = 0; x < container.form.update.length; x++) {
     e.preventDefault();
 
     const { comments } = data;
-   
+
     let oldContent;
     if (
       container.input.update[x].parentElement.parentElement.childNodes[3]
@@ -686,7 +714,6 @@ for (let x = 0; x < CRUD.delete.length; x++) {
           }
         }
       }
-      
     });
   });
 }

@@ -553,7 +553,8 @@ container.modal.addEventListener("click", function () {
 // CRUD
 // ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
-  var currentUser = _data.default.currentUser;
+  var comments = _data.default.comments,
+    currentUser = _data.default.currentUser;
   var container = document.createElement("div");
   container.classList.add("comment");
   if (type === "reply") {
@@ -591,6 +592,29 @@ function newPost(type, source) {
       container.classList.add("comment--edit");
     } else {
       container.classList.remove("comment--edit");
+    }
+  });
+  var editForm = container.childNodes[6];
+  editForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var newContent = editForm.childNodes[0].value;
+    var oldContent;
+    if (editForm.parentElement.childNodes[3].childNodes[1]) {
+      oldContent = editForm.parentElement.childNodes[3].childNodes[1];
+    } else {
+      oldContent = editForm.parentElement.childNodes[3].childNodes[0];
+    }
+    oldContent.innerText = newContent;
+    for (var _x4 in comments) {
+      if (comments[_x4].content === oldContent.innerText) {
+        comments[_x4].content = newContent;
+      } else {
+        for (var y in comments[_x4].replies) {
+          if (comments[_x4].replies[y].content === oldContent.innerText) {
+            comments[_x4].replies[y].content = newContent;
+          }
+        }
+      }
     }
   });
   deleteBtn.addEventListener("click", function () {
@@ -652,13 +676,13 @@ container.form.comment.addEventListener("submit", function (e) {
 });
 
 // NEW REPLY
-var _loop6 = function _loop6(_x4) {
-  container.form.reply[_x4].addEventListener("submit", function (e) {
+var _loop6 = function _loop6(_x5) {
+  container.form.reply[_x5].addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = _data.default.comments,
       currentUser = _data.default.currentUser;
-    var replyTo = container.input.replyTo[_x4].innerText;
-    var content = container.input.replyContent[_x4].value;
+    var replyTo = container.input.replyTo[_x5].innerText;
+    var content = container.input.replyContent[_x5].value;
     var newReply = {
       id: generateID(),
       content: content,
@@ -674,43 +698,43 @@ var _loop6 = function _loop6(_x4) {
         username: currentUser.username
       }
     };
-    if (comments[_x4].replies.length === 0) {
+    if (comments[_x5].replies.length === 0) {
       // Creates container for replies
       var replyCont = document.createElement("div");
       replyCont.classList.add("reply-wrapper");
       var hr = document.createElement("hr");
       hr.classList.add("reply-wrapper__ruler");
       replyCont.appendChild(hr);
-      container.comments[_x4].insertAdjacentElement("afterend", replyCont);
+      container.comments[_x5].insertAdjacentElement("afterend", replyCont);
 
       // Adds new reply
-      comments[_x4].replies[newReply.id] = newReply;
+      comments[_x5].replies[newReply.id] = newReply;
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "reply"), ", auto)");
+      replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "reply"), ", auto)");
     } else {
-      comments[_x4].replies[newReply.id] = newReply;
-      var replyWrapper = container.form.reply[_x4].previousElementSibling;
+      comments[_x5].replies[newReply.id] = newReply;
+      var replyWrapper = container.form.reply[_x5].previousElementSibling;
       replyWrapper.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
-      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "reply"), ", auto)");
+      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "reply"), ", auto)");
     }
   });
 };
-for (var _x4 = 0; _x4 < container.form.reply.length; _x4++) {
-  _loop6(_x4);
+for (var _x5 = 0; _x5 < container.form.reply.length; _x5++) {
+  _loop6(_x5);
 }
 
 // NEW REPLY TO REPLY
-var _loop7 = function _loop7(_x5) {
-  container.form.replyToReply[_x5].addEventListener("submit", function (e) {
+var _loop7 = function _loop7(_x6) {
+  container.form.replyToReply[_x6].addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = _data.default.comments,
       currentUser = _data.default.currentUser;
-    var replyTo = container.input.replyReplyTo[_x5].innerText;
-    var content = container.input.replyToReplyContent[_x5].value;
+    var replyTo = container.input.replyReplyTo[_x6].innerText;
+    var content = container.input.replyToReplyContent[_x6].value;
     var newReply = {
       id: generateID(),
       content: content,
@@ -726,44 +750,44 @@ var _loop7 = function _loop7(_x5) {
         username: currentUser.username
       }
     };
-    var replyWrapper = container.form.replyToReply[_x5].parentNode;
+    var replyWrapper = container.form.replyToReply[_x6].parentNode;
     replyWrapper.appendChild(newPost("replytoreply", newReply));
 
     // Generates hr height for reply container
-    replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "replytoreply"), ", auto)");
+    replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "replytoreply"), ", auto)");
     var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-    for (var _x8 in comments) {
-      if (comments[_x8].content === parentComment) {
-        var replies = comments[_x8].replies;
+    for (var _x9 in comments) {
+      if (comments[_x9].content === parentComment) {
+        var replies = comments[_x9].replies;
         replies[replies.length] = newReply;
       }
     }
   });
 };
-for (var _x5 = 0; _x5 < container.form.replyToReply.length; _x5++) {
-  _loop7(_x5);
+for (var _x6 = 0; _x6 < container.form.replyToReply.length; _x6++) {
+  _loop7(_x6);
 }
 
 // UPDATE
-var _loop8 = function _loop8(_x6) {
-  container.form.update[_x6].addEventListener("submit", function (e) {
+var _loop8 = function _loop8(_x7) {
+  container.form.update[_x7].addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = _data.default.comments;
     var oldContent;
-    if (container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1]) {
-      oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[1];
+    if (container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1]) {
+      oldContent = container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1];
       console.log(oldContent);
     } else {
-      oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[0];
+      oldContent = container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[0];
     }
-    var content = container.input.update[_x6].value;
-    for (var _x9 in comments) {
-      if (comments[_x9].content === oldContent.innerText) {
-        comments[_x9].content = content;
+    var content = container.input.update[_x7].value;
+    for (var _x10 in comments) {
+      if (comments[_x10].content === oldContent.innerText) {
+        comments[_x10].content = content;
       } else {
-        for (var y in comments[_x9].replies) {
-          if (comments[_x9].replies[y].content === oldContent.innerText) {
-            comments[_x9].replies[y].content = content;
+        for (var y in comments[_x10].replies) {
+          if (comments[_x10].replies[y].content === oldContent.innerText) {
+            comments[_x10].replies[y].content = content;
           }
         }
       }
@@ -771,14 +795,14 @@ var _loop8 = function _loop8(_x6) {
     oldContent.innerText = content;
   });
 };
-for (var _x6 = 0; _x6 < container.form.update.length; _x6++) {
-  _loop8(_x6);
+for (var _x7 = 0; _x7 < container.form.update.length; _x7++) {
+  _loop8(_x7);
 }
 
 // Deletes Post
 var _loop9 = function _loop9() {
   var comments = _data.default.comments;
-  var deleteBtn = CRUD.delete[_x7];
+  var deleteBtn = CRUD.delete[_x8];
   var deleteComment = container.btn.deleteComment;
   var chosen;
   deleteBtn.addEventListener("click", function () {
@@ -791,18 +815,18 @@ var _loop9 = function _loop9() {
     }
     deleteComment.addEventListener("click", function () {
       var comment = document.getElementsByClassName("comment");
-      for (var _x10 in comment) {
-        if (chosen === comment[_x10]) {
-          comment[_x10].remove();
+      for (var _x11 in comment) {
+        if (chosen === comment[_x11]) {
+          comment[_x11].remove();
         }
       }
-      for (var _x11 in comments) {
-        if (content === comments[_x11].content) {
-          delete comments[_x11];
+      for (var _x12 in comments) {
+        if (content === comments[_x12].content) {
+          delete comments[_x12];
         } else {
-          for (var y in comments[_x11].replies) {
-            if (content === comments[_x11].replies[y].content) {
-              delete comments[_x11].replies[y];
+          for (var y in comments[_x12].replies) {
+            if (content === comments[_x12].replies[y].content) {
+              delete comments[_x12].replies[y];
             }
           }
         }
@@ -810,7 +834,7 @@ var _loop9 = function _loop9() {
     });
   });
 };
-for (var _x7 = 0; _x7 < CRUD.delete.length; _x7++) {
+for (var _x8 = 0; _x8 < CRUD.delete.length; _x8++) {
   _loop9();
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -838,7 +862,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62137" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64721" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

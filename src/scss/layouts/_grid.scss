@@ -106,7 +106,7 @@
     
   }
 
-  &--you:not(.comment--reply){
+  &--you{
     .CRUD-container{
         grid-column: 4/8;
     }

@@ -266,6 +266,7 @@ for (let comment in data.comments) {
   }
 }
 
+// Containers for dom selection
 const selectors = {
   reply: ".comment--reply:not(.comment--you)",
   comment: ".comment:not(.comment--you):not(.comment--reply)",
@@ -395,16 +396,16 @@ container.modal.addEventListener("click", () => {
 function newPost(type, source) {
   const { comments, currentUser } = data;
 
-  const container = document.createElement("div");
-  container.classList.add("comment");
+  const postContainer = document.createElement("div");
+  postContainer.classList.add("comment");
 
   if (type === "reply") {
-    container.classList.add("comment--reply");
+    postContainer.classList.add("comment--reply");
   } else if (type === "replytoreply") {
-    container.classList.add("comment--reply");
-    container.classList.add("comment--replytoreply");
+    postContainer.classList.add("comment--reply");
+    postContainer.classList.add("comment--replytoreply");
   }
-  container.classList.add("comment--you");
+  postContainer.classList.add("comment--you");
 
   const newComment = {
     avatar: element.avatar(source),
@@ -418,31 +419,30 @@ function newPost(type, source) {
 
   for (let ele in newComment) {
     if (newComment[ele] !== newComment.updateForm) {
-      container.append(newComment[ele]);
+      postContainer.append(newComment[ele]);
     }
   }
 
   if (currentUser.username === source.user.username) {
-    container.append(newComment.updateForm);
+    postContainer.append(newComment.updateForm);
   }
 
   if (type === "reply") {
     newComment.CRUD.classList.add("CRUD-container--reply");
   }
 
-  const deleteBtn = container.childNodes[5].childNodes[0];
-  const deleteModal = document.getElementsByClassName("modal")[0];
-
-  const editBtn = container.childNodes[5].childNodes[1];
+  // Adds edit form toggle to new post
+  const editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", () => {
-    if (!container.classList.contains("comment--edit")) {
-      container.classList.add("comment--edit");
+    if (!postContainer.classList.contains("comment--edit")) {
+      postContainer.classList.add("comment--edit");
     } else {
-      container.classList.remove("comment--edit");
+      postContainer.classList.remove("comment--edit");
     }
   });
 
-  const editForm = container.childNodes[6];
+  // Adds edit functionality to new post
+  const editForm = postContainer.childNodes[6];
   editForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -456,6 +456,7 @@ function newPost(type, source) {
     }
     oldContent.innerText = newContent;
 
+    // Edits new post in data
     for (let x in comments) {
       if (comments[x].content === oldContent.innerText) {
         comments[x].content = newContent;
@@ -469,6 +470,9 @@ function newPost(type, source) {
     }
   });
 
+  // Adds delete modal toggle to new post
+  const deleteBtn = postContainer.childNodes[5].childNodes[0];
+  const deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", () => {
     if (
       deleteModal.style.display === "none" ||
@@ -478,18 +482,19 @@ function newPost(type, source) {
     }
   });
 
-  const deleteComment = document.getElementsByClassName(
-    "modal__btn-box--delete"
-  )[0];
+  // Adds delete functionality to new post
+  const deleteComment = container.btn.deleteComment
   deleteComment.addEventListener("click", () => {
     const comment = document.getElementsByClassName("comment");
 
+    // Deletes post from DOM
     for (let x in comment) {
-      if (container === comment[x]) {
+      if (postContainer === comment[x]) {
         comment[x].remove();
       }
     }
 
+    // Removes new post from data
     const chosen = deleteBtn.parentElement.parentElement;
     let content;
     if (chosen.childNodes[3].childNodes[1]) {
@@ -508,9 +513,10 @@ function newPost(type, source) {
         }
       }
     }
+
   });
 
-  return container;
+  return postContainer;
 }
 
 // ADDS NEW ID TO POST
@@ -562,8 +568,10 @@ container.form.comment.addEventListener("submit", (e) => {
     },
   };
 
+  // Adds new comment to data
   comments[newComment.id] = newComment;
 
+  // Adds new comment to DOM
   const wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
@@ -602,8 +610,10 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyCont.appendChild(hr);
       container.comments[x].insertAdjacentElement("afterend", replyCont);
 
-      // Adds new reply
+      // Adds new reply to data
       comments[x].replies[newReply.id] = newReply;
+
+      // Adds new reply to DOM
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
@@ -623,6 +633,7 @@ for (let x = 0; x < container.form.reply.length; x++) {
         "reply"
       )}, auto)`;
     }
+
   });
 }
 
@@ -660,6 +671,7 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
       "replytoreply"
     )}, auto)`;
 
+    // Adds replytoreply to data
     const parentComment =
       replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
     for (let x in comments) {
@@ -668,6 +680,7 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
         replies[replies.length] = newReply;
       }
     }
+
   });
 }
 
@@ -678,6 +691,7 @@ for (let x = 0; x < container.form.update.length; x++) {
 
     const { comments } = data;
 
+    // Sets content to be updated
     let oldContent;
     if (
       container.input.update[x].parentElement.parentElement.childNodes[3]
@@ -692,8 +706,11 @@ for (let x = 0; x < container.form.update.length; x++) {
         container.input.update[x].parentElement.parentElement.childNodes[3]
           .childNodes[0];
     }
+
+    // Stores new text for content
     const content = container.input.update[x].value;
 
+    // Updates post in data
     for (let x in comments) {
       if (comments[x].content === oldContent.innerText) {
         comments[x].content = content;
@@ -716,10 +733,11 @@ for (let x = 0; x < CRUD.delete.length; x++) {
 
   const deleteBtn = CRUD.delete[x];
   const deleteComment = container.btn.deleteComment;
-  let chosen;
 
   deleteBtn.addEventListener("click", () => {
-    chosen = deleteBtn.parentElement.parentElement;
+    const chosen = deleteBtn.parentElement.parentElement;
+
+    // Sets post content
     let content;
     if (chosen.childNodes[3].childNodes[1]) {
       content = chosen.childNodes[3].childNodes[1].innerText;
@@ -727,13 +745,18 @@ for (let x = 0; x < CRUD.delete.length; x++) {
       content = chosen.childNodes[3].childNodes[0].innerText;
     }
 
+    // Adds delete functionality
     deleteComment.addEventListener("click", () => {
       const comment = document.getElementsByClassName("comment");
+
+      // Deletes post from DOM
       for (let x in comment) {
         if (chosen === comment[x]) {
           comment[x].remove();
         }
       }
+
+      // Removes post from data
       for (let x in comments) {
         if (content === comments[x].content) {
           delete comments[x];
@@ -745,6 +768,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
           }
         }
       }
+
     });
   });
 }

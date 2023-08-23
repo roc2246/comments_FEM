@@ -392,7 +392,6 @@ container.modal.addEventListener("click", () => {
 });
 
 // CRUD
-// ADDS NEW COMMENT TO DOM
 function newPost(type, source) {
   const { comments, currentUser } = data;
 
@@ -454,9 +453,11 @@ function newPost(type, source) {
     } else {
       oldContent = editForm.parentElement.childNodes[3].childNodes[0];
     }
+
+    // Updates post in DOM
     oldContent.innerText = newContent;
 
-    // Edits new post in data
+    // Updates post in data
     for (let x in comments) {
       if (comments[x].content === oldContent.innerText) {
         comments[x].content = newContent;
@@ -487,14 +488,14 @@ function newPost(type, source) {
   deleteComment.addEventListener("click", () => {
     const comment = document.getElementsByClassName("comment");
 
-    // Deletes post from DOM
+    // Deletes post in DOM
     for (let x in comment) {
       if (postContainer === comment[x]) {
         comment[x].remove();
       }
     }
 
-    // Removes new post from data
+    // Deletes post in data
     const chosen = deleteBtn.parentElement.parentElement;
     let content;
     if (chosen.childNodes[3].childNodes[1]) {
@@ -568,10 +569,10 @@ container.form.comment.addEventListener("submit", (e) => {
     },
   };
 
-  // Adds new comment to data
+  // Adds new comment in data
   comments[newComment.id] = newComment;
 
-  // Adds new comment to DOM
+  // Adds new comment in DOM
   const wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
@@ -610,10 +611,10 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyCont.appendChild(hr);
       container.comments[x].insertAdjacentElement("afterend", replyCont);
 
-      // Adds new reply to data
+      // Adds new reply in data
       comments[x].replies[newReply.id] = newReply;
 
-      // Adds new reply to DOM
+      // Adds new reply in DOM
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
@@ -662,6 +663,7 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
       },
     };
 
+    // Adds replytoreply in DOM
     const replyWrapper = container.form.replyToReply[x].parentNode;
     replyWrapper.appendChild(newPost("replytoreply", newReply));
 
@@ -671,7 +673,7 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
       "replytoreply"
     )}, auto)`;
 
-    // Adds replytoreply to data
+    // Adds replytoreply in data
     const parentComment =
       replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
     for (let x in comments) {
@@ -723,6 +725,7 @@ for (let x = 0; x < container.form.update.length; x++) {
       }
     }
 
+    // Updates post in DOM
     oldContent.innerText = content;
   });
 }
@@ -749,14 +752,14 @@ for (let x = 0; x < CRUD.delete.length; x++) {
     deleteComment.addEventListener("click", () => {
       const comment = document.getElementsByClassName("comment");
 
-      // Deletes post from DOM
+      // Deletes post in DOM
       for (let x in comment) {
         if (chosen === comment[x]) {
           comment[x].remove();
         }
       }
 
-      // Removes post from data
+      // Deletes post in data
       for (let x in comments) {
         if (content === comments[x].content) {
           delete comments[x];

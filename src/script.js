@@ -324,6 +324,36 @@ const CRUD = {
   reply: document.getElementsByClassName("CRUD--reply"),
 };
 
+const crudFunction = {
+  comments: data.comments,
+  delete: function(content){
+    for (let x in this.comments) {
+      if (content === this.comments[x].content) {
+        delete this.comments[x];
+      } else {
+        for (let y in this.comments[x].replies) {
+          if (content === this.comments[x].replies[y].content) {
+            delete this.comments[x].replies[y];
+          }
+        }
+      }
+    }
+  },
+  update: function (oldContent, newContent) {
+    for (let x in this.comments) {
+      if (this.comments[x].content === oldContent.innerText) {
+        this.comments[x].content = newContent;
+      } else {
+        for (let y in this.comments[x].replies) {
+          if (this.comments[x].replies[y].content === oldContent.innerText) {
+            this.comments[x].replies[y].content = newContent;
+          }
+        }
+      }
+    }
+  },
+};
+
 // TOGGLES
 
 // Toggles edit mode
@@ -458,17 +488,7 @@ function newPost(type, source) {
     oldContent.innerText = newContent;
 
     // Updates post in data
-    for (let x in comments) {
-      if (comments[x].content === oldContent.innerText) {
-        comments[x].content = newContent;
-      } else {
-        for (let y in comments[x].replies) {
-          if (comments[x].replies[y].content === oldContent.innerText) {
-            comments[x].replies[y].content = newContent;
-          }
-        }
-      }
-    }
+    crudFunction.update(oldContent, newContent);
   });
 
   // Adds delete modal toggle to new post
@@ -484,7 +504,7 @@ function newPost(type, source) {
   });
 
   // Adds delete functionality to new post
-  const deleteComment = container.btn.deleteComment
+  const deleteComment = container.btn.deleteComment;
   deleteComment.addEventListener("click", () => {
     const comment = document.getElementsByClassName("comment");
 
@@ -495,7 +515,6 @@ function newPost(type, source) {
       }
     }
 
-    // Deletes post in data
     const chosen = deleteBtn.parentElement.parentElement;
     let content;
     if (chosen.childNodes[3].childNodes[1]) {
@@ -503,17 +522,9 @@ function newPost(type, source) {
     } else {
       content = chosen.childNodes[3].childNodes[0].innerText;
     }
-    for (let x in comments) {
-      if (content === comments[x].content) {
-        delete comments[x];
-      } else {
-        for (let y in comments[x].replies) {
-          if (content === comments[x].replies[y].content) {
-            delete comments[x].replies[y];
-          }
-        }
-      }
-    }
+
+    // Deletes post in data
+    crudFunction.delete(content)
 
   });
 
@@ -634,7 +645,6 @@ for (let x = 0; x < container.form.reply.length; x++) {
         "reply"
       )}, auto)`;
     }
-
   });
 }
 
@@ -682,7 +692,6 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
         replies[replies.length] = newReply;
       }
     }
-
   });
 }
 
@@ -702,7 +711,6 @@ for (let x = 0; x < container.form.update.length; x++) {
       oldContent =
         container.input.update[x].parentElement.parentElement.childNodes[3]
           .childNodes[1];
-      console.log(oldContent);
     } else {
       oldContent =
         container.input.update[x].parentElement.parentElement.childNodes[3]
@@ -710,23 +718,13 @@ for (let x = 0; x < container.form.update.length; x++) {
     }
 
     // Stores new text for content
-    const content = container.input.update[x].value;
+    const newContent = container.input.update[x].value;
 
     // Updates post in data
-    for (let x in comments) {
-      if (comments[x].content === oldContent.innerText) {
-        comments[x].content = content;
-      } else {
-        for (let y in comments[x].replies) {
-          if (comments[x].replies[y].content === oldContent.innerText) {
-            comments[x].replies[y].content = content;
-          }
-        }
-      }
-    }
+    crudFunction.update(oldContent, newContent);
 
     // Updates post in DOM
-    oldContent.innerText = content;
+    oldContent.innerText = newContent;
   });
 }
 
@@ -760,17 +758,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
       }
 
       // Deletes post in data
-      for (let x in comments) {
-        if (content === comments[x].content) {
-          delete comments[x];
-        } else {
-          for (let y in comments[x].replies) {
-            if (content === comments[x].replies[y].content) {
-              delete comments[x].replies[y];
-            }
-          }
-        }
-      }
+      crudFunction.delete(content)
 
     });
   });

@@ -362,6 +362,7 @@ for (let x = 0; x < container.userComments.length; x++) {
   const editBtn = CRUD.edit[x];
 
   editBtn.addEventListener("click", () => {
+    // Edit mode toggle
     if (!comment.classList.contains("comment--edit")) {
       comment.classList.add("comment--edit");
     } else {
@@ -404,6 +405,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
   const deleteModal = document.getElementsByClassName("modal")[0];
 
   deleteBtn.addEventListener("click", () => {
+    // Delete Toggle
     if (
       deleteModal.style.display === "none" ||
       deleteModal.style.display === ""
@@ -477,6 +479,7 @@ function newPost(type, source) {
 
     const newContent = editForm.childNodes[0].value;
 
+    // Sets post content
     let oldContent;
     if (editForm.parentElement.childNodes[3].childNodes[1]) {
       oldContent = editForm.parentElement.childNodes[3].childNodes[1];
@@ -515,6 +518,7 @@ function newPost(type, source) {
       }
     }
 
+    // Sets post content
     const chosen = deleteBtn.parentElement.parentElement;
     let content;
     if (chosen.childNodes[3].childNodes[1]) {
@@ -580,10 +584,10 @@ container.form.comment.addEventListener("submit", (e) => {
     },
   };
 
-  // Adds new comment in data
+  // Adds comment in data
   comments[newComment.id] = newComment;
 
-  // Adds new comment in DOM
+  // Adds comment in DOM
   const wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
@@ -622,10 +626,10 @@ for (let x = 0; x < container.form.reply.length; x++) {
       replyCont.appendChild(hr);
       container.comments[x].insertAdjacentElement("afterend", replyCont);
 
-      // Adds new reply in data
+      // Adds reply in data
       comments[x].replies[newReply.id] = newReply;
 
-      // Adds new reply in DOM
+      // Adds reply in DOM
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
@@ -645,6 +649,7 @@ for (let x = 0; x < container.form.reply.length; x++) {
         "reply"
       )}, auto)`;
     }
+
   });
 }
 
@@ -692,6 +697,7 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
         replies[replies.length] = newReply;
       }
     }
+
   });
 }
 
@@ -702,7 +708,7 @@ for (let x = 0; x < container.form.update.length; x++) {
 
     const { comments } = data;
 
-    // Sets content to be updated
+    // Sets post content
     let oldContent;
     if (
       container.input.update[x].parentElement.parentElement.childNodes[3]

@@ -185,9 +185,9 @@ module.exports = {
 
 var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-// Delete once data is on server
+// DELETE ONCE DATA IS ON SERVER
 
-// Generates child elements for posts
+// GENERATES CHILD ELEMENTS FOR POSTS
 var element = {
   content: function content(source) {
     var content = document.createElement("p");
@@ -322,14 +322,16 @@ var _loop = function _loop(comment) {
     comments = _data.default.comments;
   var post = comments[comment];
 
-  // SETS CURRENT USER'S AVATAR IN NEW COMMENT FORM
+  // sets current user's avatar in new comment form
   var newCommentAvatar = document.querySelector(".avatar--new-comment");
   newCommentAvatar.src = currentUser.image.png;
 
-  // FUNCTION FOR GENERATING COMMENTS AND REPLIES
+  // function for generating comments and replies
   function postCont(type, counter) {
     var container = document.createElement("div");
     container.classList.add("comment");
+
+    // sets the type of post (i.e; reply, comment, etc.)
     var post;
     if (type === "reply") {
       container.classList.add("comment--reply");
@@ -338,6 +340,8 @@ var _loop = function _loop(comment) {
       post = comments[comment];
       counter = null;
     }
+
+    // creates child elements for post
     var newComment = {
       avatar: element.avatar(post),
       username: element.username(post),
@@ -356,19 +360,21 @@ var _loop = function _loop(comment) {
       container.append(newComment.updateForm);
       container.classList.add("comment--you");
     }
+
+    // adds other classes if post is reply
     if (type === "reply") {
       newComment.CRUD.classList.add("CRUD-container--reply");
     }
     return container;
   }
 
-  // FUNCTION FOR CREATING REPLY FORM
+  // function for creating reply form
   function createReplyForm(type) {
     var replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
 
-    // SETS EXTRA CLASS IF FORM IS FOR REPLYTOREPLY
+    // sets extra class if form is for a reply to reply
     if (type === "reply") {
       replyForm.classList.add("new-comment--replytoreply");
     } else {
@@ -430,7 +436,9 @@ for (var comment in _data.default.comments) {
   _loop(comment);
 }
 
-// Containers for dom selection
+// CONTAINERS
+
+// CONTAINERS - DOM SELECTORS
 var selectors = {
   reply: ".comment--reply:not(.comment--you)",
   comment: ".comment:not(.comment--you):not(.comment--reply)",
@@ -454,6 +462,8 @@ var selectors = {
     update: ".new-comment--update > .new-comment__input"
   }
 };
+
+// CONTAINERS - ELEMENTS
 var container = {
   replies: document.querySelectorAll(selectors.reply),
   comments: document.querySelectorAll(selectors.comment),
@@ -476,11 +486,17 @@ var container = {
     update: document.querySelectorAll(selectors.input.update)
   }
 };
+
+// CONTAINERS - CRUD BUTTONS
 var CRUD = {
   edit: document.getElementsByClassName("CRUD--edit"),
   delete: document.getElementsByClassName("CRUD--delete"),
   reply: document.getElementsByClassName("CRUD--reply")
 };
+
+// METHODS
+
+// METHODS - HTTP REQUESTS
 var httpRequest = {
   comments: _data.default.comments,
   delete: function _delete(content) {
@@ -510,6 +526,8 @@ var httpRequest = {
     }
   }
 };
+
+// METHODS - BUTTON TOGGLES
 var toggles = {
   comments: _data.default.comments,
   edit: function edit(container) {
@@ -535,7 +553,7 @@ var toggles = {
 
 // TOGGLES
 
-// Toggles edit mode
+// TOGGLES - EDIT MODE
 var _loop2 = function _loop2() {
   var comment = container.userComments[x];
   var editBtn = CRUD.edit[x];
@@ -547,7 +565,7 @@ for (var x = 0; x < container.userComments.length; x++) {
   _loop2();
 }
 
-// Toggles reply form for Comments
+// TOGGLES - COMMENT REPLY
 var _loop3 = function _loop3() {
   var replyForm = document.querySelectorAll(selectors.form.reply)[_x];
   var replyBtn = document.querySelectorAll(selectors.btn.reply)[_x];
@@ -559,7 +577,7 @@ for (var _x = 0; _x < container.comments.length; _x++) {
   _loop3();
 }
 
-// Toggles reply form for Replies
+// TOGGLES - REPLY TO REPLY
 var _loop4 = function _loop4() {
   var replyForm = document.querySelectorAll(selectors.form.replyToReply)[_x2];
   var replyBtn = document.querySelectorAll(selectors.btn.replyToReply)[_x2];
@@ -571,7 +589,7 @@ for (var _x2 = 0; _x2 < container.replies.length; _x2++) {
   _loop4();
 }
 
-// Toggles delete modal
+// TOGGLES - OPEN DELETE MODAL
 var _loop5 = function _loop5() {
   var deleteBtn = CRUD.delete[_x3];
   var deleteModal = document.getElementsByClassName("modal")[0];
@@ -583,7 +601,7 @@ for (var _x3 = 0; _x3 < CRUD.delete.length; _x3++) {
   _loop5();
 }
 
-// Closes delete modal
+// TOGGLES - CLOSE DELETE MODAL
 container.modal.addEventListener("click", function () {
   var deleteModal = document.getElementsByClassName("modal")[0];
   if (deleteModal.style.display === "flex") {
@@ -594,11 +612,39 @@ container.modal.addEventListener("click", function () {
 // CRUD
 
 // CRUD - FUNCTIONS
+
+// CRUD - FUNCTIONS - GET REPLY COUNT
+function replyCount(no, type) {
+  var replyCont;
+  if (type === "reply") {
+    replyCont = container.form.reply[no].previousElementSibling;
+  } else if (type === "replytoreply") {
+    replyCont = container.form.replyToReply[no].parentElement;
+  }
+  return replyCont.childElementCount;
+}
+
+// CRUD - FUNCTIONS - GENERATE ID
+function generateID() {
+  var comments = _data.default.comments;
+  var IDarray = [];
+  for (var id in comments) {
+    IDarray.push(comments[id].id);
+    if (comments[id].replies.length > 0) {
+      for (var reply in comments[id].replies) IDarray.push(comments[id].replies[reply].id);
+    }
+  }
+  var ID = Math.max.apply(Math, IDarray) + 1;
+  return ID;
+}
+
+// CRUD - FUNCTIONS - NEW POST
 function newPost(type, source) {
-  var comments = _data.default.comments,
-    currentUser = _data.default.currentUser;
+  var currentUser = _data.default.currentUser;
   var postContainer = document.createElement("div");
   postContainer.classList.add("comment");
+
+  // adds extra classes if post isn't a comment
   if (type === "reply") {
     postContainer.classList.add("comment--reply");
   } else if (type === "replytoreply") {
@@ -606,6 +652,8 @@ function newPost(type, source) {
     postContainer.classList.add("comment--replytoreply");
   }
   postContainer.classList.add("comment--you");
+
+  // generates child elements for new post
   var newComment = {
     avatar: element.avatar(source),
     username: element.username(source),
@@ -623,16 +671,28 @@ function newPost(type, source) {
   if (currentUser.username === source.user.username) {
     postContainer.append(newComment.updateForm);
   }
+
+  // adds reply class to crud container
   if (type === "reply") {
     newComment.CRUD.classList.add("CRUD-container--reply");
   }
 
+  // new post toggles___________________________________
   // Adds edit form toggle to new post
   var editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", function () {
     toggles.edit(postContainer);
   });
 
+  // Adds delete modal toggle to new post
+  var deleteBtn = postContainer.childNodes[5].childNodes[0];
+  var deleteModal = document.getElementsByClassName("modal")[0];
+  deleteBtn.addEventListener("click", function () {
+    toggles.delete(deleteModal);
+  });
+  //________________________________________________
+
+  // new post CRUD______________________________
   // Adds edit functionality to new post
   var editForm = postContainer.childNodes[6];
   editForm.addEventListener("submit", function (e) {
@@ -652,13 +712,6 @@ function newPost(type, source) {
 
     // Updates post in data
     httpRequest.update(oldContent, newContent);
-  });
-
-  // Adds delete modal toggle to new post
-  var deleteBtn = postContainer.childNodes[5].childNodes[0];
-  var deleteModal = document.getElementsByClassName("modal")[0];
-  deleteBtn.addEventListener("click", function () {
-    toggles.delete(deleteModal);
   });
 
   // Adds delete functionality to new post
@@ -685,35 +738,13 @@ function newPost(type, source) {
     // Deletes post in data
     httpRequest.delete(content);
   });
+  //____________________________________________________________________
+
   return postContainer;
 }
 
-// ADDS NEW ID TO POST
-function generateID() {
-  var comments = _data.default.comments;
-  var IDarray = [];
-  for (var id in comments) {
-    IDarray.push(comments[id].id);
-    if (comments[id].replies.length > 0) {
-      for (var reply in comments[id].replies) IDarray.push(comments[id].replies[reply].id);
-    }
-  }
-  var ID = Math.max.apply(Math, IDarray) + 1;
-  return ID;
-}
-
-// Gets reply count
-function replyCount(no, type) {
-  var replyCont;
-  if (type === "reply") {
-    replyCont = container.form.reply[no].previousElementSibling;
-  } else if (type === "replytoreply") {
-    replyCont = container.form.replyToReply[no].parentElement;
-  }
-  return replyCont.childElementCount;
-}
-
-// NEW COMMENT
+// CRUD - DOM MANIPULATION
+// CRUD - DOM MANIPULATION - NEW COMMENT
 container.form.comment.addEventListener("submit", function (e) {
   e.preventDefault();
   var comments = _data.default.comments,
@@ -742,7 +773,7 @@ container.form.comment.addEventListener("submit", function (e) {
   wrapper.appendChild(newPost("comment", newComment));
 });
 
-// NEW REPLY
+// CRUD - DOM MANIPULATION - NEW REPLY
 var _loop6 = function _loop6(_x5) {
   container.form.reply[_x5].addEventListener("submit", function (e) {
     e.preventDefault();
@@ -796,7 +827,7 @@ for (var _x5 = 0; _x5 < container.form.reply.length; _x5++) {
   _loop6(_x5);
 }
 
-// NEW REPLY TO REPLY
+//  CRUD - DOM MANIPULATION - NEW REPLY TO REPLY
 var _loop7 = function _loop7(_x6) {
   container.form.replyToReply[_x6].addEventListener("submit", function (e) {
     e.preventDefault();
@@ -841,11 +872,10 @@ for (var _x6 = 0; _x6 < container.form.replyToReply.length; _x6++) {
   _loop7(_x6);
 }
 
-// UPDATE
+// CRUD - DOM MANIPULATION - UPDATE
 var _loop8 = function _loop8(_x7) {
   container.form.update[_x7].addEventListener("submit", function (e) {
     e.preventDefault();
-    var comments = _data.default.comments;
 
     // Sets post content
     var oldContent;
@@ -869,9 +899,8 @@ for (var _x7 = 0; _x7 < container.form.update.length; _x7++) {
   _loop8(_x7);
 }
 
-// Deletes Post
+// CRUD - DOM MANIPULATION - DELETE
 var _loop9 = function _loop9() {
-  var comments = _data.default.comments;
   var deleteBtn = CRUD.delete[_x8];
   var deleteComment = container.btn.deleteComment;
   deleteBtn.addEventListener("click", function () {

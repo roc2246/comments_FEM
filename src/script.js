@@ -198,12 +198,13 @@ for (let comment in data.comments) {
     return container;
   }
 
-  // Function for creating reply form
+  // FUNCTION FOR CREATING REPLY FORM
   function createReplyForm(type) {
     const replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
 
+    // SETS EXTRA CLASS IF FORM IS FOR REPLYTOREPLY
     if (type === "reply") {
       replyForm.classList.add("new-comment--replytoreply");
     } else {
@@ -324,9 +325,9 @@ const CRUD = {
   reply: document.getElementsByClassName("CRUD--reply"),
 };
 
-const crudFunction = {
+const httpRequest = {
   comments: data.comments,
-  delete: function(content){
+  delete: function (content) {
     for (let x in this.comments) {
       if (content === this.comments[x].content) {
         delete this.comments[x];
@@ -354,6 +355,32 @@ const crudFunction = {
   },
 };
 
+const toggles = {
+  comments: data.comments,
+  edit: function (container) {
+    if (!container.classList.contains("comment--edit")) {
+      container.classList.add("comment--edit");
+    } else {
+      container.classList.remove("comment--edit");
+    }
+  },
+  reply: function (container){
+    if (container.style.display === "") {
+      container.style.display = "grid";
+    } else {
+      container.style.display = "";
+    }
+  },
+  delete: function (container){
+    if (
+      container.style.display === "none" ||
+      container.style.display === ""
+    ) {
+      container.style.display = "flex";
+    }
+  }
+};
+
 // TOGGLES
 
 // Toggles edit mode
@@ -362,12 +389,7 @@ for (let x = 0; x < container.userComments.length; x++) {
   const editBtn = CRUD.edit[x];
 
   editBtn.addEventListener("click", () => {
-    // Edit mode toggle
-    if (!comment.classList.contains("comment--edit")) {
-      comment.classList.add("comment--edit");
-    } else {
-      comment.classList.remove("comment--edit");
-    }
+    toggles.edit(comment);
   });
 }
 
@@ -377,11 +399,7 @@ for (let x = 0; x < container.comments.length; x++) {
   const replyBtn = document.querySelectorAll(selectors.btn.reply)[x];
 
   replyBtn.addEventListener("click", () => {
-    if (replyForm.style.display === "") {
-      replyForm.style.display = "grid";
-    } else {
-      replyForm.style.display = "";
-    }
+    toggles.reply(replyForm)
   });
 }
 
@@ -391,11 +409,7 @@ for (let x = 0; x < container.replies.length; x++) {
   const replyBtn = document.querySelectorAll(selectors.btn.replyToReply)[x];
 
   replyBtn.addEventListener("click", () => {
-    if (replyForm.style.display === "") {
-      replyForm.style.display = "grid";
-    } else {
-      replyForm.style.display = "";
-    }
+    toggles.reply(replyForm)
   });
 }
 
@@ -405,13 +419,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
   const deleteModal = document.getElementsByClassName("modal")[0];
 
   deleteBtn.addEventListener("click", () => {
-    // Delete Toggle
-    if (
-      deleteModal.style.display === "none" ||
-      deleteModal.style.display === ""
-    ) {
-      deleteModal.style.display = "flex";
-    }
+    toggles.delete(deleteModal)
   });
 }
 
@@ -424,6 +432,8 @@ container.modal.addEventListener("click", () => {
 });
 
 // CRUD
+
+// CRUD - FUNCTIONS
 function newPost(type, source) {
   const { comments, currentUser } = data;
 
@@ -465,11 +475,7 @@ function newPost(type, source) {
   // Adds edit form toggle to new post
   const editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", () => {
-    if (!postContainer.classList.contains("comment--edit")) {
-      postContainer.classList.add("comment--edit");
-    } else {
-      postContainer.classList.remove("comment--edit");
-    }
+    toggles.edit(postContainer)
   });
 
   // Adds edit functionality to new post
@@ -491,19 +497,14 @@ function newPost(type, source) {
     oldContent.innerText = newContent;
 
     // Updates post in data
-    crudFunction.update(oldContent, newContent);
+    httpRequest.update(oldContent, newContent);
   });
 
   // Adds delete modal toggle to new post
   const deleteBtn = postContainer.childNodes[5].childNodes[0];
   const deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", () => {
-    if (
-      deleteModal.style.display === "none" ||
-      deleteModal.style.display === ""
-    ) {
-      deleteModal.style.display = "flex";
-    }
+    toggles.delete(deleteModal)
   });
 
   // Adds delete functionality to new post
@@ -528,8 +529,7 @@ function newPost(type, source) {
     }
 
     // Deletes post in data
-    crudFunction.delete(content)
-
+    httpRequest.delete(content);
   });
 
   return postContainer;
@@ -649,7 +649,6 @@ for (let x = 0; x < container.form.reply.length; x++) {
         "reply"
       )}, auto)`;
     }
-
   });
 }
 
@@ -697,7 +696,6 @@ for (let x = 0; x < container.form.replyToReply.length; x++) {
         replies[replies.length] = newReply;
       }
     }
-
   });
 }
 
@@ -727,7 +725,7 @@ for (let x = 0; x < container.form.update.length; x++) {
     const newContent = container.input.update[x].value;
 
     // Updates post in data
-    crudFunction.update(oldContent, newContent);
+    httpRequest.update(oldContent, newContent);
 
     // Updates post in DOM
     oldContent.innerText = newContent;
@@ -764,8 +762,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
       }
 
       // Deletes post in data
-      crudFunction.delete(content)
-
+      httpRequest.delete(content);
     });
   });
 }

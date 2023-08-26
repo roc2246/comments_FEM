@@ -105,13 +105,6 @@
     }
     
   }
-
-  &--you{
-    .CRUD-container{
-        grid-column: 4/8;
-    }
-  }
-
 }
 
 $ruler-column-size: clamp(rem(16px), vw(16px), rem(42px));

@@ -362,11 +362,13 @@ var _loop = function _loop(comment) {
     return container;
   }
 
-  // Function for creating reply form
+  // FUNCTION FOR CREATING REPLY FORM
   function createReplyForm(type) {
     var replyForm = document.createElement("form");
     replyForm.classList.add("new-comment");
     replyForm.classList.add("new-comment--reply");
+
+    // SETS EXTRA CLASS IF FORM IS FOR REPLYTOREPLY
     if (type === "reply") {
       replyForm.classList.add("new-comment--replytoreply");
     } else {
@@ -479,7 +481,7 @@ var CRUD = {
   delete: document.getElementsByClassName("CRUD--delete"),
   reply: document.getElementsByClassName("CRUD--reply")
 };
-var crudFunction = {
+var httpRequest = {
   comments: _data.default.comments,
   delete: function _delete(content) {
     for (var x in this.comments) {
@@ -508,6 +510,28 @@ var crudFunction = {
     }
   }
 };
+var toggles = {
+  comments: _data.default.comments,
+  edit: function edit(container) {
+    if (!container.classList.contains("comment--edit")) {
+      container.classList.add("comment--edit");
+    } else {
+      container.classList.remove("comment--edit");
+    }
+  },
+  reply: function reply(container) {
+    if (container.style.display === "") {
+      container.style.display = "grid";
+    } else {
+      container.style.display = "";
+    }
+  },
+  delete: function _delete(container) {
+    if (container.style.display === "none" || container.style.display === "") {
+      container.style.display = "flex";
+    }
+  }
+};
 
 // TOGGLES
 
@@ -516,11 +540,7 @@ var _loop2 = function _loop2() {
   var comment = container.userComments[x];
   var editBtn = CRUD.edit[x];
   editBtn.addEventListener("click", function () {
-    if (!comment.classList.contains("comment--edit")) {
-      comment.classList.add("comment--edit");
-    } else {
-      comment.classList.remove("comment--edit");
-    }
+    toggles.edit(comment);
   });
 };
 for (var x = 0; x < container.userComments.length; x++) {
@@ -532,11 +552,7 @@ var _loop3 = function _loop3() {
   var replyForm = document.querySelectorAll(selectors.form.reply)[_x];
   var replyBtn = document.querySelectorAll(selectors.btn.reply)[_x];
   replyBtn.addEventListener("click", function () {
-    if (replyForm.style.display === "") {
-      replyForm.style.display = "grid";
-    } else {
-      replyForm.style.display = "";
-    }
+    toggles.reply(replyForm);
   });
 };
 for (var _x = 0; _x < container.comments.length; _x++) {
@@ -548,11 +564,7 @@ var _loop4 = function _loop4() {
   var replyForm = document.querySelectorAll(selectors.form.replyToReply)[_x2];
   var replyBtn = document.querySelectorAll(selectors.btn.replyToReply)[_x2];
   replyBtn.addEventListener("click", function () {
-    if (replyForm.style.display === "") {
-      replyForm.style.display = "grid";
-    } else {
-      replyForm.style.display = "";
-    }
+    toggles.reply(replyForm);
   });
 };
 for (var _x2 = 0; _x2 < container.replies.length; _x2++) {
@@ -564,9 +576,7 @@ var _loop5 = function _loop5() {
   var deleteBtn = CRUD.delete[_x3];
   var deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", function () {
-    if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
-      deleteModal.style.display = "flex";
-    }
+    toggles.delete(deleteModal);
   });
 };
 for (var _x3 = 0; _x3 < CRUD.delete.length; _x3++) {
@@ -582,6 +592,8 @@ container.modal.addEventListener("click", function () {
 });
 
 // CRUD
+
+// CRUD - FUNCTIONS
 function newPost(type, source) {
   var comments = _data.default.comments,
     currentUser = _data.default.currentUser;
@@ -618,11 +630,7 @@ function newPost(type, source) {
   // Adds edit form toggle to new post
   var editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", function () {
-    if (!postContainer.classList.contains("comment--edit")) {
-      postContainer.classList.add("comment--edit");
-    } else {
-      postContainer.classList.remove("comment--edit");
-    }
+    toggles.edit(postContainer);
   });
 
   // Adds edit functionality to new post
@@ -630,6 +638,8 @@ function newPost(type, source) {
   editForm.addEventListener("submit", function (e) {
     e.preventDefault();
     var newContent = editForm.childNodes[0].value;
+
+    // Sets post content
     var oldContent;
     if (editForm.parentElement.childNodes[3].childNodes[1]) {
       oldContent = editForm.parentElement.childNodes[3].childNodes[1];
@@ -641,16 +651,14 @@ function newPost(type, source) {
     oldContent.innerText = newContent;
 
     // Updates post in data
-    crudFunction.update(oldContent, newContent);
+    httpRequest.update(oldContent, newContent);
   });
 
   // Adds delete modal toggle to new post
   var deleteBtn = postContainer.childNodes[5].childNodes[0];
   var deleteModal = document.getElementsByClassName("modal")[0];
   deleteBtn.addEventListener("click", function () {
-    if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
-      deleteModal.style.display = "flex";
-    }
+    toggles.delete(deleteModal);
   });
 
   // Adds delete functionality to new post
@@ -664,6 +672,8 @@ function newPost(type, source) {
         comment[_x4].remove();
       }
     }
+
+    // Sets post content
     var chosen = deleteBtn.parentElement.parentElement;
     var content;
     if (chosen.childNodes[3].childNodes[1]) {
@@ -673,7 +683,7 @@ function newPost(type, source) {
     }
 
     // Deletes post in data
-    crudFunction.delete(content);
+    httpRequest.delete(content);
   });
   return postContainer;
 }
@@ -724,10 +734,10 @@ container.form.comment.addEventListener("submit", function (e) {
     }
   };
 
-  // Adds new comment in data
+  // Adds comment in data
   comments[newComment.id] = newComment;
 
-  // Adds new comment in DOM
+  // Adds comment in DOM
   var wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(newPost("comment", newComment));
 });
@@ -764,10 +774,10 @@ var _loop6 = function _loop6(_x5) {
       replyCont.appendChild(hr);
       container.comments[_x5].insertAdjacentElement("afterend", replyCont);
 
-      // Adds new reply in data
+      // Adds reply in data
       comments[_x5].replies[newReply.id] = newReply;
 
-      // Adds new reply in DOM
+      // Adds reply in DOM
       replyCont.appendChild(newPost("reply", newReply));
 
       // Generates hr height for reply container
@@ -837,7 +847,7 @@ var _loop8 = function _loop8(_x7) {
     e.preventDefault();
     var comments = _data.default.comments;
 
-    // Sets content to be updated
+    // Sets post content
     var oldContent;
     if (container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1]) {
       oldContent = container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1];
@@ -849,7 +859,7 @@ var _loop8 = function _loop8(_x7) {
     var newContent = container.input.update[_x7].value;
 
     // Updates post in data
-    crudFunction.update(oldContent, newContent);
+    httpRequest.update(oldContent, newContent);
 
     // Updates post in DOM
     oldContent.innerText = newContent;
@@ -887,7 +897,7 @@ var _loop9 = function _loop9() {
       }
 
       // Deletes post in data
-      crudFunction.delete(content);
+      httpRequest.delete(content);
     });
   });
 };
@@ -919,7 +929,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59014" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64484" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

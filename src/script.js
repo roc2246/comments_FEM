@@ -859,7 +859,7 @@ for (let x = 0; x < CRUD.delete.length; x++) {
 
 // VOTE
 // VOTE - FUNCTION
-function vote(mode, increment) {
+function vote(mode) {
   const vote = document.getElementsByClassName(`vote__btn--${mode}`);
   for (let x = 0; x < vote.length; x++) {
     vote[x].addEventListener("click", (e) => {
@@ -868,7 +868,7 @@ function vote(mode, increment) {
       // Changes score in DOM
       const scoreContianer = vote[x].parentElement.childNodes[1];
       let score = scoreContianer.innerText;
-      increment === "increase" ? score++ : score--;
+      mode === "upvote" ? score++ : score--;
       scoreContianer.innerText = score;
 
       // Changes score in data
@@ -880,7 +880,7 @@ function vote(mode, increment) {
 }
 
 // VOTE - UPVOTE
-vote("upvote", "increase");
+vote("upvote");
 
 // VOTE -DOWNVOTE
-vote("downvote", "decrease")
+vote("downvote")

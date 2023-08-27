@@ -1013,7 +1013,7 @@ for (var _x8 = 0; _x8 < CRUD.delete.length; _x8++) {
 
 // VOTE
 // VOTE - FUNCTION
-function vote(mode, increment) {
+function vote(mode) {
   var vote = document.getElementsByClassName("vote__btn--".concat(mode));
   var _loop10 = function _loop10(_x9) {
     vote[_x9].addEventListener("click", function (e) {
@@ -1022,7 +1022,7 @@ function vote(mode, increment) {
       // Changes score in DOM
       var scoreContianer = vote[_x9].parentElement.childNodes[1];
       var score = scoreContianer.innerText;
-      increment === "increase" ? score++ : score--;
+      mode === "upvote" ? score++ : score--;
       scoreContianer.innerText = score;
 
       // Changes score in data
@@ -1035,10 +1035,10 @@ function vote(mode, increment) {
 }
 
 // VOTE - UPVOTE
-vote("upvote", "increase");
+vote("upvote");
 
 // VOTE -DOWNVOTE
-vote("downvote", "decrease");
+vote("downvote");
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

@@ -937,9 +937,9 @@ var _loop7 = function _loop7(_x6) {
 
     // Adds replytoreply in data
     var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-    for (var _x11 in comments) {
-      if (comments[_x11].content === parentComment) {
-        var replies = comments[_x11].replies;
+    for (var _x10 in comments) {
+      if (comments[_x10].content === parentComment) {
+        var replies = comments[_x10].replies;
         replies[replies.length] = newReply;
       }
     }
@@ -996,9 +996,9 @@ var _loop9 = function _loop9() {
       var comment = document.getElementsByClassName("comment");
 
       // Deletes post in DOM
-      for (var _x12 in comment) {
-        if (chosen === comment[_x12]) {
-          comment[_x12].remove();
+      for (var _x11 in comment) {
+        if (chosen === comment[_x11]) {
+          comment[_x11].remove();
         }
       }
 
@@ -1012,46 +1012,33 @@ for (var _x8 = 0; _x8 < CRUD.delete.length; _x8++) {
 }
 
 // VOTE
+// VOTE - FUNCTION
+function vote(mode, increment) {
+  var vote = document.getElementsByClassName("vote__btn--".concat(mode));
+  var _loop10 = function _loop10(_x9) {
+    vote[_x9].addEventListener("click", function (e) {
+      e.preventDefault();
+
+      // Changes score in DOM
+      var scoreContianer = vote[_x9].parentElement.childNodes[1];
+      var score = scoreContianer.innerText;
+      increment === "increase" ? score++ : score--;
+      scoreContianer.innerText = score;
+
+      // Changes score in data
+      mode === "upvote" ? httpRequest.upvote(scoreContianer) : httpRequest.downvote(scoreContianer);
+    });
+  };
+  for (var _x9 = 0; _x9 < vote.length; _x9++) {
+    _loop10(_x9);
+  }
+}
 
 // VOTE - UPVOTE
-var upvote = document.getElementsByClassName("vote__btn--upvote");
-var _loop10 = function _loop10(_x9) {
-  upvote[_x9].addEventListener("click", function (e) {
-    e.preventDefault();
-
-    // Changes score in DOM
-    var scoreContianer = upvote[_x9].parentElement.childNodes[1];
-    var score = scoreContianer.innerText;
-    score++;
-    scoreContianer.innerText = score;
-
-    // Changes score in data
-    httpRequest.upvote(scoreContianer);
-  });
-};
-for (var _x9 = 0; _x9 < upvote.length; _x9++) {
-  _loop10(_x9);
-}
+vote("upvote", "increase");
 
 // VOTE -DOWNVOTE
-var downvote = document.getElementsByClassName("vote__btn--downvote");
-var _loop11 = function _loop11(_x10) {
-  downvote[_x10].addEventListener("click", function (e) {
-    e.preventDefault();
-
-    // Changes score in DOM
-    var scoreContianer = downvote[_x10].parentElement.childNodes[1];
-    var score = scoreContianer.innerText;
-    score--;
-    scoreContianer.innerText = score;
-
-    // Changes score in data
-    httpRequest.downvote(scoreContianer);
-  });
-};
-for (var _x10 = 0; _x10 < downvote.length; _x10++) {
-  _loop11(_x10);
-}
+vote("downvote", "decrease");
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

@@ -363,6 +363,50 @@ const httpRequest = {
       }
     }
   },
+  upvote: function (scoreContianer){
+    const {comments} = data
+    const postContainer = scoreContianer.parentElement.parentElement
+    let content
+    if(postContainer.childNodes[3].childNodes[1]){
+      content = postContainer.childNodes[3].childNodes[1]
+    }else{
+      content = postContainer.childNodes[3]
+    }
+    for (let x in comments){
+     if(comments[x].content === content){
+      comments[x].score = score++
+     } else {
+      for(let y in comments[x].replies[y]){
+        const reply = comments[x].replies[y]
+        if(reply.content = content){
+          reply.score = score++
+        }
+      }
+     }
+    }
+  },
+  downvote: function(scoreContianer){
+    const {comments} = data
+    const postContainer = scoreContianer.parentElement.parentElement
+    let content
+    if(postContainer.childNodes[3].childNodes[1]){
+      content = postContainer.childNodes[3].childNodes[1]
+    }else{
+      content = postContainer.childNodes[3]
+    }
+    for (let x in comments){
+     if(comments[x].content === content){
+      comments[x].score = score--
+     } else {
+      for(let y in comments[x].replies[y]){
+        const reply = comments[x].replies[y]
+        if(reply.content = content){
+          reply.score = score--
+        }
+      }
+     }
+    }
+  }
 };
 
 // METHODS - BUTTON TOGGLES
@@ -387,6 +431,7 @@ const toggles = {
       container.style.display = "flex";
     }
   },
+ 
 };
 
 // TOGGLES
@@ -531,6 +576,38 @@ function addFunctionality(postContainer) {
     // Deletes post in data
     httpRequest.delete(content);
   });
+
+  // VOTE
+  // VOTE - UPVOTE
+const upvote = postContainer.childNodes[4].childNodes[0]
+console.log(upvote)
+  upvote.addEventListener("click", (e)=>{
+    e.preventDefault()
+    
+    // Changes score in DOM
+    const scoreContianer = upvote.parentElement.childNodes[1]
+    let score = scoreContianer.innerText
+    score++
+    scoreContianer.innerText = score
+
+    // Changes score in data
+    httpRequest.upvote(scoreContianer)
+  })
+
+// VOTE -DOWNVOTE
+const downvote = postContainer.childNodes[4].childNodes[2]
+ downvote.addEventListener("click", (e)=>{
+    e.preventDefault()
+    
+    // Changes score in DOM
+    const scoreContianer =downvote.parentElement.childNodes[1]
+    let score = scoreContianer.innerText
+    score--
+    scoreContianer.innerText = score
+
+    // Changes score in data
+    httpRequest.downvote(scoreContianer)
+  })
 }
 
 // CRUD - FUNCTIONS - NEW POST
@@ -779,4 +856,40 @@ for (let x = 0; x < CRUD.delete.length; x++) {
       httpRequest.delete(content);
     });
   });
+}
+
+// VOTE
+
+// VOTE - UPVOTE
+const upvote = document.getElementsByClassName("vote__btn--upvote")
+for(let x = 0; x < upvote.length; x++) {
+  upvote[x].addEventListener("click", (e)=>{
+    e.preventDefault()
+    
+    // Changes score in DOM
+    const scoreContianer = upvote[x].parentElement.childNodes[1]
+    let score = scoreContianer.innerText
+    score++
+    scoreContianer.innerText = score
+
+    // Changes score in data
+    httpRequest.upvote(scoreContianer)
+  })
+}
+
+// VOTE -DOWNVOTE
+const downvote = document.getElementsByClassName("vote__btn--downvote")
+for(let x = 0; x <downvote.length; x++) {
+ downvote[x].addEventListener("click", (e)=>{
+    e.preventDefault()
+    
+    // Changes score in DOM
+    const scoreContianer =downvote[x].parentElement.childNodes[1]
+    let score = scoreContianer.innerText
+    score--
+    scoreContianer.innerText = score
+
+    // Changes score in data
+    httpRequest.downvote(scoreContianer)
+  })
 }

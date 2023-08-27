@@ -524,6 +524,50 @@ var httpRequest = {
         }
       }
     }
+  },
+  upvote: function upvote(scoreContianer) {
+    var comments = _data.default.comments;
+    var postContainer = scoreContianer.parentElement.parentElement;
+    var content;
+    if (postContainer.childNodes[3].childNodes[1]) {
+      content = postContainer.childNodes[3].childNodes[1];
+    } else {
+      content = postContainer.childNodes[3];
+    }
+    for (var x in comments) {
+      if (comments[x].content === content) {
+        comments[x].score = score++;
+      } else {
+        for (var y in comments[x].replies[y]) {
+          var reply = comments[x].replies[y];
+          if (reply.content = content) {
+            reply.score = score++;
+          }
+        }
+      }
+    }
+  },
+  downvote: function downvote(scoreContianer) {
+    var comments = _data.default.comments;
+    var postContainer = scoreContianer.parentElement.parentElement;
+    var content;
+    if (postContainer.childNodes[3].childNodes[1]) {
+      content = postContainer.childNodes[3].childNodes[1];
+    } else {
+      content = postContainer.childNodes[3];
+    }
+    for (var x in comments) {
+      if (comments[x].content === content) {
+        comments[x].score = score--;
+      } else {
+        for (var y in comments[x].replies[y]) {
+          var reply = comments[x].replies[y];
+          if (reply.content = content) {
+            reply.score = score--;
+          }
+        }
+      }
+    }
   }
 };
 
@@ -698,6 +742,38 @@ function addFunctionality(postContainer) {
     // Deletes post in data
     httpRequest.delete(content);
   });
+
+  // VOTE
+  // VOTE - UPVOTE
+  var upvote = postContainer.childNodes[4].childNodes[0];
+  console.log(upvote);
+  upvote.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Changes score in DOM
+    var scoreContianer = upvote.parentElement.childNodes[1];
+    var score = scoreContianer.innerText;
+    score++;
+    scoreContianer.innerText = score;
+
+    // Changes score in data
+    httpRequest.upvote(scoreContianer);
+  });
+
+  // VOTE -DOWNVOTE
+  var downvote = postContainer.childNodes[4].childNodes[2];
+  downvote.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Changes score in DOM
+    var scoreContianer = downvote.parentElement.childNodes[1];
+    var score = scoreContianer.innerText;
+    score--;
+    scoreContianer.innerText = score;
+
+    // Changes score in data
+    httpRequest.downvote(scoreContianer);
+  });
 }
 
 // CRUD - FUNCTIONS - NEW POST
@@ -861,9 +937,9 @@ var _loop7 = function _loop7(_x6) {
 
     // Adds replytoreply in data
     var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-    for (var _x9 in comments) {
-      if (comments[_x9].content === parentComment) {
-        var replies = comments[_x9].replies;
+    for (var _x11 in comments) {
+      if (comments[_x11].content === parentComment) {
+        var replies = comments[_x11].replies;
         replies[replies.length] = newReply;
       }
     }
@@ -920,9 +996,9 @@ var _loop9 = function _loop9() {
       var comment = document.getElementsByClassName("comment");
 
       // Deletes post in DOM
-      for (var _x10 in comment) {
-        if (chosen === comment[_x10]) {
-          comment[_x10].remove();
+      for (var _x12 in comment) {
+        if (chosen === comment[_x12]) {
+          comment[_x12].remove();
         }
       }
 
@@ -933,6 +1009,48 @@ var _loop9 = function _loop9() {
 };
 for (var _x8 = 0; _x8 < CRUD.delete.length; _x8++) {
   _loop9();
+}
+
+// VOTE
+
+// VOTE - UPVOTE
+var upvote = document.getElementsByClassName("vote__btn--upvote");
+var _loop10 = function _loop10(_x9) {
+  upvote[_x9].addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Changes score in DOM
+    var scoreContianer = upvote[_x9].parentElement.childNodes[1];
+    var score = scoreContianer.innerText;
+    score++;
+    scoreContianer.innerText = score;
+
+    // Changes score in data
+    httpRequest.upvote(scoreContianer);
+  });
+};
+for (var _x9 = 0; _x9 < upvote.length; _x9++) {
+  _loop10(_x9);
+}
+
+// VOTE -DOWNVOTE
+var downvote = document.getElementsByClassName("vote__btn--downvote");
+var _loop11 = function _loop11(_x10) {
+  downvote[_x10].addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Changes score in DOM
+    var scoreContianer = downvote[_x10].parentElement.childNodes[1];
+    var score = scoreContianer.innerText;
+    score--;
+    scoreContianer.innerText = score;
+
+    // Changes score in data
+    httpRequest.downvote(scoreContianer);
+  });
+};
+for (var _x10 = 0; _x10 < downvote.length; _x10++) {
+  _loop11(_x10);
 }
 },{"./data.json":"data.json"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

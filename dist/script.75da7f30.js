@@ -638,46 +638,8 @@ function generateID() {
   return ID;
 }
 
-// CRUD - FUNCTIONS - NEW POST
-function newPost(type, source) {
-  var currentUser = _data.default.currentUser;
-  var postContainer = document.createElement("div");
-  postContainer.classList.add("comment");
-
-  // adds extra classes if post isn't a comment
-  if (type === "reply") {
-    postContainer.classList.add("comment--reply");
-  } else if (type === "replytoreply") {
-    postContainer.classList.add("comment--reply");
-    postContainer.classList.add("comment--replytoreply");
-  }
-  postContainer.classList.add("comment--you");
-
-  // generates child elements for new post
-  var newComment = {
-    avatar: element.avatar(source),
-    username: element.username(source),
-    createdAt: element.createdAt(source),
-    content: element.content(source),
-    updateForm: element.updateForm(source),
-    vote: element.vote(source),
-    CRUD: element.CRUD(source)
-  };
-  for (var ele in newComment) {
-    if (newComment[ele] !== newComment.updateForm) {
-      postContainer.append(newComment[ele]);
-    }
-  }
-  if (currentUser.username === source.user.username) {
-    postContainer.append(newComment.updateForm);
-  }
-
-  // adds reply class to crud container
-  if (type === "reply") {
-    newComment.CRUD.classList.add("CRUD-container--reply");
-  }
-
-  // new post toggles___________________________________
+// CRUD - FUNCTIONS - ADD FUNCTIONALITY
+function addFunctionality(postContainer) {
   // Adds edit form toggle to new post
   var editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", function () {
@@ -690,9 +652,7 @@ function newPost(type, source) {
   deleteBtn.addEventListener("click", function () {
     toggles.delete(deleteModal);
   });
-  //________________________________________________
 
-  // new post CRUD______________________________
   // Adds edit functionality to new post
   var editForm = postContainer.childNodes[6];
   editForm.addEventListener("submit", function (e) {
@@ -738,8 +698,49 @@ function newPost(type, source) {
     // Deletes post in data
     httpRequest.delete(content);
   });
-  //____________________________________________________________________
+}
 
+// CRUD - FUNCTIONS - NEW POST
+function newPost(type, source) {
+  var currentUser = _data.default.currentUser;
+  var postContainer = document.createElement("div");
+  postContainer.classList.add("comment");
+
+  // adds extra classes if post isn't a comment
+  if (type === "reply") {
+    postContainer.classList.add("comment--reply");
+  } else if (type === "replytoreply") {
+    postContainer.classList.add("comment--reply");
+    postContainer.classList.add("comment--replytoreply");
+  }
+  postContainer.classList.add("comment--you");
+
+  // generates child elements for new post
+  var newComment = {
+    avatar: element.avatar(source),
+    username: element.username(source),
+    createdAt: element.createdAt(source),
+    content: element.content(source),
+    updateForm: element.updateForm(source),
+    vote: element.vote(source),
+    CRUD: element.CRUD(source)
+  };
+  for (var ele in newComment) {
+    if (newComment[ele] !== newComment.updateForm) {
+      postContainer.append(newComment[ele]);
+    }
+  }
+  if (currentUser.username === source.user.username) {
+    postContainer.append(newComment.updateForm);
+  }
+
+  // adds reply class to crud container
+  if (type === "reply") {
+    newComment.CRUD.classList.add("CRUD-container--reply");
+  }
+
+  // adds CRUD funtionality to new post
+  addFunctionality(postContainer);
   return postContainer;
 }
 
@@ -958,7 +959,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64484" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50610" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

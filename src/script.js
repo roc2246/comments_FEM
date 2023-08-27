@@ -470,47 +470,8 @@ function generateID() {
   return ID;
 }
 
-// CRUD - FUNCTIONS - NEW POST
-function newPost(type, source) {
-  const { currentUser } = data;
-
-  const postContainer = document.createElement("div");
-  postContainer.classList.add("comment");
-
-  // adds extra classes if post isn't a comment
-  if (type === "reply") {
-    postContainer.classList.add("comment--reply");
-  } else if (type === "replytoreply") {
-    postContainer.classList.add("comment--reply");
-    postContainer.classList.add("comment--replytoreply");
-  }
-  postContainer.classList.add("comment--you");
-
-  // generates child elements for new post
-  const newComment = {
-    avatar: element.avatar(source),
-    username: element.username(source),
-    createdAt: element.createdAt(source),
-    content: element.content(source),
-    updateForm: element.updateForm(source),
-    vote: element.vote(source),
-    CRUD: element.CRUD(source),
-  };
-  for (let ele in newComment) {
-    if (newComment[ele] !== newComment.updateForm) {
-      postContainer.append(newComment[ele]);
-    }
-  }
-  if (currentUser.username === source.user.username) {
-    postContainer.append(newComment.updateForm);
-  }
-
-  // adds reply class to crud container
-  if (type === "reply") {
-    newComment.CRUD.classList.add("CRUD-container--reply");
-  }
-
-  // new post toggles___________________________________
+// CRUD - FUNCTIONS - ADD FUNCTIONALITY
+function addFunctionality(postContainer) {
   // Adds edit form toggle to new post
   const editBtn = postContainer.childNodes[5].childNodes[1];
   editBtn.addEventListener("click", () => {
@@ -523,9 +484,7 @@ function newPost(type, source) {
   deleteBtn.addEventListener("click", () => {
     toggles.delete(deleteModal);
   });
-  //________________________________________________
 
-  // new post CRUD______________________________
   // Adds edit functionality to new post
   const editForm = postContainer.childNodes[6];
   editForm.addEventListener("submit", (e) => {
@@ -572,7 +531,50 @@ function newPost(type, source) {
     // Deletes post in data
     httpRequest.delete(content);
   });
-  //____________________________________________________________________
+}
+
+// CRUD - FUNCTIONS - NEW POST
+function newPost(type, source) {
+  const { currentUser } = data;
+
+  const postContainer = document.createElement("div");
+  postContainer.classList.add("comment");
+
+  // adds extra classes if post isn't a comment
+  if (type === "reply") {
+    postContainer.classList.add("comment--reply");
+  } else if (type === "replytoreply") {
+    postContainer.classList.add("comment--reply");
+    postContainer.classList.add("comment--replytoreply");
+  }
+  postContainer.classList.add("comment--you");
+
+  // generates child elements for new post
+  const newComment = {
+    avatar: element.avatar(source),
+    username: element.username(source),
+    createdAt: element.createdAt(source),
+    content: element.content(source),
+    updateForm: element.updateForm(source),
+    vote: element.vote(source),
+    CRUD: element.CRUD(source),
+  };
+  for (let ele in newComment) {
+    if (newComment[ele] !== newComment.updateForm) {
+      postContainer.append(newComment[ele]);
+    }
+  }
+  if (currentUser.username === source.user.username) {
+    postContainer.append(newComment.updateForm);
+  }
+
+  // adds reply class to crud container
+  if (type === "reply") {
+    newComment.CRUD.classList.add("CRUD-container--reply");
+  }
+
+  // adds CRUD funtionality to new post
+  addFunctionality(postContainer);
 
   return postContainer;
 }

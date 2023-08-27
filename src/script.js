@@ -336,37 +336,40 @@ const CRUD = {
 
 // METHODS - HTTP REQUESTS
 const httpRequest = {
-  comments: data.comments,
   delete: function (content) {
-    for (let x in this.comments) {
-      if (content === this.comments[x].content) {
-        delete this.comments[x];
+    const { comments } = data;
+    for (let x in comments) {
+      if (content === comments[x].content) {
+        delete comments[x];
       } else {
-        for (let y in this.comments[x].replies) {
-          if (content === this.comments[x].replies[y].content) {
-            delete this.comments[x].replies[y];
+        for (let y in comments[x].replies) {
+          if (content === comments[x].replies[y].content) {
+            delete comments[x].replies[y];
           }
         }
       }
     }
   },
   update: function (oldContent, newContent) {
-    for (let x in this.comments) {
-      if (this.comments[x].content === oldContent.innerText) {
-        this.comments[x].content = newContent;
+    for (let x in comments) {
+      if (comments[x].content === oldContent.innerText) {
+        comments[x].content = newContent;
       } else {
-        for (let y in this.comments[x].replies) {
-          if (this.comments[x].replies[y].content === oldContent.innerText) {
-            this.comments[x].replies[y].content = newContent;
+        for (let y in comments[x].replies) {
+          if (comments[x].replies[y].content === oldContent.innerText) {
+            comments[x].replies[y].content = newContent;
           }
         }
       }
     }
   },
-  upvote: function (scoreContianer) {
+  vote: function (scoreContianer, mode) {
     const { comments } = data;
     const postContainer = scoreContianer.parentElement.parentElement;
     let content;
+    let change;
+    let score = scoreContianer.innerText;
+    mode === "upvote" ? (change = score++) : (change = score--);
     if (postContainer.childNodes[3].childNodes[1]) {
       content = postContainer.childNodes[3].childNodes[1];
     } else {
@@ -374,34 +377,12 @@ const httpRequest = {
     }
     for (let x in comments) {
       if (comments[x].content === content) {
-        comments[x].score = score++;
+        comments[x].score = change;
       } else {
         for (let y in comments[x].replies[y]) {
           const reply = comments[x].replies[y];
           if ((reply.content = content)) {
-            reply.score = score++;
-          }
-        }
-      }
-    }
-  },
-  downvote: function (scoreContianer) {
-    const { comments } = data;
-    const postContainer = scoreContianer.parentElement.parentElement;
-    let content;
-    if (postContainer.childNodes[3].childNodes[1]) {
-      content = postContainer.childNodes[3].childNodes[1];
-    } else {
-      content = postContainer.childNodes[3];
-    }
-    for (let x in comments) {
-      if (comments[x].content === content) {
-        comments[x].score = score--;
-      } else {
-        for (let y in comments[x].replies[y]) {
-          const reply = comments[x].replies[y];
-          if ((reply.content = content)) {
-            reply.score = score--;
+            reply.score = change;
           }
         }
       }
@@ -590,7 +571,7 @@ function addFunctionality(postContainer) {
     scoreContianer.innerText = score;
 
     // Changes score in data
-    httpRequest.upvote(scoreContianer);
+    httpRequest.vote(scoreContianer, "upvote");
   });
 
   // VOTE -DOWNVOTE
@@ -605,7 +586,7 @@ function addFunctionality(postContainer) {
     scoreContianer.innerText = score;
 
     // Changes score in data
-    httpRequest.downvote(scoreContianer);
+    httpRequest.vote(scoreContianer, "downvote");
   });
 }
 
@@ -873,8 +854,8 @@ function vote(mode) {
 
       // Changes score in data
       mode === "upvote"
-        ? httpRequest.upvote(scoreContianer)
-        : httpRequest.downvote(scoreContianer);
+        ? httpRequest.vote(scoreContianer, "upvote")
+        : httpRequest.vote(scoreContianer, "downvote");
     });
   }
 }
@@ -883,4 +864,4 @@ function vote(mode) {
 vote("upvote");
 
 // VOTE -DOWNVOTE
-vote("downvote")
+vote("downvote");

@@ -498,37 +498,40 @@ var CRUD = {
 
 // METHODS - HTTP REQUESTS
 var httpRequest = {
-  comments: _data.default.comments,
   delete: function _delete(content) {
-    for (var x in this.comments) {
-      if (content === this.comments[x].content) {
-        delete this.comments[x];
+    var comments = _data.default.comments;
+    for (var x in comments) {
+      if (content === comments[x].content) {
+        delete comments[x];
       } else {
-        for (var y in this.comments[x].replies) {
-          if (content === this.comments[x].replies[y].content) {
-            delete this.comments[x].replies[y];
+        for (var y in comments[x].replies) {
+          if (content === comments[x].replies[y].content) {
+            delete comments[x].replies[y];
           }
         }
       }
     }
   },
   update: function update(oldContent, newContent) {
-    for (var x in this.comments) {
-      if (this.comments[x].content === oldContent.innerText) {
-        this.comments[x].content = newContent;
+    for (var x in comments) {
+      if (comments[x].content === oldContent.innerText) {
+        comments[x].content = newContent;
       } else {
-        for (var y in this.comments[x].replies) {
-          if (this.comments[x].replies[y].content === oldContent.innerText) {
-            this.comments[x].replies[y].content = newContent;
+        for (var y in comments[x].replies) {
+          if (comments[x].replies[y].content === oldContent.innerText) {
+            comments[x].replies[y].content = newContent;
           }
         }
       }
     }
   },
-  upvote: function upvote(scoreContianer) {
+  vote: function vote(scoreContianer, mode) {
     var comments = _data.default.comments;
     var postContainer = scoreContianer.parentElement.parentElement;
     var content;
+    var change;
+    var score = scoreContianer.innerText;
+    mode === "upvote" ? change = score++ : change = score--;
     if (postContainer.childNodes[3].childNodes[1]) {
       content = postContainer.childNodes[3].childNodes[1];
     } else {
@@ -536,34 +539,12 @@ var httpRequest = {
     }
     for (var x in comments) {
       if (comments[x].content === content) {
-        comments[x].score = score++;
+        comments[x].score = change;
       } else {
         for (var y in comments[x].replies[y]) {
           var reply = comments[x].replies[y];
           if (reply.content = content) {
-            reply.score = score++;
-          }
-        }
-      }
-    }
-  },
-  downvote: function downvote(scoreContianer) {
-    var comments = _data.default.comments;
-    var postContainer = scoreContianer.parentElement.parentElement;
-    var content;
-    if (postContainer.childNodes[3].childNodes[1]) {
-      content = postContainer.childNodes[3].childNodes[1];
-    } else {
-      content = postContainer.childNodes[3];
-    }
-    for (var x in comments) {
-      if (comments[x].content === content) {
-        comments[x].score = score--;
-      } else {
-        for (var y in comments[x].replies[y]) {
-          var reply = comments[x].replies[y];
-          if (reply.content = content) {
-            reply.score = score--;
+            reply.score = change;
           }
         }
       }
@@ -757,7 +738,7 @@ function addFunctionality(postContainer) {
     scoreContianer.innerText = score;
 
     // Changes score in data
-    httpRequest.upvote(scoreContianer);
+    httpRequest.vote(scoreContianer, "upvote");
   });
 
   // VOTE -DOWNVOTE
@@ -772,7 +753,7 @@ function addFunctionality(postContainer) {
     scoreContianer.innerText = score;
 
     // Changes score in data
-    httpRequest.downvote(scoreContianer);
+    httpRequest.vote(scoreContianer, "downvote");
   });
 }
 
@@ -1026,7 +1007,7 @@ function vote(mode) {
       scoreContianer.innerText = score;
 
       // Changes score in data
-      mode === "upvote" ? httpRequest.upvote(scoreContianer) : httpRequest.downvote(scoreContianer);
+      mode === "upvote" ? httpRequest.vote(scoreContianer, "upvote") : httpRequest.vote(scoreContianer, "downvote");
     });
   };
   for (var _x9 = 0; _x9 < vote.length; _x9++) {

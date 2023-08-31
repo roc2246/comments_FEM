@@ -188,7 +188,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // DELETE ONCE DATA IS ON SERVER
 
 // TEST FOR RETRIEVING DATA
-fetch('http://localhost:3000/data').then(function (response) {
+fetch('http://localhost:3000/comments').then(function (response) {
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json(); // Parse the response body as JSON
+}).then(function (data) {
+  // Handle the response data here
+  console.log(data);
+}).catch(function (error) {
+  // Handle any errors that occurred during the fetch
+  console.error('There was a problem with the fetch operation:', error);
+});
+fetch('http://localhost:3000/user').then(function (response) {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }

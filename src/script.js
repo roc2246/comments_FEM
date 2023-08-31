@@ -2,7 +2,22 @@
 import data from "./data.json";
 
 // TEST FOR RETRIEVING DATA
-fetch('http://localhost:3000/data').then(response => {
+fetch('http://localhost:3000/comments').then(response => {
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json(); // Parse the response body as JSON
+})
+.then(data => {
+  // Handle the response data here
+  console.log(data);
+})
+.catch(error => {
+  // Handle any errors that occurred during the fetch
+  console.error('There was a problem with the fetch operation:', error);
+});
+
+fetch('http://localhost:3000/user').then(response => {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }

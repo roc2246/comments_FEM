@@ -187,6 +187,20 @@ var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // DELETE ONCE DATA IS ON SERVER
 
+// TEST FOR RETRIEVING DATA
+fetch('http://localhost:3000/data').then(function (response) {
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json(); // Parse the response body as JSON
+}).then(function (data) {
+  // Handle the response data here
+  console.log(data);
+}).catch(function (error) {
+  // Handle any errors that occurred during the fetch
+  console.error('There was a problem with the fetch operation:', error);
+});
+
 // GENERATES CHILD ELEMENTS FOR POSTS
 var element = {
   content: function content(source) {
@@ -1045,7 +1059,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54205" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50720" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

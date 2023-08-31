@@ -1,17 +1,19 @@
 const { MongoClient } = require('mongodb');
 const http = require('http');
+const cors = require('cors'); // Import the cors package
+require('dotenv').config();
 
 // MongoDB connection URL
-const url = 'mongodb://localhost:27017'; // Change this to your MongoDB server URL
+const url = process.env.MONGODB_URI
 
 // Database and collection names
-const dbName = 'yourDatabaseName'; // Change this to your database name
-const collectionName = 'yourCollectionName'; // Change this to your collection name
+const dbName = 'comments'; // Change this to your database name
+const collectionName = 'comments'; // Change this to your collection name
 
 // Create a function to connect to the MongoDB database
 async function connectToDB() {
   try {
-    const client = new MongoClient(url, { useUnifiedTopology: true });
+    const client = new MongoClient(url);
     
     // Connect to the MongoDB server
     await client.connect();
@@ -38,6 +40,9 @@ async function connectToDB() {
 
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
+  // Enable CORS for all routes
+  cors()(req, res, () => {});
+
   if (req.method === 'GET' && req.url === '/data') {
     try {
       // Call the connectToDB function to retrieve data

@@ -1,6 +1,5 @@
 const { MongoClient } = require('mongodb');
 const http = require('http');
-const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
 // MongoDB connection URL
@@ -41,7 +40,18 @@ async function connectToDB() {
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
   // Enable CORS for all routes
-  cors()(req, res, () => {});
+  // Set CORS headers to allow requests from any origin (you can specify specific origins if needed)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Define which HTTP methods are allowed
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
+  // Define which HTTP headers can be included in the actual request
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Allow credentials (e.g., cookies) to be sent cross-origin
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
 
   if (req.method === 'GET' && req.url === '/data') {
     try {

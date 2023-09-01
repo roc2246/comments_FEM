@@ -187,32 +187,6 @@ var _data = _interopRequireDefault(require("./data.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // DELETE ONCE DATA IS ON SERVER
 
-// TEST FOR RETRIEVING DATA
-fetch('http://localhost:3000/comments').then(function (response) {
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json(); // Parse the response body as JSON
-}).then(function (data) {
-  // Handle the response data here
-  console.log(data);
-}).catch(function (error) {
-  // Handle any errors that occurred during the fetch
-  console.error('There was a problem with the fetch operation:', error);
-});
-fetch('http://localhost:3000/user').then(function (response) {
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json(); // Parse the response body as JSON
-}).then(function (data) {
-  // Handle the response data here
-  console.log(data);
-}).catch(function (error) {
-  // Handle any errors that occurred during the fetch
-  console.error('There was a problem with the fetch operation:', error);
-});
-
 // GENERATES CHILD ELEMENTS FOR POSTS
 var element = {
   content: function content(source) {
@@ -342,125 +316,136 @@ var element = {
 };
 
 // COMMENT GENERATION
-var _loop = function _loop(comment) {
-  var container = document.getElementById("comment-wrapper");
-  var currentUser = _data.default.currentUser,
-    comments = _data.default.comments;
-  var post = comments[comment];
-
-  // sets current user's avatar in new comment form
-  var newCommentAvatar = document.querySelector(".avatar--new-comment");
-  newCommentAvatar.src = currentUser.image.png;
-
-  // function for generating comments and replies
-  function postCont(type, counter) {
-    var container = document.createElement("div");
-    container.classList.add("comment");
-
-    // sets the type of post (i.e; reply, comment, etc.)
-    var post;
-    if (type === "reply") {
-      container.classList.add("comment--reply");
-      post = comments[comment].replies[counter];
-    } else if (type === "comment") {
-      post = comments[comment];
-      counter = null;
-    }
-
-    // creates child elements for post
-    var newComment = {
-      avatar: element.avatar(post),
-      username: element.username(post),
-      createdAt: element.createdAt(post),
-      content: element.content(post),
-      updateForm: element.updateForm(post),
-      vote: element.vote(post),
-      CRUD: element.CRUD(post)
-    };
-    for (var ele in newComment) {
-      if (newComment[ele] !== newComment.updateForm) {
-        container.append(newComment[ele]);
-      }
-    }
-    if (currentUser.username === post.user.username) {
-      container.append(newComment.updateForm);
-      container.classList.add("comment--you");
-    }
-
-    // adds other classes if post is reply
-    if (type === "reply") {
-      newComment.CRUD.classList.add("CRUD-container--reply");
-    }
-    return container;
+fetch('http://localhost:3000/combined').then(function (response) {
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
   }
+  return response.json(); // Parse the response body as JSON
+}).then(function (data) {
+  var _data$ = data[0],
+    comments = _data$.comments,
+    currentUser = _data$.currentUser;
+  var _loop = function _loop(comment) {
+    var container = document.getElementById("comment-wrapper");
+    var post = comments[comment];
 
-  // function for creating reply form
-  function createReplyForm(type) {
-    var replyForm = document.createElement("form");
-    replyForm.classList.add("new-comment");
-    replyForm.classList.add("new-comment--reply");
+    // sets current user's avatar in new comment form
+    var newCommentAvatar = document.querySelector(".avatar--new-comment");
+    newCommentAvatar.src = currentUser.image.png;
 
-    // sets extra class if form is for a reply to reply
-    if (type === "reply") {
-      replyForm.classList.add("new-comment--replytoreply");
+    // function for generating comments and replies
+    function postCont(type, counter) {
+      var container = document.createElement("div");
+      container.classList.add("comment");
+
+      // sets the type of post (i.e; reply, comment, etc.)
+      var post;
+      if (type === "reply") {
+        container.classList.add("comment--reply");
+        post = comments[comment].replies[counter];
+      } else if (type === "comment") {
+        post = comments[comment];
+        counter = null;
+      }
+
+      // creates child elements for post
+      var newComment = {
+        avatar: element.avatar(post),
+        username: element.username(post),
+        createdAt: element.createdAt(post),
+        content: element.content(post),
+        updateForm: element.updateForm(post),
+        vote: element.vote(post),
+        CRUD: element.CRUD(post)
+      };
+      for (var ele in newComment) {
+        if (newComment[ele] !== newComment.updateForm) {
+          container.append(newComment[ele]);
+        }
+      }
+      if (currentUser.username === post.user.username) {
+        container.append(newComment.updateForm);
+        container.classList.add("comment--you");
+      }
+
+      // adds other classes if post is reply
+      if (type === "reply") {
+        newComment.CRUD.classList.add("CRUD-container--reply");
+      }
+      return container;
+    }
+
+    // function for creating reply form
+    function createReplyForm(type) {
+      var replyForm = document.createElement("form");
+      replyForm.classList.add("new-comment");
+      replyForm.classList.add("new-comment--reply");
+
+      // sets extra class if form is for a reply to reply
+      if (type === "reply") {
+        replyForm.classList.add("new-comment--replytoreply");
+      } else {
+        type = null;
+      }
+      var avatar = document.createElement("img");
+      avatar.classList.add("avatar");
+      avatar.classList.add("avatar--new-reply");
+      avatar.src = currentUser.image.png;
+      avatar.alt = post.user.username;
+      replyForm.appendChild(avatar);
+      var replyInput = document.createElement("textarea");
+      replyInput.classList.add("new-comment__input");
+      replyInput.placeholder = "...Add a reply";
+      replyForm.appendChild(replyInput);
+      var replySend = document.createElement("button");
+      replySend.classList.add("btn");
+      replySend.classList.add("new-comment__send");
+      replySend.innerText = "REPLY";
+      replyForm.appendChild(replySend);
+      return replyForm;
+    }
+
+    // Generates comments
+    if (post.replies.length > 0) {
+      container.appendChild(postCont("comment"));
+
+      // Creates container for replies
+      var replyCont = document.createElement("div");
+      replyCont.classList.add("reply-wrapper");
+      var hr = document.createElement("hr");
+      hr.classList.add("reply-wrapper__ruler");
+      replyCont.appendChild(hr);
+      container.appendChild(replyCont);
+
+      // Generates replies
+      for (var reply in post.replies) {
+        replyCont.appendChild(postCont("reply", reply));
+        if (post.replies[reply].user.username !== currentUser.username) {
+          replyCont.appendChild(createReplyForm("reply"));
+        }
+      }
+
+      // Generates hr hight for reply container
+      replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
+
+      // Generates reply forms
+      if (post.user.username !== currentUser.username) {
+        container.appendChild(createReplyForm());
+      }
     } else {
-      type = null;
-    }
-    var avatar = document.createElement("img");
-    avatar.classList.add("avatar");
-    avatar.classList.add("avatar--new-reply");
-    avatar.src = currentUser.image.png;
-    avatar.alt = post.user.username;
-    replyForm.appendChild(avatar);
-    var replyInput = document.createElement("textarea");
-    replyInput.classList.add("new-comment__input");
-    replyInput.placeholder = "...Add a reply";
-    replyForm.appendChild(replyInput);
-    var replySend = document.createElement("button");
-    replySend.classList.add("btn");
-    replySend.classList.add("new-comment__send");
-    replySend.innerText = "REPLY";
-    replyForm.appendChild(replySend);
-    return replyForm;
-  }
-
-  // Generates comments
-  if (post.replies.length > 0) {
-    container.appendChild(postCont("comment"));
-
-    // Creates container for replies
-    var replyCont = document.createElement("div");
-    replyCont.classList.add("reply-wrapper");
-    var hr = document.createElement("hr");
-    hr.classList.add("reply-wrapper__ruler");
-    replyCont.appendChild(hr);
-    container.appendChild(replyCont);
-
-    // Generates replies
-    for (var reply in post.replies) {
-      replyCont.appendChild(postCont("reply", reply));
-      if (post.replies[reply].user.username !== currentUser.username) {
-        replyCont.appendChild(createReplyForm("reply"));
+      container.appendChild(postCont("comment"));
+      if (post.user.username !== currentUser.username) {
+        container.appendChild(createReplyForm());
       }
     }
-
-    // Generates hr hight for reply container
-    replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
-
-    // Generates reply forms
-    if (post.user.username !== currentUser.username) {
-      container.appendChild(createReplyForm());
-    }
-  } else {
-    container.appendChild(postCont("comment"));
-    if (post.user.username !== currentUser.username) {
-      container.appendChild(createReplyForm());
-    }
+  };
+  for (var comment in comments) {
+    _loop(comment);
   }
-};
-for (var comment in _data.default.comments) {
-  _loop(comment);
-}
+}).catch(function (error) {
+  // Handle any errors that occurred during the fetch
+  console.error('There was a problem with the fetch operation:', error);
+});
 
 // CONTAINERS
 
@@ -1071,7 +1056,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51838" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53999" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -9,7 +9,8 @@ const url = process.env.MONGODB_URI
 const dbName = 'comments'; // Change this to your database name
 const collectionName = {
   comments: 'comments',
-  userName: 'user'
+  userName: 'user',
+  combined: 'combined'
 }// Change this to your collection name
 
 // Create a function to connect to the MongoDB database
@@ -85,7 +86,21 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('Internal Server Error');
       }
-    } else {
+    } else if (req.url === '/combined') {
+      try {
+        // Call the connectToDB function to retrieve data
+        const data = await connectToDB(collectionName.combined);
+
+        // Set the response headers
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+
+        // Send the JSON response
+        res.end(JSON.stringify(data));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Internal Server Error');
+      }
+    }else {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('Not Found');
     }

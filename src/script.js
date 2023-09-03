@@ -432,6 +432,7 @@ fetchData()
         }
         fetch("http://localhost:3000/comments", params)
           .then((response) => {
+            console.log(response)
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }
@@ -706,10 +707,9 @@ fetchData()
       const content = document.querySelector(selectors.input.comment).value;
 
       const newComment = {
+        id: generateID(),
         content: content,
         createdAt: "TEST",
-        id: generateID(),
-        replies: {},
         score: 0,
         user: {
           image: {
@@ -718,6 +718,7 @@ fetchData()
           },
           username: currentUser[0].username,
         },
+        replies: [],
       };
 
       // Adds comment in data

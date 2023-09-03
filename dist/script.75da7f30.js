@@ -577,6 +577,7 @@ fetchData().then(function (data) {
         body: JSON.stringify(postData)
       };
       fetch("http://localhost:3000/comments", params).then(function (response) {
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -847,10 +848,9 @@ fetchData().then(function (data) {
       currentUser = data.currentUser;
     var content = document.querySelector(selectors.input.comment).value;
     var newComment = {
+      id: generateID(),
       content: content,
       createdAt: "TEST",
-      id: generateID(),
-      replies: {},
       score: 0,
       user: {
         image: {
@@ -858,7 +858,8 @@ fetchData().then(function (data) {
           webp: currentUser[0].image.webp
         },
         username: currentUser[0].username
-      }
+      },
+      replies: []
     };
 
     // Adds comment in data
@@ -1087,7 +1088,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60294" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53497" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

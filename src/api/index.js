@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 const http = require("http");
 require("dotenv").config();
 
-const cors = require('cors')
+const cors = require("cors");
 
 // MongoDB connection URL
 const url = process.env.MONGODB_URI;
@@ -16,7 +16,7 @@ const collectionName = {
 }; // Change this to your collection name
 
 // Create a function to connect to the MongoDB database
-async function connectToDB(collectionParam) {
+async function connectToDB() {
   try {
     const client = new MongoClient(url);
 
@@ -26,17 +26,7 @@ async function connectToDB(collectionParam) {
     // Access the database
     const db = client.db(dbName);
 
-    // Access the collections
-    const collection = db.collection(collectionParam);
-
-    // Make a GET request (find documents)
-    const query = {}; // You can specify a query here if needed
-    const documents = await collection.find(query).toArray();
-
-    // Close the connection
-    client.close();
-
-    return documents;
+    return db; // Return the database connection
   } catch (err) {
     console.error(err);
     throw err;
@@ -65,79 +55,101 @@ function CORS(response) {
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
   // CORS(res);
-  cors()(req, res, async() => {
-  if (req.method === "GET") {
-    if (req.url === "/comments") {
-      try {
-        // Call the connectToDB function to retrieve comment data
-        const data = await connectToDB(collectionName.comments);
+  cors()(req, res, async () => {
+    if (req.method === "GET") {
+      if (req.url === "/comments") {
+        try {
+          // Call the connectToDB function to retrieve comment data
+          const data = await connectToDB();
 
-        // Set the response headers
-        res.writeHead(200, { "Content-Type": "application/json" });
+          // Access the "comments" collection from the database connection
+          const collection = data.collection(collectionName.comments);
 
-        // Send the JSON response
-        res.end(JSON.stringify(data));
-      } catch (err) {
-        res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
+          // Make a GET request (find documents)
+          const query = {}; // You can specify a query here if needed
+          const documents = await collection.find(query).toArray();
+
+          // Set the response headers
+          res.writeHead(200, { "Content-Type": "application/json" });
+
+          // Send the JSON response
+          res.end(JSON.stringify(documents));
+        } catch (err) {
+          console.error("Error while processing the GET request:", err);
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Internal Server Error");
+        }
+      } else if (req.url === "/currentUser") {
+        try {
+          // Call the connectToDB function to retrieve user data
+          const data = await connectToDB();
+
+          // Access the "user" collection from the database connection
+          const collection = data.collection(collectionName.userName);
+
+          // Make a GET request (find documents)
+          const query = {}; // You can specify a query here if needed
+          const documents = await collection.find(query).toArray();
+
+          // Set the response headers
+          res.writeHead(200, { "Content-Type": "application/json" });
+
+          // Send the JSON response
+          res.end(JSON.stringify(documents));
+        } catch (err) {
+          console.error("Error while processing the GET request:", err);
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Internal Server Error");
+        }
+      } else {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
       }
-    } else if (req.url === "/currentUser") {
-      try {
-        // Call the connectToDB function to retrieve user data
-        const data = await connectToDB(collectionName.userName);
+    } else if (req.method === "POST") {
+      if (req.url === "/comments") {
+        try {
+          // Extract the incoming data from the request
+          let incomingData = "";
+          req.on("data", (chunk) => {
+            incomingData += chunk.toString("utf8");
+          });
 
-        // Set the response headers
-        res.writeHead(200, { "Content-Type": "application/json" });
+          req.on("end", async () => {
+            try {
+              // Parse the incoming JSON data
+              const commentData = JSON.parse(incomingData);
 
-        // Send the JSON response
-        res.end(JSON.stringify(data));
-      } catch (err) {
-        res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
+              // Call the connectToDB function to get the "comments" collection
+              const data = await connectToDB();
+
+              // Access the "comments" collection from the database connection
+              const collection = data.collection(collectionName.comments);
+
+              // Insert the comment data into the "comments" collection
+              const result = await collection.insertOne(commentData);
+
+              // Set the response headers
+              res.writeHead(201, { "Content-Type": "application/json" });
+
+              // Send a JSON response with the result (e.g., the inserted comment data)
+              res.end(JSON.stringify(result));
+            } catch (error) {
+              console.error("Error while processing the POST request:", error);
+              res.writeHead(400, { "Content-Type": "text/plain" });
+              res.end("Bad Request: " + error.message);
+            }
+          });
+        } catch (err) {
+          console.error("Error while handling POST request:", err);
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Internal Server Error");
+        }
+      } else {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
       }
-    } else {
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Not Found");
     }
-  } else if (req.method === "POST") {
-    if (req.url === "/comments") {
-      try {
-    console.log("SUCCESS")
-        // Extract the incoming data from the request
-        let incomingData = '';
-        req.on('data', (chunk) => {
-          incomingData += chunk;
-        });
-
-        req.on('end', async () => {
-          try {
-            // Parse the incoming JSON data
-            const commentData = JSON.parse(incomingData);
-
-            // Call the connectToDB function to insert the comment data into the "comments" collection
-            const result = await connectToDB(collectionName.comments, commentData);
-
-            // Set the response headers
-            res.writeHead(201, { "Content-Type": "application/json" });
-
-            // Send a JSON response with the result (e.g., the inserted comment data)
-            res.end(JSON.stringify(result));
-          } catch (error) {
-            res.writeHead(400, { "Content-Type": "text/plain" });
-            res.end("Bad Request");
-          }
-        });
-      } catch (err) {
-        res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
-      }
-    } else {
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Not Found");
-    }
-  }
-});
-console.log(req.method)
+  });
 });
 
 // Start the HTTP server on port 3000

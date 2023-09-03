@@ -52,98 +52,88 @@ function CORS(response) {
   response.setHeader("Access-Control-Allow-Credentials", "true");
 }
 
+const controller = {
+  GET: async function(res, col){
+    try {
+      // Call the connectToDB function to retrieve comment data
+      const data = await connectToDB();
+  
+      // Access the "comments" collection from the database connection
+      const collection = data.collection(collectionName[col]);
+  
+      // Make a GET request (find documents)
+      const query = {}; // You can specify a query here if needed
+      const documents = await collection.find(query).toArray();
+  
+      // Set the response headers
+      res.writeHead(200, { "Content-Type": "application/json" });
+  
+      // Send the JSON response
+      res.end(JSON.stringify(documents));
+    } catch (err) {
+      console.error("Error while processing the GET request:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    }
+  },
+  POST: async function(req, res, col){
+    try {
+      // Extract the incoming data from the request
+      let incomingData = "";
+      req.on("data", (chunk) => {
+        incomingData += chunk.toString("utf8");
+      });
+
+      req.on("end", async () => {
+        try {
+          // Parse the incoming JSON data
+          const commentData = JSON.parse(incomingData);
+
+          // Call the connectToDB function to get the "comments" collection
+          const data = await connectToDB();
+
+          // Access the "comments" collection from the database connection
+          const collection = data.collection(collectionName[col]);
+
+          // Insert the comment data into the "comments" collection
+          const result = await collection.insertOne(commentData);
+
+          // Set the response headers
+          res.writeHead(201, { "Content-Type": "application/json" });
+
+          // Send a JSON response with the result (e.g., the inserted comment data)
+          res.end(JSON.stringify(result));
+        } catch (error) {
+          console.error("Error while processing the POST request:", error);
+          res.writeHead(400, { "Content-Type": "text/plain" });
+          res.end("Bad Request: " + error.message);
+        }
+      });
+    } catch (err) {
+      console.error("Error while handling POST request:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    }
+  }
+}
+
+
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
   // CORS(res);
   cors()(req, res, async () => {
     if (req.method === "GET") {
       if (req.url === "/comments") {
-        try {
-          // Call the connectToDB function to retrieve comment data
-          const data = await connectToDB();
-
-          // Access the "comments" collection from the database connection
-          const collection = data.collection(collectionName.comments);
-
-          // Make a GET request (find documents)
-          const query = {}; // You can specify a query here if needed
-          const documents = await collection.find(query).toArray();
-
-          // Set the response headers
-          res.writeHead(200, { "Content-Type": "application/json" });
-
-          // Send the JSON response
-          res.end(JSON.stringify(documents));
-        } catch (err) {
-          console.error("Error while processing the GET request:", err);
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Internal Server Error");
-        }
+        controller.GET(res, "comments")
       } else if (req.url === "/currentUser") {
-        try {
-          // Call the connectToDB function to retrieve user data
-          const data = await connectToDB();
-
-          // Access the "user" collection from the database connection
-          const collection = data.collection(collectionName.userName);
-
-          // Make a GET request (find documents)
-          const query = {}; // You can specify a query here if needed
-          const documents = await collection.find(query).toArray();
-
-          // Set the response headers
-          res.writeHead(200, { "Content-Type": "application/json" });
-
-          // Send the JSON response
-          res.end(JSON.stringify(documents));
-        } catch (err) {
-          console.error("Error while processing the GET request:", err);
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Internal Server Error");
-        }
+        controller.GET(res, "userName")
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
     } else if (req.method === "POST") {
       if (req.url === "/comments") {
-        try {
-          // Extract the incoming data from the request
-          let incomingData = "";
-          req.on("data", (chunk) => {
-            incomingData += chunk.toString("utf8");
-          });
-
-          req.on("end", async () => {
-            try {
-              // Parse the incoming JSON data
-              const commentData = JSON.parse(incomingData);
-
-              // Call the connectToDB function to get the "comments" collection
-              const data = await connectToDB();
-
-              // Access the "comments" collection from the database connection
-              const collection = data.collection(collectionName.comments);
-
-              // Insert the comment data into the "comments" collection
-              const result = await collection.insertOne(commentData);
-
-              // Set the response headers
-              res.writeHead(201, { "Content-Type": "application/json" });
-
-              // Send a JSON response with the result (e.g., the inserted comment data)
-              res.end(JSON.stringify(result));
-            } catch (error) {
-              console.error("Error while processing the POST request:", error);
-              res.writeHead(400, { "Content-Type": "text/plain" });
-              res.end("Bad Request: " + error.message);
-            }
-          });
-        } catch (err) {
-          console.error("Error while handling POST request:", err);
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Internal Server Error");
-        }
+       controller.POST(req, res, "comments")
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");

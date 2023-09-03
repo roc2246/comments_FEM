@@ -125,7 +125,6 @@ const controller = {
       // Perform the DELETE operation
       const result = await collection.findOneAndDelete({ id: parseInt(documentId)});
   
-      console.log(result)
       if (result) {
         console.log('Document deleted successfully');
         res.writeHead(204); // Send a 204 (No Content) response for successful deletion

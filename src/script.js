@@ -1,12 +1,39 @@
-// COMMENT GENERATION
-fetch("http://localhost:3000/combined")
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json(); // Parse the response body as JSON
-  })
+async function fetchData() {
+  try {
+    // Define an object with key-value pairs where keys represent labels and values are URLs
+    const urlMap = {
+      comments: "http://localhost:3000/comments",
+      currentUser: "http://localhost:3000/currentUser",
+    };
+
+    // Create an array of Promises for fetch requests using Object.entries()
+    const promises = Object.entries(urlMap).map(async ([key, url]) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Request for ${url} failed`);
+      }
+      return { [key]: await response.json() }; // Store the result with a key
+    });
+
+    // Use Promise.all() to wait for all Promises to resolve
+    const results = await Promise.all(promises);
+
+    // Combine the results into a single object
+    const combinedResults = results.reduce((acc, result) => {
+      return { ...acc, ...result };
+    }, {});
+
+    return combinedResults;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// GENERATES COMMENTS
+fetchData()
   .then((data) => {
+    const { comments, currentUser } = data;
+   
     // GENERATES CHILD ELEMENTS FOR POSTS
     const element = {
       content: function (source) {
@@ -74,7 +101,7 @@ fetch("http://localhost:3000/combined")
         return avatar;
       },
       username: function (source) {
-        const { currentUser } = data[0];
+        const { currentUser } = data;
 
         const username = document.createElement("span");
         username.classList.add("username");
@@ -119,7 +146,7 @@ fetch("http://localhost:3000/combined")
         return updateForm;
       },
       CRUD: function (source) {
-        const { currentUser } = data[0];
+        const { currentUser } = data;
 
         const CRUD = document.createElement("div");
         CRUD.classList.add("CRUD-container");
@@ -154,14 +181,14 @@ fetch("http://localhost:3000/combined")
       },
     };
 
-    const { comments, currentUser } = data[0];
+    // const { comments, currentUser } = data;
     for (let comment in comments) {
       const container = document.getElementById("comment-wrapper");
       const post = comments[comment];
 
       // sets current user's avatar in new comment form
       const newCommentAvatar = document.querySelector(".avatar--new-comment");
-      newCommentAvatar.src = currentUser.image.png;
+      newCommentAvatar.src = currentUser[0].image.png;
 
       // function for generating comments and replies
       function postCont(type, counter) {
@@ -222,7 +249,7 @@ fetch("http://localhost:3000/combined")
         const avatar = document.createElement("img");
         avatar.classList.add("avatar");
         avatar.classList.add("avatar--new-reply");
-        avatar.src = currentUser.image.png;
+        avatar.src = currentUser[0].image.png;
         avatar.alt = post.user.username;
         replyForm.appendChild(avatar);
 
@@ -398,7 +425,7 @@ fetch("http://localhost:3000/combined")
 
     // METHODS - BUTTON TOGGLES
     const toggles = {
-      comments: data[0].comments,
+      comments: data.comments,
       edit: function (container) {
         if (!container.classList.contains("comment--edit")) {
           container.classList.add("comment--edit");
@@ -492,7 +519,7 @@ fetch("http://localhost:3000/combined")
 
     // CRUD - FUNCTIONS - GENERATE ID
     function generateID() {
-      const { comments } = data[0];
+      // const { comments } = data;
 
       let IDarray = [];
       for (let id in comments) {
@@ -603,7 +630,7 @@ fetch("http://localhost:3000/combined")
 
     // CRUD - FUNCTIONS - NEW POST
     function newPost(type, source) {
-      const { currentUser } = data[0];
+      const { currentUser } = data;
 
       const postContainer = document.createElement("div");
       postContainer.classList.add("comment");
@@ -652,7 +679,7 @@ fetch("http://localhost:3000/combined")
     container.form.comment.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const { comments, currentUser } = data[0];
+      const { comments, currentUser } = data;
       const content = document.querySelector(selectors.input.comment).value;
 
       const newComment = {
@@ -663,8 +690,8 @@ fetch("http://localhost:3000/combined")
         score: 0,
         user: {
           image: {
-            png: currentUser.image.png,
-            webp: currentUser.image.webp,
+            png: currentUser[0].image.png,
+            webp: currentUser[0].image.webp,
           },
           username: currentUser.username,
         },
@@ -683,7 +710,7 @@ fetch("http://localhost:3000/combined")
       container.form.reply[x].addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const { comments, currentUser } = data[0];
+        const { comments, currentUser } = data;
         const replyTo = container.input.replyTo[x].innerText;
         const content = container.input.replyContent[x].value;
 
@@ -696,8 +723,8 @@ fetch("http://localhost:3000/combined")
           score: 0,
           user: {
             image: {
-              png: currentUser.image.png,
-              webp: currentUser.image.webp,
+              png: currentUser[0].image.png,
+              webp: currentUser[0].image.webp,
             },
             username: currentUser.username,
           },
@@ -743,7 +770,7 @@ fetch("http://localhost:3000/combined")
       container.form.replyToReply[x].addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const { comments, currentUser } = data[0];
+        const { comments, currentUser } = data;
         const replyTo = container.input.replyReplyTo[x].innerText;
         const content = container.input.replyToReplyContent[x].value;
 
@@ -756,8 +783,8 @@ fetch("http://localhost:3000/combined")
           score: 0,
           user: {
             image: {
-              png: currentUser.image.png,
-              webp: currentUser.image.webp,
+              png: currentUser[0].image.png,
+              webp: currentUser[0].image.webp,
             },
             username: currentUser.username,
           },

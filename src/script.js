@@ -106,7 +106,7 @@ fetchData()
         const username = document.createElement("span");
         username.classList.add("username");
 
-        if (source.user.username === currentUser.username) {
+        if (source.user.username === currentUser[0].username) {
           username.classList.add("username--you");
           const name = document.createElement("span");
           name.classList.add("username__name");
@@ -171,7 +171,7 @@ fetchData()
 
           return btn;
         }
-        if (source.user.username === currentUser.username) {
+        if (source.user.username === currentUser[0].username) {
           CRUD.appendChild(createCRUDbtn("delete"));
           CRUD.appendChild(createCRUDbtn("edit"));
         } else {
@@ -220,7 +220,7 @@ fetchData()
             container.append(newComment[ele]);
           }
         }
-        if (currentUser.username === post.user.username) {
+        if (currentUser[0].username === post.user.username) {
           container.append(newComment.updateForm);
           container.classList.add("comment--you");
         }
@@ -282,7 +282,7 @@ fetchData()
         // Generates replies
         for (let reply in post.replies) {
           replyCont.appendChild(postCont("reply", reply));
-          if (post.replies[reply].user.username !== currentUser.username) {
+          if (post.replies[reply].user.username !== currentUser[0].username) {
             replyCont.appendChild(createReplyForm("reply"));
           }
         }
@@ -291,12 +291,12 @@ fetchData()
         replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
 
         // Generates reply forms
-        if (post.user.username !== currentUser.username) {
+        if (post.user.username !== currentUser[0].username) {
           container.appendChild(createReplyForm());
         }
       } else {
         container.appendChild(postCont("comment"));
-        if (post.user.username !== currentUser.username) {
+        if (post.user.username !== currentUser[0].username) {
           container.appendChild(createReplyForm());
         }
       }
@@ -659,7 +659,7 @@ fetchData()
           postContainer.append(newComment[ele]);
         }
       }
-      if (currentUser.username === source.user.username) {
+      if (currentUser[0].username === source.user.username) {
         postContainer.append(newComment.updateForm);
       }
 
@@ -693,7 +693,7 @@ fetchData()
             png: currentUser[0].image.png,
             webp: currentUser[0].image.webp,
           },
-          username: currentUser.username,
+          username: currentUser[0].username,
         },
       };
 
@@ -726,7 +726,7 @@ fetchData()
               png: currentUser[0].image.png,
               webp: currentUser[0].image.webp,
             },
-            username: currentUser.username,
+            username: currentUser[0].username,
           },
         };
 
@@ -786,7 +786,7 @@ fetchData()
               png: currentUser[0].image.png,
               webp: currentUser[0].image.webp,
             },
-            username: currentUser.username,
+            username: currentUser[0].username,
           },
         };
 

@@ -270,7 +270,7 @@ fetchData().then(function (data) {
       var currentUser = data.currentUser;
       var username = document.createElement("span");
       username.classList.add("username");
-      if (source.user.username === currentUser.username) {
+      if (source.user.username === currentUser[0].username) {
         username.classList.add("username--you");
         var name = document.createElement("span");
         name.classList.add("username__name");
@@ -326,7 +326,7 @@ fetchData().then(function (data) {
         btn.appendChild(btnTxt);
         return btn;
       }
-      if (source.user.username === currentUser.username) {
+      if (source.user.username === currentUser[0].username) {
         CRUD.appendChild(createCRUDbtn("delete"));
         CRUD.appendChild(createCRUDbtn("edit"));
       } else {
@@ -375,7 +375,7 @@ fetchData().then(function (data) {
           container.append(newComment[ele]);
         }
       }
-      if (currentUser.username === post.user.username) {
+      if (currentUser[0].username === post.user.username) {
         container.append(newComment.updateForm);
         container.classList.add("comment--you");
       }
@@ -432,7 +432,7 @@ fetchData().then(function (data) {
       // Generates replies
       for (var reply in post.replies) {
         replyCont.appendChild(postCont("reply", reply));
-        if (post.replies[reply].user.username !== currentUser.username) {
+        if (post.replies[reply].user.username !== currentUser[0].username) {
           replyCont.appendChild(createReplyForm("reply"));
         }
       }
@@ -441,12 +441,12 @@ fetchData().then(function (data) {
       replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
 
       // Generates reply forms
-      if (post.user.username !== currentUser.username) {
+      if (post.user.username !== currentUser[0].username) {
         container.appendChild(createReplyForm());
       }
     } else {
       container.appendChild(postCont("comment"));
-      if (post.user.username !== currentUser.username) {
+      if (post.user.username !== currentUser[0].username) {
         container.appendChild(createReplyForm());
       }
     }
@@ -805,7 +805,7 @@ fetchData().then(function (data) {
         postContainer.append(newComment[ele]);
       }
     }
-    if (currentUser.username === source.user.username) {
+    if (currentUser[0].username === source.user.username) {
       postContainer.append(newComment.updateForm);
     }
 
@@ -837,7 +837,7 @@ fetchData().then(function (data) {
           png: currentUser[0].image.png,
           webp: currentUser[0].image.webp
         },
-        username: currentUser.username
+        username: currentUser[0].username
       }
     };
 
@@ -869,7 +869,7 @@ fetchData().then(function (data) {
             png: currentUser[0].image.png,
             webp: currentUser[0].image.webp
           },
-          username: currentUser.username
+          username: currentUser[0].username
         }
       };
       if (comments[_x5].replies.length === 0) {
@@ -923,7 +923,7 @@ fetchData().then(function (data) {
             png: currentUser[0].image.png,
             webp: currentUser[0].image.webp
           },
-          username: currentUser.username
+          username: currentUser[0].username
         }
       };
 

@@ -41,27 +41,48 @@ async function connectToDB(collectionParam) {
   }
 }
 
-// Create an HTTP server
-
-const server = http.createServer(async (req, res) => {
+// Opens CORS policy
+function CORS(response) {
   // Enable CORS for all routes
   // Set CORS headers to allow requests from any origin (you can specify specific origins if needed)
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Origin", "*");
 
   // Define which HTTP methods are allowed
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 
   // Define which HTTP headers can be included in the actual request
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
 
   // Allow credentials (e.g., cookies) to be sent cross-origin
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  response.setHeader("Access-Control-Allow-Credentials", "true");
+}
+
+// Create an HTTP server
+const server = http.createServer(async (req, res) => {
+  CORS(res);
 
   if (req.method === "GET") {
-    if (req.url === "/combined") {
+    if (req.url === "/comments") {
       try {
-        // Call the connectToDB function to retrieve data
-        const data = await connectToDB(collectionName.combined);
+        // Call the connectToDB function to retrieve comment data
+        const data = await connectToDB(collectionName.comments);
+
+        // Set the response headers
+        res.writeHead(200, { "Content-Type": "application/json" });
+
+        // Send the JSON response
+        res.end(JSON.stringify(data));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal Server Error");
+      }
+    } else if (req.url === "/currentUser") {
+      try {
+        // Call the connectToDB function to retrieve user data
+        const data = await connectToDB(collectionName.userName);
 
         // Set the response headers
         res.writeHead(200, { "Content-Type": "application/json" });
@@ -76,6 +97,8 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("Not Found");
     }
+  } else if (req.method === "POST") {
+    // ... (existing POST route logic)
   } else {
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Not Found");

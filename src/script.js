@@ -33,7 +33,7 @@ async function fetchData() {
 fetchData()
   .then((data) => {
     const { comments, currentUser } = data;
-   
+
     // GENERATES CHILD ELEMENTS FOR POSTS
     const element = {
       content: function (source) {
@@ -421,6 +421,30 @@ fetchData()
           }
         }
       },
+      post: function (src) {
+        const postData = src
+        const params = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        }
+        fetch("http://localhost:3000/comments", params)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json(); 
+          })
+          .then((data) => {
+            console.log("POST request successful:", data);
+          })
+          .catch((error) => {
+            console.error("POST request error:", error);
+          });
+      console.log(data.comments)
+      },
     };
 
     // METHODS - BUTTON TOGGLES
@@ -598,7 +622,6 @@ fetchData()
       // VOTE
       // VOTE - UPVOTE
       const upvote = postContainer.childNodes[4].childNodes[0];
-      console.log(upvote);
       upvote.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -698,7 +721,7 @@ fetchData()
       };
 
       // Adds comment in data
-      comments[newComment.id] = newComment;
+      httpRequest.post(newComment)
 
       // Adds comment in DOM
       const wrapper = document.getElementById("comment-wrapper");

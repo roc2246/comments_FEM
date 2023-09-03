@@ -566,6 +566,27 @@ fetchData().then(function (data) {
           }
         }
       }
+    },
+    post: function post(src) {
+      var postData = src;
+      var params = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(postData)
+      };
+      fetch("http://localhost:3000/comments", params).then(function (response) {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      }).then(function (data) {
+        console.log("POST request successful:", data);
+      }).catch(function (error) {
+        console.error("POST request error:", error);
+      });
+      console.log(data.comments);
     }
   };
 
@@ -745,7 +766,6 @@ fetchData().then(function (data) {
     // VOTE
     // VOTE - UPVOTE
     var upvote = postContainer.childNodes[4].childNodes[0];
-    console.log(upvote);
     upvote.addEventListener("click", function (e) {
       e.preventDefault();
 
@@ -842,7 +862,7 @@ fetchData().then(function (data) {
     };
 
     // Adds comment in data
-    comments[newComment.id] = newComment;
+    httpRequest.post(newComment);
 
     // Adds comment in DOM
     var wrapper = document.getElementById("comment-wrapper");

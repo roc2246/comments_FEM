@@ -2,6 +2,8 @@ const { MongoClient } = require("mongodb");
 const http = require("http");
 require("dotenv").config();
 
+const cors = require('cors')
+
 // MongoDB connection URL
 const url = process.env.MONGODB_URI;
 
@@ -62,8 +64,8 @@ function CORS(response) {
 
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
-  CORS(res);
-
+  // CORS(res);
+  cors()(req, res, async() => {
   if (req.method === "GET") {
     if (req.url === "/comments") {
       try {
@@ -98,11 +100,44 @@ const server = http.createServer(async (req, res) => {
       res.end("Not Found");
     }
   } else if (req.method === "POST") {
-    // ... (existing POST route logic)
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not Found");
+    if (req.url === "/comments") {
+      try {
+    console.log("SUCCESS")
+        // Extract the incoming data from the request
+        let incomingData = '';
+        req.on('data', (chunk) => {
+          incomingData += chunk;
+        });
+
+        req.on('end', async () => {
+          try {
+            // Parse the incoming JSON data
+            const commentData = JSON.parse(incomingData);
+
+            // Call the connectToDB function to insert the comment data into the "comments" collection
+            const result = await connectToDB(collectionName.comments, commentData);
+
+            // Set the response headers
+            res.writeHead(201, { "Content-Type": "application/json" });
+
+            // Send a JSON response with the result (e.g., the inserted comment data)
+            res.end(JSON.stringify(result));
+          } catch (error) {
+            res.writeHead(400, { "Content-Type": "text/plain" });
+            res.end("Bad Request");
+          }
+        });
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal Server Error");
+      }
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Not Found");
+    }
   }
+});
+console.log(req.method)
 });
 
 // Start the HTTP server on port 3000

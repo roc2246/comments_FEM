@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const http = require("http");
 require("dotenv").config();
 
@@ -114,8 +114,35 @@ const controller = {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     }
+  },
+  DELETE: async function (res, col, documentId) {
+    try {
+      // Call the connectToDB function to retrieve the database connection
+      const db = await connectToDB();
+      // Access the specified collection from the database connection
+      const collection = db.collection(collectionName[col]);
+  
+      // Perform the DELETE operation
+      const result = await collection.findOneAndDelete({ id: parseInt(documentId)});
+  
+      console.log(result)
+      if (result) {
+        console.log('Document deleted successfully');
+        res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+        res.end();
+      } else {
+        console.log('Document not found');
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Document not found');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Internal Server Error');
+    }
   }
 }
+  
 
 
 // Create an HTTP server
@@ -134,6 +161,14 @@ const server = http.createServer(async (req, res) => {
     } else if (req.method === "POST") {
       if (req.url === "/comments") {
        controller.POST(req, res, "comments")
+      } else {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
+      }
+    }  else if (req.method === "DELETE") {
+      if (req.url.startsWith('/delete/')) {
+        const documentId = req.url.split('/').pop();
+        controller.DELETE(res, 'comments', documentId);
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");

@@ -179,7 +179,7 @@ function _fetchData() {
                 }
               }, _callee);
             }));
-            return function (_x12) {
+            return function (_x14) {
               return _ref2.apply(this, arguments);
             };
           }()); // Use Promise.all() to wait for all Promises to resolve
@@ -517,19 +517,6 @@ fetchData().then(function (data) {
 
   // METHODS - HTTP REQUESTS
   var httpRequest = {
-    delete: function _delete(content) {
-      for (var x in comments) {
-        if (content === comments[x].content) {
-          delete comments[x];
-        } else {
-          for (var y in comments[x].replies) {
-            if (content === comments[x].replies[y].content) {
-              delete comments[x].replies[y];
-            }
-          }
-        }
-      }
-    },
     update: function update(oldContent, newContent) {
       for (var x in comments) {
         if (comments[x].content === oldContent.innerText) {
@@ -588,6 +575,29 @@ fetchData().then(function (data) {
         console.error("POST request error:", error);
       });
       console.log(data.comments);
+    },
+    delete: function _delete(id) {
+      var options = {
+        method: 'DELETE',
+        // Use the DELETE HTTP method
+        headers: {
+          'Content-Type': 'application/json' // Set the content type if needed
+          // You may also need to include authentication headers or other headers here
+        }
+      };
+
+      // Send the DELETE request
+      fetch("http://localhost:3000/delete/".concat(id), options).then(function (response) {
+        if (response.ok) {
+          // Resource successfully deleted
+          console.log('Resource deleted successfully');
+        } else {
+          // Handle error cases here
+          console.error('Error deleting resource');
+        }
+      }).catch(function (error) {
+        console.error('Fetch error:', error);
+      });
     }
   };
 
@@ -759,9 +769,15 @@ fetchData().then(function (data) {
       } else {
         content = chosen.childNodes[3].childNodes[0].innerText;
       }
+      var id;
+      for (var _x5 in comments) {
+        if (content === comments[_x5].content) {
+          id = comments[_x5].id;
+        }
+      }
 
       // Deletes post in data
-      httpRequest.delete(content);
+      httpRequest.delete(id);
     });
 
     // VOTE
@@ -871,13 +887,13 @@ fetchData().then(function (data) {
   });
 
   // CRUD - DOM MANIPULATION - NEW REPLY
-  var _loop6 = function _loop6(_x5) {
-    container.form.reply[_x5].addEventListener("submit", function (e) {
+  var _loop6 = function _loop6(_x6) {
+    container.form.reply[_x6].addEventListener("submit", function (e) {
       e.preventDefault();
       var comments = data.comments,
         currentUser = data.currentUser;
-      var replyTo = container.input.replyTo[_x5].innerText;
-      var content = container.input.replyContent[_x5].value;
+      var replyTo = container.input.replyTo[_x6].innerText;
+      var content = container.input.replyContent[_x6].value;
       var newReply = {
         id: generateID(),
         content: content,
@@ -893,45 +909,45 @@ fetchData().then(function (data) {
           username: currentUser[0].username
         }
       };
-      if (comments[_x5].replies.length === 0) {
+      if (comments[_x6].replies.length === 0) {
         // Creates container for replies
         var replyCont = document.createElement("div");
         replyCont.classList.add("reply-wrapper");
         var hr = document.createElement("hr");
         hr.classList.add("reply-wrapper__ruler");
         replyCont.appendChild(hr);
-        container.comments[_x5].insertAdjacentElement("afterend", replyCont);
+        container.comments[_x6].insertAdjacentElement("afterend", replyCont);
 
         // Adds reply in data
-        comments[_x5].replies[newReply.id] = newReply;
+        comments[_x6].replies[newReply.id] = newReply;
 
         // Adds reply in DOM
         replyCont.appendChild(newPost("reply", newReply));
 
         // Generates hr height for reply container
-        replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "reply"), ", auto)");
+        replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "reply"), ", auto)");
       } else {
-        comments[_x5].replies[newReply.id] = newReply;
-        var replyWrapper = container.form.reply[_x5].previousElementSibling;
+        comments[_x6].replies[newReply.id] = newReply;
+        var replyWrapper = container.form.reply[_x6].previousElementSibling;
         replyWrapper.appendChild(newPost("reply", newReply));
 
         // Generates hr height for reply container
-        replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x5, "reply"), ", auto)");
+        replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "reply"), ", auto)");
       }
     });
   };
-  for (var _x5 = 0; _x5 < container.form.reply.length; _x5++) {
-    _loop6(_x5);
+  for (var _x6 = 0; _x6 < container.form.reply.length; _x6++) {
+    _loop6(_x6);
   }
 
   //  CRUD - DOM MANIPULATION - NEW REPLY TO REPLY
-  var _loop7 = function _loop7(_x6) {
-    container.form.replyToReply[_x6].addEventListener("submit", function (e) {
+  var _loop7 = function _loop7(_x7) {
+    container.form.replyToReply[_x7].addEventListener("submit", function (e) {
       e.preventDefault();
       var comments = data.comments,
         currentUser = data.currentUser;
-      var replyTo = container.input.replyReplyTo[_x6].innerText;
-      var content = container.input.replyToReplyContent[_x6].value;
+      var replyTo = container.input.replyReplyTo[_x7].innerText;
+      var content = container.input.replyToReplyContent[_x7].value;
       var newReply = {
         id: generateID(),
         content: content,
@@ -949,41 +965,41 @@ fetchData().then(function (data) {
       };
 
       // Adds replytoreply in DOM
-      var replyWrapper = container.form.replyToReply[_x6].parentNode;
+      var replyWrapper = container.form.replyToReply[_x7].parentNode;
       replyWrapper.appendChild(newPost("replytoreply", newReply));
 
       // Generates hr height for reply container
-      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "replytoreply"), ", auto)");
+      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x7, "replytoreply"), ", auto)");
 
       // Adds replytoreply in data
       var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-      for (var _x10 in comments) {
-        if (comments[_x10].content === parentComment) {
-          var replies = comments[_x10].replies;
+      for (var _x11 in comments) {
+        if (comments[_x11].content === parentComment) {
+          var replies = comments[_x11].replies;
           replies[replies.length] = newReply;
         }
       }
     });
   };
-  for (var _x6 = 0; _x6 < container.form.replyToReply.length; _x6++) {
-    _loop7(_x6);
+  for (var _x7 = 0; _x7 < container.form.replyToReply.length; _x7++) {
+    _loop7(_x7);
   }
 
   // CRUD - DOM MANIPULATION - UPDATE
-  var _loop8 = function _loop8(_x7) {
-    container.form.update[_x7].addEventListener("submit", function (e) {
+  var _loop8 = function _loop8(_x8) {
+    container.form.update[_x8].addEventListener("submit", function (e) {
       e.preventDefault();
 
       // Sets post content
       var oldContent;
-      if (container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1]) {
-        oldContent = container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[1];
+      if (container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[1]) {
+        oldContent = container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[1];
       } else {
-        oldContent = container.input.update[_x7].parentElement.parentElement.childNodes[3].childNodes[0];
+        oldContent = container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[0];
       }
 
       // Stores new text for content
-      var newContent = container.input.update[_x7].value;
+      var newContent = container.input.update[_x8].value;
 
       // Updates post in data
       httpRequest.update(oldContent, newContent);
@@ -992,13 +1008,13 @@ fetchData().then(function (data) {
       oldContent.innerText = newContent;
     });
   };
-  for (var _x7 = 0; _x7 < container.form.update.length; _x7++) {
-    _loop8(_x7);
+  for (var _x8 = 0; _x8 < container.form.update.length; _x8++) {
+    _loop8(_x8);
   }
 
   // CRUD - DOM MANIPULATION - DELETE
   var _loop9 = function _loop9() {
-    var deleteBtn = CRUD.delete[_x8];
+    var deleteBtn = CRUD.delete[_x9];
     var deleteComment = container.btn.deleteComment;
     deleteBtn.addEventListener("click", function () {
       var chosen = deleteBtn.parentElement.parentElement;
@@ -1016,18 +1032,23 @@ fetchData().then(function (data) {
         var comment = document.getElementsByClassName("comment");
 
         // Deletes post in DOM
-        for (var _x11 in comment) {
-          if (chosen === comment[_x11]) {
-            comment[_x11].remove();
+        for (var _x12 in comment) {
+          if (chosen === comment[_x12]) {
+            comment[_x12].remove();
           }
         }
-
+        var id;
+        for (var _x13 in comments) {
+          if (content === comments[_x13].content) {
+            id = comments[_x13].id;
+          }
+        }
         // Deletes post in data
-        httpRequest.delete(content);
+        httpRequest.delete(id);
       });
     });
   };
-  for (var _x8 = 0; _x8 < CRUD.delete.length; _x8++) {
+  for (var _x9 = 0; _x9 < CRUD.delete.length; _x9++) {
     _loop9();
   }
 
@@ -1035,12 +1056,12 @@ fetchData().then(function (data) {
   // VOTE - FUNCTION
   function vote(mode) {
     var vote = document.getElementsByClassName("vote__btn--".concat(mode));
-    var _loop10 = function _loop10(_x9) {
-      vote[_x9].addEventListener("click", function (e) {
+    var _loop10 = function _loop10(_x10) {
+      vote[_x10].addEventListener("click", function (e) {
         e.preventDefault();
 
         // Changes score in DOM
-        var scoreContianer = vote[_x9].parentElement.childNodes[1];
+        var scoreContianer = vote[_x10].parentElement.childNodes[1];
         var score = scoreContianer.innerText;
         mode === "upvote" ? score++ : score--;
         scoreContianer.innerText = score;
@@ -1049,8 +1070,8 @@ fetchData().then(function (data) {
         mode === "upvote" ? httpRequest.vote(scoreContianer, "upvote") : httpRequest.vote(scoreContianer, "downvote");
       });
     };
-    for (var _x9 = 0; _x9 < vote.length; _x9++) {
-      _loop10(_x9);
+    for (var _x10 = 0; _x10 < vote.length; _x10++) {
+      _loop10(_x10);
     }
   }
 
@@ -1088,7 +1109,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53497" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49957" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

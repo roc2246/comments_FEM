@@ -371,19 +371,6 @@ fetchData()
 
     // METHODS - HTTP REQUESTS
     const httpRequest = {
-      delete: function (content) {
-        for (let x in comments) {
-          if (content === comments[x].content) {
-            delete comments[x];
-          } else {
-            for (let y in comments[x].replies) {
-              if (content === comments[x].replies[y].content) {
-                delete comments[x].replies[y];
-              }
-            }
-          }
-        }
-      },
       update: function (oldContent, newContent) {
         for (let x in comments) {
           if (comments[x].content === oldContent.innerText) {
@@ -446,6 +433,30 @@ fetchData()
           });
       console.log(data.comments)
       },
+      delete : function(id){
+        const options = {
+          method: 'DELETE', // Use the DELETE HTTP method
+          headers: {
+            'Content-Type': 'application/json', // Set the content type if needed
+            // You may also need to include authentication headers or other headers here
+          },
+        };
+        
+        // Send the DELETE request
+        fetch(`http://localhost:3000/delete/${id}`, options)
+          .then(response => {
+            if (response.ok) {
+              // Resource successfully deleted
+              console.log('Resource deleted successfully');
+            } else {
+              // Handle error cases here
+              console.error('Error deleting resource');
+            }
+          })
+          .catch(error => {
+            console.error('Fetch error:', error);
+          });
+      }
     };
 
     // METHODS - BUTTON TOGGLES
@@ -616,8 +627,15 @@ fetchData()
           content = chosen.childNodes[3].childNodes[0].innerText;
         }
 
+        let id
+        for(let x in comments){
+          if(content === comments[x].content){
+            id = comments[x].id
+          }
+        }
+        
         // Deletes post in data
-        httpRequest.delete(content);
+        httpRequest.delete(id);
       });
 
       // VOTE
@@ -894,8 +912,14 @@ fetchData()
             }
           }
 
+          let id
+          for(let x in comments){
+            if(content === comments[x].content){
+              id = comments[x].id
+            }
+          }
           // Deletes post in data
-          httpRequest.delete(content);
+          httpRequest.delete(id);
         });
       });
     }

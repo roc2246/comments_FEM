@@ -409,54 +409,47 @@ fetchData()
         }
       },
       post: function (src) {
-        const postData = src
+        const postData = src;
         const params = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(postData),
-        }
-        fetch("http://localhost:3000/comments", params)
+        };
+        fetch("http://localhost:3000/newPost", params)
           .then((response) => {
-            console.log(response)
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }
-            return response.json(); 
+            return response.json();
           })
-          .then((data) => {
-            console.log("POST request successful:", data);
-          })
-          .catch((error) => {
-            console.error("POST request error:", error);
-          });
-      console.log(data.comments)
+          comments.push(postData)
       },
-      delete : function(id){
+      delete: function (id) {
         const options = {
-          method: 'DELETE', // Use the DELETE HTTP method
+          method: "DELETE", // Use the DELETE HTTP method
           headers: {
-            'Content-Type': 'application/json', // Set the content type if needed
+            "Content-Type": "application/json", // Set the content type if needed
             // You may also need to include authentication headers or other headers here
           },
         };
-        
+
         // Send the DELETE request
         fetch(`http://localhost:3000/delete/${id}`, options)
-          .then(response => {
+          .then((response) => {
             if (response.ok) {
               // Resource successfully deleted
-              console.log('Resource deleted successfully');
+              console.log("Resource deleted successfully");
             } else {
               // Handle error cases here
-              console.error('Error deleting resource');
+              console.error("Error deleting resource");
             }
           })
-          .catch(error => {
-            console.error('Fetch error:', error);
+          .catch((error) => {
+            console.error("Fetch error:", error);
           });
-      }
+      },
     };
 
     // METHODS - BUTTON TOGGLES
@@ -555,8 +548,6 @@ fetchData()
 
     // CRUD - FUNCTIONS - GENERATE ID
     function generateID() {
-      // const { comments } = data;
-
       let IDarray = [];
       for (let id in comments) {
         IDarray.push(comments[id].id);
@@ -627,13 +618,20 @@ fetchData()
           content = chosen.childNodes[3].childNodes[0].innerText;
         }
 
-        let id
-        for(let x in comments){
-          if(content === comments[x].content){
-            id = comments[x].id
+        /* CREATE A CONDITIONAL AND VARIABLE HERE 
+      TO CHECK IF ITS A COMMENT OR REPLY */
+
+        let id;
+        for (let x in comments) {
+          if (content === comments[x].content) {
+            id = comments[x].id;
+          } else {
+            for (let y in comments[x].replies) {
+              id = comments[x].replies[y].id;
+            }
           }
         }
-        
+
         // Deletes post in data
         httpRequest.delete(id);
       });
@@ -740,11 +738,12 @@ fetchData()
       };
 
       // Adds comment in data
-      httpRequest.post(newComment)
+      httpRequest.post(newComment);
 
       // Adds comment in DOM
       const wrapper = document.getElementById("comment-wrapper");
       wrapper.appendChild(newPost("comment", newComment));
+    
     });
 
     // CRUD - DOM MANIPULATION - NEW REPLY
@@ -912,12 +911,17 @@ fetchData()
             }
           }
 
-          let id
-          for(let x in comments){
-            if(content === comments[x].content){
-              id = comments[x].id
+          let id;
+          for (let x in comments) {
+            if (content === comments[x].content) {
+              id = comments[x].id;
+            } else {
+              for (let y in comments[x].replies) {
+                id = comments[x].replies[y].id;
+              }
             }
           }
+
           // Deletes post in data
           httpRequest.delete(id);
         });

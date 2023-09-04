@@ -53,21 +53,21 @@ function CORS(response) {
 }
 
 const controller = {
-  GET: async function(res, col){
+  GET: async function (res, col) {
     try {
       // Call the connectToDB function to retrieve comment data
       const data = await connectToDB();
-  
+
       // Access the "comments" collection from the database connection
       const collection = data.collection(collectionName[col]);
-  
+
       // Make a GET request (find documents)
       const query = {}; // You can specify a query here if needed
       const documents = await collection.find(query).toArray();
-  
+
       // Set the response headers
       res.writeHead(200, { "Content-Type": "application/json" });
-  
+
       // Send the JSON response
       res.end(JSON.stringify(documents));
     } catch (err) {
@@ -76,7 +76,7 @@ const controller = {
       res.end("Internal Server Error");
     }
   },
-  POST: async function(req, res, col){
+  POST: async function (req, res, col) {
     try {
       // Extract the incoming data from the request
       let incomingData = "";
@@ -121,28 +121,56 @@ const controller = {
       const db = await connectToDB();
       // Access the specified collection from the database connection
       const collection = db.collection(collectionName[col]);
-  
-      // Perform the DELETE operation
-      const result = await collection.findOneAndDelete({ id: parseInt(documentId)});
-  
-      if (result) {
-        console.log('Document deleted successfully');
-        res.writeHead(204); // Send a 204 (No Content) response for successful deletion
-        res.end();
+
+      let isComment = false;
+      const query = { id: parseInt(documentId) };
+      const result1 = await collection.find(query).toArray();
+      if (result1.length > 0) {
+        isComment = true;
+      }
+
+      if (isComment === true) {
+        // If it's a comment, we need to remove the entire comment
+        const result = await collection.deleteOne({
+          id: parseInt(documentId),
+        });
+
+        if (result.deletedCount === 1) {
+          console.log("Comment deleted successfully");
+          res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+          res.end();
+        } else {
+          console.log("Comment not found");
+          res.writeHead(404, { "Content-Type": "text/plain" });
+          res.end("Comment not found");
+        }
       } else {
-        console.log('Document not found');
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Document not found');
+        // If it's a reply, we need to remove the reply from the comments array
+        const query = { "comments.replies.id": parseInt(documentId) };
+        const update = {
+          $pull: { "comments.replies": { id: parseInt(documentId) } },
+        };
+
+        const result = await collection.updateOne(query, update);
+
+        if (result.modifiedCount === 1) {
+          console.log("Reply deleted successfully.");
+          res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+          res.end();
+        } else {
+          console.log("Reply not found");
+          res.writeHead(404, { "Content-Type": "text/plain" });
+          res.end("Reply not found");
+        }
       }
     } catch (err) {
-      console.error('Error:', err);
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('Internal Server Error');
+      console.error("Error:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
     }
-  }
-}
-  
-
+    isComment = false
+  },
+};
 
 // Create an HTTP server
 const server = http.createServer(async (req, res) => {
@@ -150,24 +178,24 @@ const server = http.createServer(async (req, res) => {
   cors()(req, res, async () => {
     if (req.method === "GET") {
       if (req.url === "/comments") {
-        controller.GET(res, "comments")
+        controller.GET(res, "comments");
       } else if (req.url === "/currentUser") {
-        controller.GET(res, "userName")
+        controller.GET(res, "userName");
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
     } else if (req.method === "POST") {
-      if (req.url === "/comments") {
-       controller.POST(req, res, "comments")
+      if (req.url === "/newPost") {
+        controller.POST(req, res, "comments");
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
-    }  else if (req.method === "DELETE") {
-      if (req.url.startsWith('/delete/')) {
-        const documentId = req.url.split('/').pop();
-        controller.DELETE(res, 'comments', documentId);
+    } else if (req.method === "DELETE") {
+      if (req.url.startsWith("/delete/")) {
+        const documentId = req.url.split("/").pop();
+        controller.DELETE(res, "comments", documentId);
       } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");

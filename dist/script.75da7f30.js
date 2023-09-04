@@ -563,25 +563,20 @@ fetchData().then(function (data) {
         },
         body: JSON.stringify(postData)
       };
-      fetch("http://localhost:3000/comments", params).then(function (response) {
-        console.log(response);
+      fetch("http://localhost:3000/newPost", params).then(function (response) {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         return response.json();
-      }).then(function (data) {
-        console.log("POST request successful:", data);
-      }).catch(function (error) {
-        console.error("POST request error:", error);
       });
-      console.log(data.comments);
+      comments.push(postData);
     },
     delete: function _delete(id) {
       var options = {
-        method: 'DELETE',
+        method: "DELETE",
         // Use the DELETE HTTP method
         headers: {
-          'Content-Type': 'application/json' // Set the content type if needed
+          "Content-Type": "application/json" // Set the content type if needed
           // You may also need to include authentication headers or other headers here
         }
       };
@@ -590,13 +585,13 @@ fetchData().then(function (data) {
       fetch("http://localhost:3000/delete/".concat(id), options).then(function (response) {
         if (response.ok) {
           // Resource successfully deleted
-          console.log('Resource deleted successfully');
+          console.log("Resource deleted successfully");
         } else {
           // Handle error cases here
-          console.error('Error deleting resource');
+          console.error("Error deleting resource");
         }
       }).catch(function (error) {
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
       });
     }
   };
@@ -700,8 +695,6 @@ fetchData().then(function (data) {
 
   // CRUD - FUNCTIONS - GENERATE ID
   function generateID() {
-    // const { comments } = data;
-
     var IDarray = [];
     for (var id in comments) {
       IDarray.push(comments[id].id);
@@ -769,10 +762,18 @@ fetchData().then(function (data) {
       } else {
         content = chosen.childNodes[3].childNodes[0].innerText;
       }
+
+      /* CREATE A CONDITIONAL AND VARIABLE HERE 
+      TO CHECK IF ITS A COMMENT OR REPLY */
+
       var id;
       for (var _x5 in comments) {
         if (content === comments[_x5].content) {
           id = comments[_x5].id;
+        } else {
+          for (var y in comments[_x5].replies) {
+            id = comments[_x5].replies[y].id;
+          }
         }
       }
 
@@ -1041,8 +1042,13 @@ fetchData().then(function (data) {
         for (var _x13 in comments) {
           if (content === comments[_x13].content) {
             id = comments[_x13].id;
+          } else {
+            for (var y in comments[_x13].replies) {
+              id = comments[_x13].replies[y].id;
+            }
           }
         }
+
         // Deletes post in data
         httpRequest.delete(id);
       });
@@ -1109,7 +1115,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49957" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55208" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

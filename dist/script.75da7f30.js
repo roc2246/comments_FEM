@@ -569,7 +569,6 @@ fetchData().then(function (data) {
         }
         return response.json();
       });
-      comments.push(postData);
     },
     delete: function _delete(id) {
       var options = {
@@ -778,7 +777,16 @@ fetchData().then(function (data) {
       }
 
       // Deletes post in data
-      httpRequest.delete(id);
+
+      for (var i = 0; i < comments.length; i++) {
+        if (comments[i].id === id) {
+          comments.splice(i, 1); // Remove the object at index i
+          break; // Stop searching after removal
+        }
+      }
+      // Deletes post in data
+      // httpRequest.delete(id);
+      console.log(data.comments);
     });
 
     // VOTE
@@ -881,6 +889,8 @@ fetchData().then(function (data) {
 
     // Adds comment in data
     httpRequest.post(newComment);
+    comments.push(newComment);
+    console.log(comments);
 
     // Adds comment in DOM
     var wrapper = document.getElementById("comment-wrapper");
@@ -935,6 +945,7 @@ fetchData().then(function (data) {
         // Generates hr height for reply container
         replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "reply"), ", auto)");
       }
+      // comments[x].replies[comments[x].replies.length + 1].push(newReply);
     });
   };
   for (var _x6 = 0; _x6 < container.form.reply.length; _x6++) {
@@ -974,9 +985,9 @@ fetchData().then(function (data) {
 
       // Adds replytoreply in data
       var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-      for (var _x11 in comments) {
-        if (comments[_x11].content === parentComment) {
-          var replies = comments[_x11].replies;
+      for (var _x13 in comments) {
+        if (comments[_x13].content === parentComment) {
+          var replies = comments[_x13].replies;
           replies[replies.length] = newReply;
         }
       }
@@ -1012,62 +1023,70 @@ fetchData().then(function (data) {
   for (var _x8 = 0; _x8 < container.form.update.length; _x8++) {
     _loop8(_x8);
   }
-
+  var content;
+  var chosen;
   // CRUD - DOM MANIPULATION - DELETE
   var _loop9 = function _loop9() {
     var deleteBtn = CRUD.delete[_x9];
-    var deleteComment = container.btn.deleteComment;
     deleteBtn.addEventListener("click", function () {
-      var chosen = deleteBtn.parentElement.parentElement;
+      chosen = deleteBtn.parentElement.parentElement;
 
       // Sets post content
-      var content;
       if (chosen.childNodes[3].childNodes[1]) {
         content = chosen.childNodes[3].childNodes[1].innerText;
       } else {
         content = chosen.childNodes[3].childNodes[0].innerText;
       }
-
-      // Adds delete functionality
-      deleteComment.addEventListener("click", function () {
-        var comment = document.getElementsByClassName("comment");
-
-        // Deletes post in DOM
-        for (var _x12 in comment) {
-          if (chosen === comment[_x12]) {
-            comment[_x12].remove();
-          }
-        }
-        var id;
-        for (var _x13 in comments) {
-          if (content === comments[_x13].content) {
-            id = comments[_x13].id;
-          } else {
-            for (var y in comments[_x13].replies) {
-              id = comments[_x13].replies[y].id;
-            }
-          }
-        }
-
-        // Deletes post in data
-        httpRequest.delete(id);
-      });
     });
   };
   for (var _x9 = 0; _x9 < CRUD.delete.length; _x9++) {
     _loop9();
   }
+  var deleteComment = container.btn.deleteComment;
+  // Adds delete functionality
+  deleteComment.addEventListener("click", function () {
+    var comment = document.getElementsByClassName("comment");
+
+    // Deletes post in DOM
+    for (var _x10 in comment) {
+      if (chosen === comment[_x10]) {
+        comment[_x10].remove();
+      }
+    }
+    var id;
+    for (var _x11 in comments) {
+      if (content === comments[_x11].content) {
+        id = comments[_x11].id;
+      } else {
+        for (var y in comments[_x11].replies) {
+          id = comments[_x11].replies[y].id;
+        }
+      }
+    }
+    for (var i = 0; i < comments.length; i++) {
+      if (comments[i].id === id) {
+        comments.splice(i, 1); // Remove the object at index i
+        break; // Stop searching after removal
+      }
+    }
+
+    // PROBLEM LIES IN LOOP COUNT
+    // Deletes post in data
+    httpRequest.delete(id);
+    console.log(id);
+    console.log(data.comments);
+  });
 
   // VOTE
   // VOTE - FUNCTION
   function vote(mode) {
     var vote = document.getElementsByClassName("vote__btn--".concat(mode));
-    var _loop10 = function _loop10(_x10) {
-      vote[_x10].addEventListener("click", function (e) {
+    var _loop10 = function _loop10(_x12) {
+      vote[_x12].addEventListener("click", function (e) {
         e.preventDefault();
 
         // Changes score in DOM
-        var scoreContianer = vote[_x10].parentElement.childNodes[1];
+        var scoreContianer = vote[_x12].parentElement.childNodes[1];
         var score = scoreContianer.innerText;
         mode === "upvote" ? score++ : score--;
         scoreContianer.innerText = score;
@@ -1076,8 +1095,8 @@ fetchData().then(function (data) {
         mode === "upvote" ? httpRequest.vote(scoreContianer, "upvote") : httpRequest.vote(scoreContianer, "downvote");
       });
     };
-    for (var _x10 = 0; _x10 < vote.length; _x10++) {
-      _loop10(_x10);
+    for (var _x12 = 0; _x12 < vote.length; _x12++) {
+      _loop10(_x12);
     }
   }
 
@@ -1115,7 +1134,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55208" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56936" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

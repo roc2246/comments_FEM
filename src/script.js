@@ -417,14 +417,12 @@ fetchData()
           },
           body: JSON.stringify(postData),
         };
-        fetch("http://localhost:3000/newPost", params)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          comments.push(postData)
+        fetch("http://localhost:3000/newPost", params).then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        });
       },
       delete: function (id) {
         const options = {
@@ -633,7 +631,16 @@ fetchData()
         }
 
         // Deletes post in data
-        httpRequest.delete(id);
+
+        for (let i = 0; i < comments.length; i++) {
+          if (comments[i].id === id) {
+            comments.splice(i, 1); // Remove the object at index i
+            break; // Stop searching after removal
+          }
+        }
+        // Deletes post in data
+        // httpRequest.delete(id);
+        console.log(data.comments);
       });
 
       // VOTE
@@ -739,11 +746,12 @@ fetchData()
 
       // Adds comment in data
       httpRequest.post(newComment);
+      comments.push(newComment);
+      console.log(comments);
 
       // Adds comment in DOM
       const wrapper = document.getElementById("comment-wrapper");
       wrapper.appendChild(newPost("comment", newComment));
-    
     });
 
     // CRUD - DOM MANIPULATION - NEW REPLY
@@ -803,6 +811,7 @@ fetchData()
             "reply"
           )}, auto)`;
         }
+        // comments[x].replies[comments[x].replies.length + 1].push(newReply);
       });
     }
 
@@ -884,49 +893,59 @@ fetchData()
       });
     }
 
+    let content;
+    let chosen
     // CRUD - DOM MANIPULATION - DELETE
     for (let x = 0; x < CRUD.delete.length; x++) {
       const deleteBtn = CRUD.delete[x];
-      const deleteComment = container.btn.deleteComment;
 
       deleteBtn.addEventListener("click", () => {
-        const chosen = deleteBtn.parentElement.parentElement;
+        chosen = deleteBtn.parentElement.parentElement;
 
         // Sets post content
-        let content;
         if (chosen.childNodes[3].childNodes[1]) {
           content = chosen.childNodes[3].childNodes[1].innerText;
         } else {
           content = chosen.childNodes[3].childNodes[0].innerText;
         }
-
-        // Adds delete functionality
-        deleteComment.addEventListener("click", () => {
-          const comment = document.getElementsByClassName("comment");
-
-          // Deletes post in DOM
-          for (let x in comment) {
-            if (chosen === comment[x]) {
-              comment[x].remove();
-            }
-          }
-
-          let id;
-          for (let x in comments) {
-            if (content === comments[x].content) {
-              id = comments[x].id;
-            } else {
-              for (let y in comments[x].replies) {
-                id = comments[x].replies[y].id;
-              }
-            }
-          }
-
-          // Deletes post in data
-          httpRequest.delete(id);
-        });
       });
     }
+    const deleteComment = container.btn.deleteComment;
+    // Adds delete functionality
+    deleteComment.addEventListener("click", () => {
+      const comment = document.getElementsByClassName("comment");
+
+      // Deletes post in DOM
+      for (let x in comment) {
+        if (chosen === comment[x]) {
+          comment[x].remove();
+        }
+      }
+
+      let id;
+      for (let x in comments) {
+        if (content === comments[x].content) {
+          id = comments[x].id;
+        } else {
+          for (let y in comments[x].replies) {
+            id = comments[x].replies[y].id;
+          }
+        }
+      }
+
+      for (let i = 0; i < comments.length; i++) {
+        if (comments[i].id === id) {
+          comments.splice(i, 1); // Remove the object at index i
+          break; // Stop searching after removal
+        }
+      }
+
+      // PROBLEM LIES IN LOOP COUNT
+      // Deletes post in data
+      httpRequest.delete(id);
+      console.log(id);
+      console.log(data.comments);
+    });
 
     // VOTE
     // VOTE - FUNCTION

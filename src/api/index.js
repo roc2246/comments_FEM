@@ -124,17 +124,18 @@ const controller = {
 
       let isComment = false;
       const query = { id: parseInt(documentId) };
-      const result1 = await collection.find(query).toArray();
-      if (result1.length > 0) {
-        isComment = true;
-      }
+      // const result1 = await collection.find(query).toArray();
+      // if (result1.length > 0) {
+      //   isComment = true;
+      // }
 
-      if (isComment === true) {
+      // if (isComment === true) {
         // If it's a comment, we need to remove the entire comment
         const result = await collection.deleteOne({
           id: parseInt(documentId),
         });
 
+        console.log(result)
         if (result.deletedCount === 1) {
           console.log("Comment deleted successfully");
           res.writeHead(204); // Send a 204 (No Content) response for successful deletion
@@ -144,25 +145,25 @@ const controller = {
           res.writeHead(404, { "Content-Type": "text/plain" });
           res.end("Comment not found");
         }
-      } else {
-        // If it's a reply, we need to remove the reply from the comments array
-        const query = { "comments.replies.id": parseInt(documentId) };
-        const update = {
-          $pull: { "comments.replies": { id: parseInt(documentId) } },
-        };
+      // } else {
+      //   // If it's a reply, we need to remove the reply from the comments array
+      //   const query = { "comments.replies.id": parseInt(documentId) };
+      //   const update = {
+      //     $pull: { "comments.replies": { id: parseInt(documentId) } },
+      //   };
 
-        const result = await collection.updateOne(query, update);
+      //   const result = await collection.updateOne(query, update);
 
-        if (result.modifiedCount === 1) {
-          console.log("Reply deleted successfully.");
-          res.writeHead(204); // Send a 204 (No Content) response for successful deletion
-          res.end();
-        } else {
-          console.log("Reply not found");
-          res.writeHead(404, { "Content-Type": "text/plain" });
-          res.end("Reply not found");
-        }
-      }
+      //   if (result.modifiedCount === 1) {
+      //     console.log("Reply deleted successfully.");
+      //     res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+      //     res.end();
+      //   } else {
+      //     console.log("Reply not found");
+      //     res.writeHead(404, { "Content-Type": "text/plain" });
+      //     res.end("Reply not found");
+      //   }
+      // }
     } catch (err) {
       console.error("Error:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });

@@ -511,15 +511,7 @@ fetchData()
       });
     }
 
-    // TOGGLES - OPEN DELETE MODAL
-    for (let x = 0; x < CRUD.delete.length; x++) {
-      const deleteBtn = CRUD.delete[x];
-      const deleteModal = document.getElementsByClassName("modal")[0];
-
-      deleteBtn.addEventListener("click", () => {
-        toggles.delete(deleteModal);
-      });
-    }
+  
 
     // TOGGLES - CLOSE DELETE MODAL
     container.modal.addEventListener("click", () => {
@@ -556,123 +548,6 @@ fetchData()
       }
       const ID = Math.max(...IDarray) + 1;
       return ID;
-    }
-
-    // CRUD - FUNCTIONS - ADD FUNCTIONALITY
-    function addFunctionality(postContainer) {
-      // Adds edit form toggle to new post
-      const editBtn = postContainer.childNodes[5].childNodes[1];
-      editBtn.addEventListener("click", () => {
-        toggles.edit(postContainer);
-      });
-
-      // Adds delete modal toggle to new post
-      const deleteBtn = postContainer.childNodes[5].childNodes[0];
-      const deleteModal = document.getElementsByClassName("modal")[0];
-      deleteBtn.addEventListener("click", () => {
-        toggles.delete(deleteModal);
-      });
-
-      // Adds edit functionality to new post
-      const editForm = postContainer.childNodes[6];
-      editForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const newContent = editForm.childNodes[0].value;
-
-        // Sets post content
-        let oldContent;
-        if (editForm.parentElement.childNodes[3].childNodes[1]) {
-          oldContent = editForm.parentElement.childNodes[3].childNodes[1];
-        } else {
-          oldContent = editForm.parentElement.childNodes[3].childNodes[0];
-        }
-
-        // Updates post in DOM
-        oldContent.innerText = newContent;
-
-        // Updates post in data
-        httpRequest.update(oldContent, newContent);
-      });
-
-      // Adds delete functionality to new post
-      const deleteComment = container.btn.deleteComment;
-      deleteComment.addEventListener("click", () => {
-        const comment = document.getElementsByClassName("comment");
-
-        // Deletes post in DOM
-        for (let x in comment) {
-          if (postContainer === comment[x]) {
-            comment[x].remove();
-          }
-        }
-
-        // Sets post content
-        const chosen = deleteBtn.parentElement.parentElement;
-        let content;
-        if (chosen.childNodes[3].childNodes[1]) {
-          content = chosen.childNodes[3].childNodes[1].innerText;
-        } else {
-          content = chosen.childNodes[3].childNodes[0].innerText;
-        }
-
-        /* CREATE A CONDITIONAL AND VARIABLE HERE 
-      TO CHECK IF ITS A COMMENT OR REPLY */
-
-        let id;
-        for (let x in comments) {
-          if (content === comments[x].content) {
-            id = comments[x].id;
-          } else {
-            for (let y in comments[x].replies) {
-              id = comments[x].replies[y].id;
-            }
-          }
-        }
-
-        // Deletes post in data
-
-        for (let i = 0; i < comments.length; i++) {
-          if (comments[i].id === id) {
-            comments.splice(i, 1); // Remove the object at index i
-            break; // Stop searching after removal
-          }
-        }
-        // Deletes post in data
-        // httpRequest.delete(id);
-        console.log(data.comments);
-      });
-
-      // VOTE
-      // VOTE - UPVOTE
-      const upvote = postContainer.childNodes[4].childNodes[0];
-      upvote.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        // Changes score in DOM
-        const scoreContianer = upvote.parentElement.childNodes[1];
-        let score = scoreContianer.innerText;
-        score++;
-        scoreContianer.innerText = score;
-
-        // Changes score in data
-        httpRequest.vote(scoreContianer, "upvote");
-      });
-
-      // VOTE -DOWNVOTE
-      const downvote = postContainer.childNodes[4].childNodes[2];
-      downvote.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        // Changes score in DOM
-        const scoreContianer = downvote.parentElement.childNodes[1];
-        let score = scoreContianer.innerText;
-        score--;
-        scoreContianer.innerText = score;
-
-        // Changes score in data
-        httpRequest.vote(scoreContianer, "downvote");
-      });
     }
 
     // CRUD - FUNCTIONS - NEW POST
@@ -715,14 +590,12 @@ fetchData()
         newComment.CRUD.classList.add("CRUD-container--reply");
       }
 
-      // adds CRUD funtionality to new post
-      addFunctionality(postContainer);
-
       return postContainer;
     }
 
     // CRUD - DOM MANIPULATION
     // CRUD - DOM MANIPULATION - NEW COMMENT
+    let deleteCounter = CRUD.delete.length
     container.form.comment.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -752,6 +625,8 @@ fetchData()
       // Adds comment in DOM
       const wrapper = document.getElementById("comment-wrapper");
       wrapper.appendChild(newPost("comment", newComment));
+
+deleteCounter++
     });
 
     // CRUD - DOM MANIPULATION - NEW REPLY
@@ -893,59 +768,64 @@ fetchData()
       });
     }
 
-    let content;
-    let chosen
     // CRUD - DOM MANIPULATION - DELETE
-    for (let x = 0; x < CRUD.delete.length; x++) {
-      const deleteBtn = CRUD.delete[x];
+    function deletePost() {
+      let content;
+      let chosen;
+      for (let x = 0; x < CRUD.delete.length; x++) {
+        const deleteBtn = CRUD.delete[x];
+        const deleteModal = document.getElementsByClassName("modal")[0];
 
-      deleteBtn.addEventListener("click", () => {
-        chosen = deleteBtn.parentElement.parentElement;
+        deleteBtn.addEventListener("click", () => {
+          toggles.delete(deleteModal);
 
-        // Sets post content
-        if (chosen.childNodes[3].childNodes[1]) {
-          content = chosen.childNodes[3].childNodes[1].innerText;
-        } else {
-          content = chosen.childNodes[3].childNodes[0].innerText;
-        }
-      });
-    }
-    const deleteComment = container.btn.deleteComment;
-    // Adds delete functionality
-    deleteComment.addEventListener("click", () => {
-      const comment = document.getElementsByClassName("comment");
+          chosen = deleteBtn.parentElement.parentElement;
 
-      // Deletes post in DOM
-      for (let x in comment) {
-        if (chosen === comment[x]) {
-          comment[x].remove();
-        }
+          // Sets post content
+          if (chosen.childNodes[3].childNodes[1]) {
+            content = chosen.childNodes[3].childNodes[1].innerText;
+          } else {
+            content = chosen.childNodes[3].childNodes[0].innerText;
+          }
+        });
       }
+      const deleteComment = container.btn.deleteComment;
+      // Adds delete functionality
+      deleteComment.addEventListener("click", () => {
+        const comment = document.getElementsByClassName("comment");
 
-      let id;
-      for (let x in comments) {
-        if (content === comments[x].content) {
-          id = comments[x].id;
-        } else {
-          for (let y in comments[x].replies) {
-            id = comments[x].replies[y].id;
+        // Deletes post in DOM
+        for (let x in comment) {
+          if (chosen === comment[x]) {
+            comment[x].remove();
           }
         }
-      }
 
-      for (let i = 0; i < comments.length; i++) {
-        if (comments[i].id === id) {
-          comments.splice(i, 1); // Remove the object at index i
-          break; // Stop searching after removal
+        let id;
+        for (let x in comments) {
+          if (content === comments[x].content) {
+            id = comments[x].id;
+          } else {
+            for (let y in comments[x].replies) {
+              id = comments[x].replies[y].id;
+            }
+          }
         }
-      }
 
-      // PROBLEM LIES IN LOOP COUNT
-      // Deletes post in data
-      httpRequest.delete(id);
-      console.log(id);
-      console.log(data.comments);
-    });
+        for (let i = 0; i < comments.length; i++) {
+          if (comments[i].id === id) {
+            comments.splice(i, 1); // Remove the object at index i
+            break; // Stop searching after removal
+          }
+        }
+
+        // Deletes post in data
+        httpRequest.delete(id);
+        console.log(id);
+        console.log(data.comments);
+      });
+    }
+    deletePost()
 
     // VOTE
     // VOTE - FUNCTION
@@ -972,7 +852,7 @@ fetchData()
     // VOTE - UPVOTE
     vote("upvote");
 
-    // VOTE -DOWNVOTE
+    // VOTE - DOWNVOTE
     vote("downvote");
   })
   .catch((error) => {

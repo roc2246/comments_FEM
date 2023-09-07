@@ -179,7 +179,7 @@ function _fetchData() {
                 }
               }, _callee);
             }));
-            return function (_x14) {
+            return function (_x11) {
               return _ref2.apply(this, arguments);
             };
           }()); // Use Promise.all() to wait for all Promises to resolve
@@ -657,18 +657,6 @@ fetchData().then(function (data) {
     _loop4();
   }
 
-  // TOGGLES - OPEN DELETE MODAL
-  var _loop5 = function _loop5() {
-    var deleteBtn = CRUD.delete[_x3];
-    var deleteModal = document.getElementsByClassName("modal")[0];
-    deleteBtn.addEventListener("click", function () {
-      toggles.delete(deleteModal);
-    });
-  };
-  for (var _x3 = 0; _x3 < CRUD.delete.length; _x3++) {
-    _loop5();
-  }
-
   // TOGGLES - CLOSE DELETE MODAL
   container.modal.addEventListener("click", function () {
     var deleteModal = document.getElementsByClassName("modal")[0];
@@ -703,122 +691,6 @@ fetchData().then(function (data) {
     }
     var ID = Math.max.apply(Math, IDarray) + 1;
     return ID;
-  }
-
-  // CRUD - FUNCTIONS - ADD FUNCTIONALITY
-  function addFunctionality(postContainer) {
-    // Adds edit form toggle to new post
-    var editBtn = postContainer.childNodes[5].childNodes[1];
-    editBtn.addEventListener("click", function () {
-      toggles.edit(postContainer);
-    });
-
-    // Adds delete modal toggle to new post
-    var deleteBtn = postContainer.childNodes[5].childNodes[0];
-    var deleteModal = document.getElementsByClassName("modal")[0];
-    deleteBtn.addEventListener("click", function () {
-      toggles.delete(deleteModal);
-    });
-
-    // Adds edit functionality to new post
-    var editForm = postContainer.childNodes[6];
-    editForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var newContent = editForm.childNodes[0].value;
-
-      // Sets post content
-      var oldContent;
-      if (editForm.parentElement.childNodes[3].childNodes[1]) {
-        oldContent = editForm.parentElement.childNodes[3].childNodes[1];
-      } else {
-        oldContent = editForm.parentElement.childNodes[3].childNodes[0];
-      }
-
-      // Updates post in DOM
-      oldContent.innerText = newContent;
-
-      // Updates post in data
-      httpRequest.update(oldContent, newContent);
-    });
-
-    // Adds delete functionality to new post
-    var deleteComment = container.btn.deleteComment;
-    deleteComment.addEventListener("click", function () {
-      var comment = document.getElementsByClassName("comment");
-
-      // Deletes post in DOM
-      for (var _x4 in comment) {
-        if (postContainer === comment[_x4]) {
-          comment[_x4].remove();
-        }
-      }
-
-      // Sets post content
-      var chosen = deleteBtn.parentElement.parentElement;
-      var content;
-      if (chosen.childNodes[3].childNodes[1]) {
-        content = chosen.childNodes[3].childNodes[1].innerText;
-      } else {
-        content = chosen.childNodes[3].childNodes[0].innerText;
-      }
-
-      /* CREATE A CONDITIONAL AND VARIABLE HERE 
-      TO CHECK IF ITS A COMMENT OR REPLY */
-
-      var id;
-      for (var _x5 in comments) {
-        if (content === comments[_x5].content) {
-          id = comments[_x5].id;
-        } else {
-          for (var y in comments[_x5].replies) {
-            id = comments[_x5].replies[y].id;
-          }
-        }
-      }
-
-      // Deletes post in data
-
-      for (var i = 0; i < comments.length; i++) {
-        if (comments[i].id === id) {
-          comments.splice(i, 1); // Remove the object at index i
-          break; // Stop searching after removal
-        }
-      }
-      // Deletes post in data
-      // httpRequest.delete(id);
-      console.log(data.comments);
-    });
-
-    // VOTE
-    // VOTE - UPVOTE
-    var upvote = postContainer.childNodes[4].childNodes[0];
-    upvote.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      // Changes score in DOM
-      var scoreContianer = upvote.parentElement.childNodes[1];
-      var score = scoreContianer.innerText;
-      score++;
-      scoreContianer.innerText = score;
-
-      // Changes score in data
-      httpRequest.vote(scoreContianer, "upvote");
-    });
-
-    // VOTE -DOWNVOTE
-    var downvote = postContainer.childNodes[4].childNodes[2];
-    downvote.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      // Changes score in DOM
-      var scoreContianer = downvote.parentElement.childNodes[1];
-      var score = scoreContianer.innerText;
-      score--;
-      scoreContianer.innerText = score;
-
-      // Changes score in data
-      httpRequest.vote(scoreContianer, "downvote");
-    });
   }
 
   // CRUD - FUNCTIONS - NEW POST
@@ -859,14 +731,12 @@ fetchData().then(function (data) {
     if (type === "reply") {
       newComment.CRUD.classList.add("CRUD-container--reply");
     }
-
-    // adds CRUD funtionality to new post
-    addFunctionality(postContainer);
     return postContainer;
   }
 
   // CRUD - DOM MANIPULATION
   // CRUD - DOM MANIPULATION - NEW COMMENT
+  var deleteCounter = CRUD.delete.length;
   container.form.comment.addEventListener("submit", function (e) {
     e.preventDefault();
     var comments = data.comments,
@@ -895,16 +765,17 @@ fetchData().then(function (data) {
     // Adds comment in DOM
     var wrapper = document.getElementById("comment-wrapper");
     wrapper.appendChild(newPost("comment", newComment));
+    deleteCounter++;
   });
 
   // CRUD - DOM MANIPULATION - NEW REPLY
-  var _loop6 = function _loop6(_x6) {
-    container.form.reply[_x6].addEventListener("submit", function (e) {
+  var _loop5 = function _loop5(_x3) {
+    container.form.reply[_x3].addEventListener("submit", function (e) {
       e.preventDefault();
       var comments = data.comments,
         currentUser = data.currentUser;
-      var replyTo = container.input.replyTo[_x6].innerText;
-      var content = container.input.replyContent[_x6].value;
+      var replyTo = container.input.replyTo[_x3].innerText;
+      var content = container.input.replyContent[_x3].value;
       var newReply = {
         id: generateID(),
         content: content,
@@ -920,46 +791,46 @@ fetchData().then(function (data) {
           username: currentUser[0].username
         }
       };
-      if (comments[_x6].replies.length === 0) {
+      if (comments[_x3].replies.length === 0) {
         // Creates container for replies
         var replyCont = document.createElement("div");
         replyCont.classList.add("reply-wrapper");
         var hr = document.createElement("hr");
         hr.classList.add("reply-wrapper__ruler");
         replyCont.appendChild(hr);
-        container.comments[_x6].insertAdjacentElement("afterend", replyCont);
+        container.comments[_x3].insertAdjacentElement("afterend", replyCont);
 
         // Adds reply in data
-        comments[_x6].replies[newReply.id] = newReply;
+        comments[_x3].replies[newReply.id] = newReply;
 
         // Adds reply in DOM
         replyCont.appendChild(newPost("reply", newReply));
 
         // Generates hr height for reply container
-        replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "reply"), ", auto)");
+        replyCont.style.gridTemplateRows = "repeat(".concat(replyCount(_x3, "reply"), ", auto)");
       } else {
-        comments[_x6].replies[newReply.id] = newReply;
-        var replyWrapper = container.form.reply[_x6].previousElementSibling;
+        comments[_x3].replies[newReply.id] = newReply;
+        var replyWrapper = container.form.reply[_x3].previousElementSibling;
         replyWrapper.appendChild(newPost("reply", newReply));
 
         // Generates hr height for reply container
-        replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x6, "reply"), ", auto)");
+        replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x3, "reply"), ", auto)");
       }
       // comments[x].replies[comments[x].replies.length + 1].push(newReply);
     });
   };
-  for (var _x6 = 0; _x6 < container.form.reply.length; _x6++) {
-    _loop6(_x6);
+  for (var _x3 = 0; _x3 < container.form.reply.length; _x3++) {
+    _loop5(_x3);
   }
 
   //  CRUD - DOM MANIPULATION - NEW REPLY TO REPLY
-  var _loop7 = function _loop7(_x7) {
-    container.form.replyToReply[_x7].addEventListener("submit", function (e) {
+  var _loop6 = function _loop6(_x4) {
+    container.form.replyToReply[_x4].addEventListener("submit", function (e) {
       e.preventDefault();
       var comments = data.comments,
         currentUser = data.currentUser;
-      var replyTo = container.input.replyReplyTo[_x7].innerText;
-      var content = container.input.replyToReplyContent[_x7].value;
+      var replyTo = container.input.replyReplyTo[_x4].innerText;
+      var content = container.input.replyToReplyContent[_x4].value;
       var newReply = {
         id: generateID(),
         content: content,
@@ -977,41 +848,41 @@ fetchData().then(function (data) {
       };
 
       // Adds replytoreply in DOM
-      var replyWrapper = container.form.replyToReply[_x7].parentNode;
+      var replyWrapper = container.form.replyToReply[_x4].parentNode;
       replyWrapper.appendChild(newPost("replytoreply", newReply));
 
       // Generates hr height for reply container
-      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x7, "replytoreply"), ", auto)");
+      replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "replytoreply"), ", auto)");
 
       // Adds replytoreply in data
       var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-      for (var _x13 in comments) {
-        if (comments[_x13].content === parentComment) {
-          var replies = comments[_x13].replies;
+      for (var _x10 in comments) {
+        if (comments[_x10].content === parentComment) {
+          var replies = comments[_x10].replies;
           replies[replies.length] = newReply;
         }
       }
     });
   };
-  for (var _x7 = 0; _x7 < container.form.replyToReply.length; _x7++) {
-    _loop7(_x7);
+  for (var _x4 = 0; _x4 < container.form.replyToReply.length; _x4++) {
+    _loop6(_x4);
   }
 
   // CRUD - DOM MANIPULATION - UPDATE
-  var _loop8 = function _loop8(_x8) {
-    container.form.update[_x8].addEventListener("submit", function (e) {
+  var _loop7 = function _loop7(_x5) {
+    container.form.update[_x5].addEventListener("submit", function (e) {
       e.preventDefault();
 
       // Sets post content
       var oldContent;
-      if (container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[1]) {
-        oldContent = container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[1];
+      if (container.input.update[_x5].parentElement.parentElement.childNodes[3].childNodes[1]) {
+        oldContent = container.input.update[_x5].parentElement.parentElement.childNodes[3].childNodes[1];
       } else {
-        oldContent = container.input.update[_x8].parentElement.parentElement.childNodes[3].childNodes[0];
+        oldContent = container.input.update[_x5].parentElement.parentElement.childNodes[3].childNodes[0];
       }
 
       // Stores new text for content
-      var newContent = container.input.update[_x8].value;
+      var newContent = container.input.update[_x5].value;
 
       // Updates post in data
       httpRequest.update(oldContent, newContent);
@@ -1020,73 +891,78 @@ fetchData().then(function (data) {
       oldContent.innerText = newContent;
     });
   };
-  for (var _x8 = 0; _x8 < container.form.update.length; _x8++) {
-    _loop8(_x8);
+  for (var _x5 = 0; _x5 < container.form.update.length; _x5++) {
+    _loop7(_x5);
   }
-  var content;
-  var chosen;
+
   // CRUD - DOM MANIPULATION - DELETE
-  var _loop9 = function _loop9() {
-    var deleteBtn = CRUD.delete[_x9];
-    deleteBtn.addEventListener("click", function () {
-      chosen = deleteBtn.parentElement.parentElement;
+  function deletePost() {
+    var content;
+    var chosen;
+    var _loop8 = function _loop8() {
+      var deleteBtn = CRUD.delete[_x6];
+      var deleteModal = document.getElementsByClassName("modal")[0];
+      deleteBtn.addEventListener("click", function () {
+        toggles.delete(deleteModal);
+        chosen = deleteBtn.parentElement.parentElement;
 
-      // Sets post content
-      if (chosen.childNodes[3].childNodes[1]) {
-        content = chosen.childNodes[3].childNodes[1].innerText;
-      } else {
-        content = chosen.childNodes[3].childNodes[0].innerText;
-      }
-    });
-  };
-  for (var _x9 = 0; _x9 < CRUD.delete.length; _x9++) {
-    _loop9();
-  }
-  var deleteComment = container.btn.deleteComment;
-  // Adds delete functionality
-  deleteComment.addEventListener("click", function () {
-    var comment = document.getElementsByClassName("comment");
-
-    // Deletes post in DOM
-    for (var _x10 in comment) {
-      if (chosen === comment[_x10]) {
-        comment[_x10].remove();
-      }
+        // Sets post content
+        if (chosen.childNodes[3].childNodes[1]) {
+          content = chosen.childNodes[3].childNodes[1].innerText;
+        } else {
+          content = chosen.childNodes[3].childNodes[0].innerText;
+        }
+      });
+    };
+    for (var _x6 = 0; _x6 < CRUD.delete.length; _x6++) {
+      _loop8();
     }
-    var id;
-    for (var _x11 in comments) {
-      if (content === comments[_x11].content) {
-        id = comments[_x11].id;
-      } else {
-        for (var y in comments[_x11].replies) {
-          id = comments[_x11].replies[y].id;
+    var deleteComment = container.btn.deleteComment;
+    // Adds delete functionality
+    deleteComment.addEventListener("click", function () {
+      var comment = document.getElementsByClassName("comment");
+
+      // Deletes post in DOM
+      for (var _x7 in comment) {
+        if (chosen === comment[_x7]) {
+          comment[_x7].remove();
         }
       }
-    }
-    for (var i = 0; i < comments.length; i++) {
-      if (comments[i].id === id) {
-        comments.splice(i, 1); // Remove the object at index i
-        break; // Stop searching after removal
+      var id;
+      for (var _x8 in comments) {
+        if (content === comments[_x8].content) {
+          id = comments[_x8].id;
+        } else {
+          for (var y in comments[_x8].replies) {
+            id = comments[_x8].replies[y].id;
+          }
+        }
       }
-    }
+      for (var i = 0; i < comments.length; i++) {
+        if (comments[i].id === id) {
+          comments.splice(i, 1); // Remove the object at index i
+          break; // Stop searching after removal
+        }
+      }
 
-    // PROBLEM LIES IN LOOP COUNT
-    // Deletes post in data
-    httpRequest.delete(id);
-    console.log(id);
-    console.log(data.comments);
-  });
+      // Deletes post in data
+      httpRequest.delete(id);
+      console.log(id);
+      console.log(data.comments);
+    });
+  }
+  deletePost();
 
   // VOTE
   // VOTE - FUNCTION
   function vote(mode) {
     var vote = document.getElementsByClassName("vote__btn--".concat(mode));
-    var _loop10 = function _loop10(_x12) {
-      vote[_x12].addEventListener("click", function (e) {
+    var _loop9 = function _loop9(_x9) {
+      vote[_x9].addEventListener("click", function (e) {
         e.preventDefault();
 
         // Changes score in DOM
-        var scoreContianer = vote[_x12].parentElement.childNodes[1];
+        var scoreContianer = vote[_x9].parentElement.childNodes[1];
         var score = scoreContianer.innerText;
         mode === "upvote" ? score++ : score--;
         scoreContianer.innerText = score;
@@ -1095,15 +971,15 @@ fetchData().then(function (data) {
         mode === "upvote" ? httpRequest.vote(scoreContianer, "upvote") : httpRequest.vote(scoreContianer, "downvote");
       });
     };
-    for (var _x12 = 0; _x12 < vote.length; _x12++) {
-      _loop10(_x12);
+    for (var _x9 = 0; _x9 < vote.length; _x9++) {
+      _loop9(_x9);
     }
   }
 
   // VOTE - UPVOTE
   vote("upvote");
 
-  // VOTE -DOWNVOTE
+  // VOTE - DOWNVOTE
   vote("downvote");
 }).catch(function (error) {
   // Handle any errors that occurred during the fetch
@@ -1134,7 +1010,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56936" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60143" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

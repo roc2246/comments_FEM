@@ -511,8 +511,6 @@ fetchData()
       });
     }
 
-  
-
     // TOGGLES - CLOSE DELETE MODAL
     container.modal.addEventListener("click", () => {
       const deleteModal = document.getElementsByClassName("modal")[0];
@@ -590,12 +588,69 @@ fetchData()
         newComment.CRUD.classList.add("CRUD-container--reply");
       }
 
+      // Adds delete functionality
+      let chosen;
+      let content;
+      const deleteBtn = postContainer.childNodes[5].childNodes[0];
+      const deleteModal = document.getElementsByClassName("modal")[0];
+      const deleteComment = container.btn.deleteComment;
+
+      deleteBtn.addEventListener("click", () => {
+        toggles.delete(deleteModal);
+
+        chosen = postContainer.childNodes[3];
+        // Sets post content
+        if (chosen.childNodes[1]) {
+          content = chosen.childNodes[1].innerText;
+        } else {
+          content = chosen.childNodes[0].innerText;
+        }
+      });
+
+      deleteComment.addEventListener("click", () => {
+        const comment = document.getElementsByClassName("comment");
+
+        let id;
+        for (let x in comments) {
+          if (content === comments[x].content) {
+            id = comments[x].id;
+            break;
+          } /*  else {
+            for (let y in comments[x].replies) {
+              id = comments[x].replies[y].id;
+              break
+            }
+          } */
+        }
+
+        // Deletes post in data
+        if (id !== undefined) {
+          // Deletes post in DOM
+          for (let x in comment) {
+            if (postContainer === comment[x]) {
+              comment[x].remove();
+              break;
+            }
+          }
+
+          for (let i = 0; i < comments.length; i++) {
+            if (comments[i].id === id) {
+              comments.splice(i, 1); // Remove the object at index i
+              break; // Stop searching after removal
+            }
+          }
+
+          httpRequest.delete(id);
+        }
+        console.log(id);
+        console.log(data.comments);
+      });
+
       return postContainer;
     }
 
     // CRUD - DOM MANIPULATION
     // CRUD - DOM MANIPULATION - NEW COMMENT
-    let deleteCounter = CRUD.delete.length
     container.form.comment.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -625,8 +680,6 @@ fetchData()
       // Adds comment in DOM
       const wrapper = document.getElementById("comment-wrapper");
       wrapper.appendChild(newPost("comment", newComment));
-
-deleteCounter++
     });
 
     // CRUD - DOM MANIPULATION - NEW REPLY
@@ -825,7 +878,7 @@ deleteCounter++
         console.log(data.comments);
       });
     }
-    deletePost()
+    // deletePost()
 
     // VOTE
     // VOTE - FUNCTION

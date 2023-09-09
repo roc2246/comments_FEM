@@ -136,6 +136,7 @@ const controller = {
         });
 
         console.log(result)
+        console.log(documentId)
         if (result.deletedCount === 1) {
           console.log("Comment deleted successfully");
           res.writeHead(204); // Send a 204 (No Content) response for successful deletion

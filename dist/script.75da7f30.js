@@ -363,7 +363,7 @@ fetchData().then(function (data) {
             break;
           } else {
             for (var y in comments[x].replies) {
-              if (content === comments[x].replies) {
+              if (content === comments[x].replies[y].content) {
                 id = comments[x].replies[y].id;
                 break;
               }

@@ -214,7 +214,7 @@ fetchData()
               break;
             } else {
               for (let y in comments[x].replies) {
-                if (content === comments[x].replies) {
+                if (content === comments[x].replies[y].content) {
                   id = comments[x].replies[y].id;
                   break;
                 }

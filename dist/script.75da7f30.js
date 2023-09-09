@@ -179,7 +179,7 @@ function _fetchData() {
                 }
               }, _callee);
             }));
-            return function (_x13) {
+            return function (_x15) {
               return _ref2.apply(this, arguments);
             };
           }()); // Use Promise.all() to wait for all Promises to resolve
@@ -384,6 +384,61 @@ fetchData().then(function (data) {
       if (type === "reply") {
         newComment.CRUD.classList.add("CRUD-container--reply");
       }
+
+      // Refactor______________________________
+      var chosen;
+      var content;
+      var deleteBtn = container.childNodes[5].childNodes[0];
+      var deleteModal = document.getElementsByClassName("modal")[0];
+      var deleteComment = document.getElementsByClassName("modal__btn-box--delete")[0];
+      deleteBtn.addEventListener("click", function () {
+        toggles.delete(deleteModal);
+        chosen = container.childNodes[3];
+        // Sets post content
+        if (chosen.childNodes[1]) {
+          content = chosen.childNodes[1].innerText;
+        } else {
+          content = chosen.childNodes[0].innerText;
+        }
+      });
+      deleteComment.addEventListener("click", function () {
+        var comment = document.getElementsByClassName("comment");
+        var id;
+        for (var _x12 in comments) {
+          if (content === comments[_x12].content) {
+            id = comments[_x12].id;
+            break;
+          } /*  else {
+            for (let y in comments[x].replies) {
+              id = comments[x].replies[y].id;
+              break
+            }
+            } */
+        }
+
+        // Deletes post in data
+        if (id !== undefined) {
+          // Deletes post in DOM
+          for (var _x13 in comment) {
+            if (container === comment[_x13]) {
+              comment[_x13].remove();
+              break;
+            }
+          }
+          for (var i = 0; i < comments.length; i++) {
+            if (comments[i].id === id) {
+              comments.splice(i, 1); // Remove the object at index i
+              break; // Stop searching after removal
+            }
+          }
+
+          httpRequest.delete(id);
+        }
+        console.log(id);
+        console.log(data.comments);
+      });
+      // __________________________________________________
+
       return container;
     }
 
@@ -732,6 +787,7 @@ fetchData().then(function (data) {
       newComment.CRUD.classList.add("CRUD-container--reply");
     }
 
+    // ADD TO GENETATE COMMENTS LOOP
     // Adds delete functionality
     var chosen;
     var content;
@@ -907,9 +963,9 @@ fetchData().then(function (data) {
 
       // Adds replytoreply in data
       var parentComment = replyWrapper.previousSibling.childNodes[3].childNodes[0].innerText;
-      for (var _x12 in comments) {
-        if (comments[_x12].content === parentComment) {
-          var replies = comments[_x12].replies;
+      for (var _x14 in comments) {
+        if (comments[_x14].content === parentComment) {
+          var replies = comments[_x14].replies;
           replies[replies.length] = newReply;
         }
       }
@@ -946,6 +1002,7 @@ fetchData().then(function (data) {
     _loop7(_x7);
   }
 
+  // REFACTOR TO GENETATE COMMENTS LOOP
   // CRUD - DOM MANIPULATION - DELETE
   function deletePost() {
     var content;
@@ -1002,7 +1059,7 @@ fetchData().then(function (data) {
       console.log(data.comments);
     });
   }
-  // deletePost()
+  // deletePost();
 
   // VOTE
   // VOTE - FUNCTION

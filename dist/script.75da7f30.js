@@ -361,13 +361,16 @@ fetchData().then(function (data) {
           if (content === comments[x].content) {
             id = comments[x].id;
             break;
-          } /*  else {
-            for (let y in comments[x].replies) {
-              id = comments[x].replies[y].id;
-              break
+          } else {
+            for (var y in comments[x].replies) {
+              if (content === comments[x].replies) {
+                id = comments[x].replies[y].id;
+                break;
+              }
             }
-            } */
+          }
         }
+        console.log(id);
 
         // Deletes post in data
         if (id !== undefined) {
@@ -387,8 +390,6 @@ fetchData().then(function (data) {
 
           httpRequest.delete(id);
         }
-        console.log(id);
-        console.log(data.comments);
       });
     }
   };
@@ -822,7 +823,6 @@ fetchData().then(function (data) {
     // Adds comment in data
     httpRequest.post(newComment);
     comments.push(newComment);
-    console.log(comments);
 
     // Adds comment in DOM
     var wrapper = document.getElementById("comment-wrapper");

@@ -626,6 +626,7 @@ fetchData().then(function (data) {
         },
         body: JSON.stringify(postData)
       };
+      // Possible put id here to insert new replies and replytoreplies to database
       fetch("http://localhost:3000/newPost", params).then(function (response) {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -880,6 +881,7 @@ fetchData().then(function (data) {
         replyWrapper.style.gridTemplateRows = "repeat(".concat(replyCount(_x4, "reply"), ", auto)");
       }
       // comments[x].replies[comments[x].replies.length + 1].push(newReply);
+      httpRequest.post(newReply);
     });
   };
   for (var _x4 = 0; _x4 < container.form.reply.length; _x4++) {
@@ -1015,7 +1017,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49815" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55102" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

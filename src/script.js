@@ -487,6 +487,7 @@ fetchData()
           },
           body: JSON.stringify(postData),
         };
+        // Possible put id here to insert new replies and replytoreplies to database
         fetch("http://localhost:3000/newPost", params).then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -754,6 +755,7 @@ fetchData()
           )}, auto)`;
         }
         // comments[x].replies[comments[x].replies.length + 1].push(newReply);
+        httpRequest.post(newReply)
       });
     }
 

@@ -96,7 +96,16 @@ const controller = {
           const collection = data.collection(collectionName[col]);
 
           // Insert the comment data into the "comments" collection
-          const result = await collection.insertOne(commentData);
+          let result;
+          if (commentData.replyingTo === undefined) {
+            result = await collection.insertOne(commentData);
+          } else {
+            const query = { "user.username": commentData.replyingTo };
+            const update = {
+              $push: { "replies": commentData },
+            };
+             result = await collection.updateOne(query, update);
+          }
 
           // Set the response headers
           res.writeHead(201, { "Content-Type": "application/json" });
@@ -121,7 +130,7 @@ const controller = {
       const collection = db.collection(collectionName[col]);
 
       let isComment = false;
-      
+
       const query = { id: parseInt(documentId) };
       const findComment = await collection.find(query).toArray();
       if (findComment.length > 0) {
@@ -137,7 +146,7 @@ const controller = {
         console.log(documentId);
         if (result.deletedCount === 1) {
           console.log("Comment deleted successfully");
-          res.writeHead(204); 
+          res.writeHead(204);
           res.end();
         } else {
           console.log("Comment not found");
@@ -146,10 +155,10 @@ const controller = {
         }
       }
 
-      async function deleteReply(){
+      async function deleteReply() {
         const query = { "replies.id": parseInt(documentId) };
         const update = {
-          $pull: { "replies": { id: parseInt(documentId) } },
+          $pull: { replies: { id: parseInt(documentId) } },
         };
 
         const result = await collection.updateOne(query, update);
@@ -165,8 +174,7 @@ const controller = {
         }
       }
 
-     isComment === true ? deleteComment() : deleteReply()
-
+      isComment === true ? deleteComment() : deleteReply();
     } catch (err) {
       console.error("Error:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });

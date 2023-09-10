@@ -296,7 +296,9 @@ fetchData()
         }
 
         // Adds CRUD functionality
-        CRUDFunction.delete(container);
+        if (currentUser[0].username === post.user.username) {
+          CRUDFunction.delete(container);
+        }
 
         return container;
       }

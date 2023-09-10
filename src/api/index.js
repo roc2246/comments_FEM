@@ -117,12 +117,11 @@ const controller = {
   },
   DELETE: async function (res, col, documentId) {
     try {
-      // Call the connectToDB function to retrieve the database connection
       const db = await connectToDB();
-      // Access the specified collection from the database connection
       const collection = db.collection(collectionName[col]);
 
       let isComment = false;
+      
       const query = { id: parseInt(documentId) };
       const findComment = await collection.find(query).toArray();
       if (findComment.length > 0) {
@@ -130,7 +129,6 @@ const controller = {
       }
 
       async function deleteComment() {
-        // If it's a comment, we need to remove the entire comment
         const result = await collection.deleteOne({
           id: parseInt(documentId),
         });
@@ -139,7 +137,7 @@ const controller = {
         console.log(documentId);
         if (result.deletedCount === 1) {
           console.log("Comment deleted successfully");
-          res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+          res.writeHead(204); 
           res.end();
         } else {
           console.log("Comment not found");
@@ -149,7 +147,6 @@ const controller = {
       }
 
       async function deleteReply(){
-        // If it's a reply, we need to remove the reply from the comments array
         const query = { "replies.id": parseInt(documentId) };
         const update = {
           $pull: { "replies": { id: parseInt(documentId) } },
@@ -159,7 +156,7 @@ const controller = {
 
         if (result.modifiedCount === 1) {
           console.log("Reply deleted successfully.");
-          res.writeHead(204); // Send a 204 (No Content) response for successful deletion
+          res.writeHead(204);
           res.end();
         } else {
           console.log("Reply not found");
@@ -168,11 +165,8 @@ const controller = {
         }
       }
 
-      if (isComment === true) {
-        deleteComment()
-      } else {
-        deleteReply()
-      }
+     isComment === true ? deleteComment() : deleteReply()
+
     } catch (err) {
       console.error("Error:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });

@@ -150,9 +150,9 @@ const controller = {
 
       async function deleteReply(){
         // If it's a reply, we need to remove the reply from the comments array
-        const query = { "comments.replies.id": parseInt(documentId) };
+        const query = { "replies.id": parseInt(documentId) };
         const update = {
-          $pull: { "comments.replies": { id: parseInt(documentId) } },
+          $pull: { "replies": { id: parseInt(documentId) } },
         };
 
         const result = await collection.updateOne(query, update);

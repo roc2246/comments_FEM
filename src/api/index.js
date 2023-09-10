@@ -129,14 +129,14 @@ const controller = {
         isComment = true;
       }
 
-      if (isComment === true) {
+      async function deleteComment() {
         // If it's a comment, we need to remove the entire comment
         const result = await collection.deleteOne({
           id: parseInt(documentId),
         });
 
-        console.log(result)
-        console.log(documentId)
+        console.log(result);
+        console.log(documentId);
         if (result.deletedCount === 1) {
           console.log("Comment deleted successfully");
           res.writeHead(204); // Send a 204 (No Content) response for successful deletion
@@ -146,7 +146,9 @@ const controller = {
           res.writeHead(404, { "Content-Type": "text/plain" });
           res.end("Comment not found");
         }
-      } else {
+      }
+
+      async function deleteReply(){
         // If it's a reply, we need to remove the reply from the comments array
         const query = { "comments.replies.id": parseInt(documentId) };
         const update = {
@@ -165,12 +167,18 @@ const controller = {
           res.end("Reply not found");
         }
       }
+
+      if (isComment === true) {
+        deleteComment()
+      } else {
+        deleteReply()
+      }
     } catch (err) {
       console.error("Error:", err);
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.end("Internal Server Error");
     }
-    isComment = false
+    isComment = false;
   },
 };
 

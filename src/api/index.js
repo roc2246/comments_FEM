@@ -129,6 +129,9 @@ const controller = {
       res.end("Internal Server Error");
     }
   },
+  PUT: async function(req, res){
+
+  },
   DELETE: async function (res, col, documentId) {
     try {
       const db = await connectToDB();

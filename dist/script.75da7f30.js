@@ -895,12 +895,15 @@ fetchData().then(function (data) {
       var comments = data.comments,
         currentUser = data.currentUser;
       var replyTo = container.input.replyReplyTo[_x5].innerText;
+      var parentUser = container.input.replyReplyTo[_x5].parentElement.parentElement.previousElementSibling.childNodes[1].innerText;
       var content = container.input.replyToReplyContent[_x5].value;
+      console.log(parentUser);
       var newReply = {
         id: generateID(),
         content: content,
         createdAt: "TEST",
         replyingTo: replyTo,
+        parentUser: parentUser,
         replies: {},
         score: 0,
         user: {
@@ -927,6 +930,7 @@ fetchData().then(function (data) {
           replies[replies.length] = newReply;
         }
       }
+      httpRequest.post(newReply);
     });
   };
   for (var _x5 = 0; _x5 < container.form.replyToReply.length; _x5++) {
@@ -1017,7 +1021,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55102" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58958" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

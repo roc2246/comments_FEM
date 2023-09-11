@@ -766,13 +766,16 @@ fetchData()
 
         const { comments, currentUser } = data;
         const replyTo = container.input.replyReplyTo[x].innerText;
+        const parentUser = container.input.replyReplyTo[x].parentElement.parentElement.previousElementSibling.childNodes[1].innerText
         const content = container.input.replyToReplyContent[x].value;
+        console.log(parentUser)
 
         const newReply = {
           id: generateID(),
           content: content,
           createdAt: "TEST",
           replyingTo: replyTo,
+          parentUser: parentUser,
           replies: {},
           score: 0,
           user: {
@@ -803,6 +806,8 @@ fetchData()
             replies[replies.length] = newReply;
           }
         }
+
+        httpRequest.post(newReply)
       });
     }
 

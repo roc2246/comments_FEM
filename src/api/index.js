@@ -100,7 +100,12 @@ const controller = {
           if (commentData.replyingTo === undefined) {
             result = await collection.insertOne(commentData);
           } else {
-            const query = { "user.username": commentData.replyingTo };
+            let query
+            if(commentData.parentUser === undefined){
+              query = { "user.username": commentData.replyingTo };
+            } else {
+              query = { "user.username": commentData.parentUser};
+            }
             const update = {
               $push: { "replies": commentData },
             };

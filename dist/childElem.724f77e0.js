@@ -117,64 +117,138 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"js/containers.js":[function(require,module,exports) {
-// CONTAINERS
+})({"js/childElem.js":[function(require,module,exports) {
+"use strict";
 
-// CONTAINERS - DOM SELECTORS
-var selectors = {
-  reply: ".comment--reply:not(.comment--you)",
-  comment: ".comment:not(.comment--you):not(.comment--reply)",
-  form: {
-    comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update)",
-    reply: ".new-comment--reply:not(.new-comment--replytoreply)",
-    replyToReply: ".new-comment--replytoreply",
-    update: ".new-comment--update"
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.element = void 0;
+var element = {
+  content: function content(source) {
+    var content = document.createElement("p");
+    content.classList.add("comment__content");
+    var message = document.createElement("span");
+    message.innerText = source.content;
+    message.classList.add("comment__message");
+    if (source.replyingTo !== undefined) {
+      var replyingTo = document.createElement("span");
+      replyingTo.innerText = "@".concat(source.replyingTo, " ");
+      replyingTo.classList.add("comment__replyingTo");
+      content.appendChild(replyingTo);
+    }
+    content.appendChild(message);
+    return content;
   },
-  btn: {
-    reply: ".CRUD-container:not(.CRUD-container--reply) > .CRUD--reply",
-    replyToReply: ".CRUD-container--reply > .CRUD--reply",
-    deleteComment: "modal__btn-box--delete"
+  createdAt: function createdAt(source) {
+    var createdAt = document.createElement("span");
+    createdAt.classList.add("comment__createdAt");
+    createdAt.innerText = source.createdAt;
+    return createdAt;
   },
-  input: {
-    comment: ".new-comment:not(.new-comment--reply):not(.new-comment--update) > .new-comment__input",
-    reply: ".new-comment--reply:not(.new-comment--replytoreply)> .new-comment__input",
-    replyToReply: ".new-comment--replytoreply> .new-comment__input",
-    replyTo: ".comment:not(.comment--reply) > .username",
-    replyReplyTo: ".comment--reply:not(.comment--replytoreply) > .username",
-    update: ".new-comment--update > .new-comment__input"
+  vote: function vote(source) {
+    var vote = document.createElement("form");
+    vote.classList.add("vote");
+    var upvote = document.createElement("button");
+    upvote.classList.add("vote__btn");
+    upvote.classList.add("vote__btn--upvote");
+    vote.appendChild(upvote);
+    var plus = document.createElement("img");
+    plus.classList.add("vote__img");
+    plus.classList.add("vote__img--plus");
+    plus.src = "./images/icon-plus.svg";
+    upvote.appendChild(plus);
+    var score = document.createElement("span");
+    score.classList.add("vote__score");
+    score.innerText = source.score;
+    vote.appendChild(score);
+    var downvote = document.createElement("button");
+    downvote.classList.add("vote__btn");
+    downvote.classList.add("vote__btn--downvote");
+    vote.appendChild(downvote);
+    var minus = document.createElement("img");
+    minus.classList.add("vote__img");
+    minus.classList.add("vote__img--minus");
+    minus.src = "./images/icon-minus.svg";
+    downvote.appendChild(minus);
+    return vote;
+  },
+  avatar: function avatar(source) {
+    var avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--comment");
+    avatar.src = source.user.image.png;
+    avatar.alt = source.user.username;
+    return avatar;
+  },
+  username: function username(source, currentUser) {
+    var username = document.createElement("span");
+    username.classList.add("username");
+    if (source.user.username === currentUser) {
+      username.classList.add("username--you");
+      var name = document.createElement("span");
+      name.classList.add("username__name");
+      name.innerText = source.user.username;
+      username.appendChild(name);
+      var indicator = document.createElement("span");
+      indicator.classList.add("username__you");
+      indicator.innerText = "you";
+      username.appendChild(indicator);
+    } else {
+      username.innerText = source.user.username;
+    }
+    return username;
+  },
+  updateForm: function updateForm(source) {
+    var updateForm = document.createElement("form");
+    updateForm.classList.add("new-comment");
+    updateForm.classList.add("new-comment--update");
+    var updateInput = document.createElement("textarea");
+    updateInput.classList.add("new-comment__input");
+    if (source.replyingTo !== undefined) {
+      updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+    } else {
+      updateInput.value = "".concat(source.content);
+    }
+    updateForm.appendChild(updateInput);
+    var updateSend = document.createElement("button");
+    updateSend.classList.add("btn");
+    updateSend.classList.add("new-comment__send");
+    updateSend.classList.add("new-comment__send--update");
+    updateSend.innerText = "UPDATE";
+    updateForm.appendChild(updateSend);
+    return updateForm;
+  },
+  CRUD: function CRUD(source, currentUser) {
+    var CRUD = document.createElement("div");
+    CRUD.classList.add("CRUD-container");
+    function createCRUDbtn(type) {
+      var btn = document.createElement("button");
+      btn.classList.add("CRUD");
+      btn.classList.add("CRUD--".concat(type));
+      CRUD.appendChild(btn);
+      var btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add("CRUD__icon--".concat(type));
+      btnIcon.src = "./images/icon-".concat(type, ".svg");
+      btn.appendChild(btnIcon);
+      var btnTxt = document.createElement("span");
+      btnTxt.classList.add("CRUD__text");
+      btnTxt.classList.add("CRUD__text--".concat(type));
+      btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
+      btn.appendChild(btnTxt);
+      return btn;
+    }
+    if (source.user.username === currentUser) {
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
+    } else {
+      CRUD.appendChild(createCRUDbtn("reply"));
+    }
+    return CRUD;
   }
 };
-
-// CONTAINERS - ELEMENTS
-var container = {
-  replies: document.querySelectorAll(selectors.reply),
-  comments: document.querySelectorAll(selectors.comment),
-  userComments: document.getElementsByClassName("comment--you"),
-  modal: document.getElementsByClassName("modal__btn-box--cancel")[0],
-  btn: {
-    deleteComment: document.getElementsByClassName("modal__btn-box--delete")[0]
-  },
-  form: {
-    comment: document.querySelector(selectors.form.comment),
-    reply: document.querySelectorAll(selectors.form.reply),
-    replyToReply: document.querySelectorAll(selectors.form.replyToReply),
-    update: document.querySelectorAll(selectors.form.update)
-  },
-  input: {
-    replyTo: document.querySelectorAll(selectors.input.replyTo),
-    replyReplyTo: document.querySelectorAll(selectors.input.replyReplyTo),
-    replyContent: document.querySelectorAll(selectors.input.reply),
-    replyToReplyContent: document.querySelectorAll(selectors.input.replyToReply),
-    update: document.querySelectorAll(selectors.input.update)
-  }
-};
-
-// CONTAINERS - CRUD BUTTONS
-var CRUD = {
-  edit: document.getElementsByClassName("CRUD--edit"),
-  delete: document.getElementsByClassName("CRUD--delete"),
-  reply: document.getElementsByClassName("CRUD--reply")
-};
+exports.element = element;
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -344,5 +418,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/containers.js"], null)
-//# sourceMappingURL=/containers.2865dbc2.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/childElem.js"], null)
+//# sourceMappingURL=/childElem.724f77e0.js.map

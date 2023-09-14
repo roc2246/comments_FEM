@@ -1,3 +1,6 @@
+import { element } from "./childElem";
+import { CRUDFunction, toggle} from "./crud"
+
 async function fetchData() {
   try {
     // Define an object with key-value pairs where keys represent labels and values are URLs
@@ -59,12 +62,12 @@ fetchData()
         // creates child elements for post
         const newComment = {
           avatar: element.avatar(post),
-          username: element.username(post),
+          username: element.username(post, currentUser),
           createdAt: element.createdAt(post),
           content: element.content(post),
           updateForm: element.updateForm(post),
           vote: element.vote(post),
-          CRUD: element.CRUD(post),
+          CRUD: element.CRUD(post, currentUser),
         };
         for (let ele in newComment) {
           if (newComment[ele] !== newComment.updateForm) {
@@ -157,8 +160,6 @@ fetchData()
         }
       }
     }
-
-    
   })
   .catch((error) => {
     // Handle any errors that occurred during the fetch

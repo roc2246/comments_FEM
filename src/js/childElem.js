@@ -1,5 +1,4 @@
-// GENERATES CHILD ELEMENTS FOR POSTS
-const element = {
+export const element = {
   content: function (source) {
     const content = document.createElement("p");
     content.classList.add("comment__content");
@@ -64,13 +63,11 @@ const element = {
     avatar.alt = source.user.username;
     return avatar;
   },
-  username: function (source) {
-    const { currentUser } = data;
-
+  username: function (source, currentUser) {
     const username = document.createElement("span");
     username.classList.add("username");
 
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser) {
       username.classList.add("username--you");
       const name = document.createElement("span");
       name.classList.add("username__name");
@@ -109,8 +106,7 @@ const element = {
 
     return updateForm;
   },
-  CRUD: function (source) {
-    const { currentUser } = data;
+  CRUD: function (source, currentUser) {
 
     const CRUD = document.createElement("div");
     CRUD.classList.add("CRUD-container");
@@ -135,7 +131,7 @@ const element = {
 
       return btn;
     }
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser) {
       CRUD.appendChild(createCRUDbtn("delete"));
       CRUD.appendChild(createCRUDbtn("edit"));
     } else {
@@ -144,3 +140,4 @@ const element = {
     return CRUD;
   },
 };
+

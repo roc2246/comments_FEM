@@ -118,8 +118,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"js/crud.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toggles = exports.CRUDFunction = void 0;
 var toggles = {
-  comments: data.comments,
   edit: function edit(container) {
     if (!container.classList.contains("comment--edit")) {
       container.classList.add("comment--edit");
@@ -140,6 +145,7 @@ var toggles = {
     }
   }
 };
+exports.toggles = toggles;
 var CRUDFunction = {
   delete: function _delete(source) {
     var chosen;
@@ -160,14 +166,14 @@ var CRUDFunction = {
     deleteComment.addEventListener("click", function () {
       var comment = document.getElementsByClassName("comment");
       var id;
-      for (var x in comments) {
-        if (content === comments[x].content) {
-          id = comments[x].id;
+      for (var x in source) {
+        if (content === source[x].content) {
+          id = source[x].id;
           break;
         } else {
-          for (var y in comments[x].replies) {
-            if (content === comments[x].replies[y].content) {
-              id = comments[x].replies[y].id;
+          for (var y in source[x].replies) {
+            if (content === source[x].replies[y].content) {
+              id = source[x].replies[y].id;
               break;
             }
           }
@@ -195,6 +201,7 @@ var CRUDFunction = {
     });
   }
 };
+exports.CRUDFunction = CRUDFunction;
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -220,7 +227,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55527" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58480" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

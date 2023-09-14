@@ -1,5 +1,4 @@
- const toggles = {
-  comments: data.comments,
+ export const toggles = {
   edit: function (container) {
     if (!container.classList.contains("comment--edit")) {
       container.classList.add("comment--edit");
@@ -24,7 +23,7 @@
   },
 };
 
- const CRUDFunction = {
+ export const CRUDFunction = {
     delete: function (source) {
       let chosen;
       let content;
@@ -50,14 +49,14 @@
         const comment = document.getElementsByClassName("comment");
 
         let id;
-        for (let x in comments) {
-          if (content === comments[x].content) {
-            id = comments[x].id;
+        for (let x in source) {
+          if (content === source[x].content) {
+            id = source[x].id;
             break;
           } else {
-            for (let y in comments[x].replies) {
-              if (content === comments[x].replies[y].content) {
-                id = comments[x].replies[y].id;
+            for (let y in source[x].replies) {
+              if (content === source[x].replies[y].content) {
+                id = source[x].replies[y].id;
                 break;
               }
             }

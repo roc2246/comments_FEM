@@ -184,7 +184,7 @@ var childElement = {
   username: function username(source, currentUser) {
     var username = document.createElement("span");
     username.classList.add("username");
-    if (source.user.username === currentUser) {
+    if (source.user.username === currentUser[0].username) {
       username.classList.add("username--you");
       var name = document.createElement("span");
       name.classList.add("username__name");
@@ -239,7 +239,7 @@ var childElement = {
       btn.appendChild(btnTxt);
       return btn;
     }
-    if (source.user.username === currentUser) {
+    if (source.user.username === currentUser[0].username) {
       CRUD.appendChild(createCRUDbtn("delete"));
       CRUD.appendChild(createCRUDbtn("edit"));
     } else {
@@ -597,7 +597,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64483" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65219" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

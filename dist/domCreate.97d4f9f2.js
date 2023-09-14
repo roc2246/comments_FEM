@@ -117,62 +117,137 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
+})({"js/domCreate.js":[function(require,module,exports) {
+// GENERATES CHILD ELEMENTS FOR POSTS
+var element = {
+  content: function content(source) {
+    var content = document.createElement("p");
+    content.classList.add("comment__content");
+    var message = document.createElement("span");
+    message.innerText = source.content;
+    message.classList.add("comment__message");
+    if (source.replyingTo !== undefined) {
+      var replyingTo = document.createElement("span");
+      replyingTo.innerText = "@".concat(source.replyingTo, " ");
+      replyingTo.classList.add("comment__replyingTo");
+      content.appendChild(replyingTo);
     }
-  }
-  return '/';
-}
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
+    content.appendChild(message);
+    return content;
+  },
+  createdAt: function createdAt(source) {
+    var createdAt = document.createElement("span");
+    createdAt.classList.add("comment__createdAt");
+    createdAt.innerText = source.createdAt;
+    return createdAt;
+  },
+  vote: function vote(source) {
+    var vote = document.createElement("form");
+    vote.classList.add("vote");
+    var upvote = document.createElement("button");
+    upvote.classList.add("vote__btn");
+    upvote.classList.add("vote__btn--upvote");
+    vote.appendChild(upvote);
+    var plus = document.createElement("img");
+    plus.classList.add("vote__img");
+    plus.classList.add("vote__img--plus");
+    plus.src = "./images/icon-plus.svg";
+    upvote.appendChild(plus);
+    var score = document.createElement("span");
+    score.classList.add("vote__score");
+    score.innerText = source.score;
+    vote.appendChild(score);
+    var downvote = document.createElement("button");
+    downvote.classList.add("vote__btn");
+    downvote.classList.add("vote__btn--downvote");
+    vote.appendChild(downvote);
+    var minus = document.createElement("img");
+    minus.classList.add("vote__img");
+    minus.classList.add("vote__img--minus");
+    minus.src = "./images/icon-minus.svg";
+    downvote.appendChild(minus);
+    return vote;
+  },
+  avatar: function avatar(source) {
+    var avatar = document.createElement("img");
+    avatar.classList.add("avatar");
+    avatar.classList.add("avatar--comment");
+    avatar.src = source.user.image.png;
+    avatar.alt = source.user.username;
+    return avatar;
+  },
+  username: function username(source) {
+    var _data = data,
+      currentUser = _data.currentUser;
+    var username = document.createElement("span");
+    username.classList.add("username");
+    if (source.user.username === currentUser[0].username) {
+      username.classList.add("username--you");
+      var name = document.createElement("span");
+      name.classList.add("username__name");
+      name.innerText = source.user.username;
+      username.appendChild(name);
+      var indicator = document.createElement("span");
+      indicator.classList.add("username__you");
+      indicator.innerText = "you";
+      username.appendChild(indicator);
+    } else {
+      username.innerText = source.user.username;
     }
-    cssTimeout = null;
-  }, 50);
-}
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"scss/main.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+    return username;
+  },
+  updateForm: function updateForm(source) {
+    var updateForm = document.createElement("form");
+    updateForm.classList.add("new-comment");
+    updateForm.classList.add("new-comment--update");
+    var updateInput = document.createElement("textarea");
+    updateInput.classList.add("new-comment__input");
+    if (source.replyingTo !== undefined) {
+      updateInput.value = "@".concat(source.replyingTo, " ").concat(source.content);
+    } else {
+      updateInput.value = "".concat(source.content);
+    }
+    updateForm.appendChild(updateInput);
+    var updateSend = document.createElement("button");
+    updateSend.classList.add("btn");
+    updateSend.classList.add("new-comment__send");
+    updateSend.classList.add("new-comment__send--update");
+    updateSend.innerText = "UPDATE";
+    updateForm.appendChild(updateSend);
+    return updateForm;
+  },
+  CRUD: function CRUD(source) {
+    var _data2 = data,
+      currentUser = _data2.currentUser;
+    var CRUD = document.createElement("div");
+    CRUD.classList.add("CRUD-container");
+    function createCRUDbtn(type) {
+      var btn = document.createElement("button");
+      btn.classList.add("CRUD");
+      btn.classList.add("CRUD--".concat(type));
+      CRUD.appendChild(btn);
+      var btnIcon = document.createElement("img");
+      btnIcon.classList.add("CRUD__icon");
+      btnIcon.classList.add("CRUD__icon--".concat(type));
+      btnIcon.src = "./images/icon-".concat(type, ".svg");
+      btn.appendChild(btnIcon);
+      var btnTxt = document.createElement("span");
+      btnTxt.classList.add("CRUD__text");
+      btnTxt.classList.add("CRUD__text--".concat(type));
+      btnTxt.innerText = "".concat(type.charAt(0).toUpperCase()).concat(type.slice(1));
+      btn.appendChild(btnTxt);
+      return btn;
+    }
+    if (source.user.username === currentUser[0].username) {
+      CRUD.appendChild(createCRUDbtn("delete"));
+      CRUD.appendChild(createCRUDbtn("edit"));
+    } else {
+      CRUD.appendChild(createCRUDbtn("reply"));
+    }
+    return CRUD;
+  }
+};
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -341,5 +416,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/main.77bb5cfd.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/domCreate.js"], null)
+//# sourceMappingURL=/domCreate.97d4f9f2.js.map

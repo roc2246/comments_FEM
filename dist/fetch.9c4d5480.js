@@ -117,62 +117,94 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
+})({"js/fetch.js":[function(require,module,exports) {
+// METHODS - HTTP REQUESTS
+var httpRequest = {
+  update: function update(id, _update) {
+    fetch("http://localhost:3000/update/".concat(id), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json' // You may need to adjust the content type based on your application's needs
+      },
+
+      body: JSON.stringify(_update) // If you have data to send in the request, it needs to be converted to a JSON string
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // If you expect JSON data in the response
+    }).then(function (data) {
+      // Handle the response data here
+    }).catch(function (error) {
+      console.error('Error:', error);
+    });
+  },
+  vote: function vote(scoreContianer, mode) {
+    var postContainer = scoreContianer.parentElement.parentElement;
+    var content;
+    var change;
+    var score = scoreContianer.innerText;
+    mode === "upvote" ? change = score++ : change = score--;
+    if (postContainer.childNodes[3].childNodes[1]) {
+      content = postContainer.childNodes[3].childNodes[1];
+    } else {
+      content = postContainer.childNodes[3];
     }
-  }
-  return '/';
-}
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
+    for (var x in comments) {
+      if (comments[x].content === content) {
+        comments[x].score = change;
+      } else {
+        for (var y in comments[x].replies[y]) {
+          var reply = comments[x].replies[y];
+          if (reply.content = content) {
+            reply.score = change;
+          }
+        }
       }
     }
-    cssTimeout = null;
-  }, 50);
-}
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"scss/main.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  },
+  post: function post(src) {
+    var postData = src;
+    var params = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    };
+    // Possible put id here to insert new replies and replytoreplies to database
+    fetch("http://localhost:3000/newPost", params).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    });
+  },
+  delete: function _delete(id) {
+    var options = {
+      method: "DELETE",
+      // Use the DELETE HTTP method
+      headers: {
+        "Content-Type": "application/json" // Set the content type if needed
+        // You may also need to include authentication headers or other headers here
+      }
+    };
+
+    // Send the DELETE request
+    fetch("http://localhost:3000/delete/".concat(id), options).then(function (response) {
+      if (response.ok) {
+        // Resource successfully deleted
+        console.log("Resource deleted successfully");
+      } else {
+        // Handle error cases here
+        console.error("Error deleting resource");
+      }
+    }).catch(function (error) {
+      console.error("Fetch error:", error);
+    });
+  }
+};
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -341,5 +373,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/main.77bb5cfd.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/fetch.js"], null)
+//# sourceMappingURL=/fetch.9c4d5480.js.map

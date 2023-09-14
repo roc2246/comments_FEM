@@ -123,8 +123,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.element = void 0;
-var element = {
+exports.childElement = void 0;
+var childElement = {
   content: function content(source) {
     var content = document.createElement("p");
     content.classList.add("comment__content");
@@ -248,7 +248,7 @@ var element = {
     return CRUD;
   }
 };
-exports.element = element;
+exports.childElement = childElement;
 },{}],"js/crud.js":[function(require,module,exports) {
 "use strict";
 
@@ -370,12 +370,12 @@ function _fetchData() {
             currentUser: "http://localhost:3000/currentUser"
           }; // Create an array of Promises for fetch requests using Object.entries()
           promises = Object.entries(urlMap).map( /*#__PURE__*/function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(_ref) {
-              var _ref3, key, url, response;
+            var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(_ref2) {
+              var _ref4, key, url, response;
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
-                    _ref3 = _slicedToArray(_ref, 2), key = _ref3[0], url = _ref3[1];
+                    _ref4 = _slicedToArray(_ref2, 2), key = _ref4[0], url = _ref4[1];
                     _context.next = 3;
                     return fetch(url);
                   case 3:
@@ -401,7 +401,7 @@ function _fetchData() {
               }, _callee);
             }));
             return function (_x) {
-              return _ref2.apply(this, arguments);
+              return _ref3.apply(this, arguments);
             };
           }()); // Use Promise.all() to wait for all Promises to resolve
           _context2.next = 5;
@@ -425,9 +425,9 @@ function _fetchData() {
   }));
   return _fetchData.apply(this, arguments);
 }
-fetchData().then(function (data) {
-  var comments = data.comments,
-    currentUser = data.currentUser;
+fetchData().then(function (_ref) {
+  var comments = _ref.comments,
+    currentUser = _ref.currentUser;
   var _loop = function _loop(comment) {
     var container = document.getElementById("comment-wrapper");
     var post = comments[comment];
@@ -453,13 +453,13 @@ fetchData().then(function (data) {
 
       // creates child elements for post
       var newComment = {
-        avatar: _childElem.element.avatar(post),
-        username: _childElem.element.username(post, currentUser),
-        createdAt: _childElem.element.createdAt(post),
-        content: _childElem.element.content(post),
-        updateForm: _childElem.element.updateForm(post),
-        vote: _childElem.element.vote(post),
-        CRUD: _childElem.element.CRUD(post, currentUser)
+        avatar: _childElem.childElement.avatar(post),
+        username: _childElem.childElement.username(post, currentUser),
+        createdAt: _childElem.childElement.createdAt(post),
+        content: _childElem.childElement.content(post),
+        updateForm: _childElem.childElement.updateForm(post),
+        vote: _childElem.childElement.vote(post),
+        CRUD: _childElem.childElement.CRUD(post, currentUser)
       };
       for (var ele in newComment) {
         if (newComment[ele] !== newComment.updateForm) {
@@ -490,9 +490,9 @@ fetchData().then(function (data) {
       replyForm.classList.add("new-comment--reply");
 
       // sets extra class if form is for a reply to reply
-      if (type === "reply") {
+      if (type === "replytoreply") {
         replyForm.classList.add("new-comment--replytoreply");
-      } else {
+      } else if (type = "reply") {
         type = null;
       }
       var avatar = document.createElement("img");
@@ -526,24 +526,42 @@ fetchData().then(function (data) {
       container.appendChild(replyCont);
 
       // Generates replies
-      for (var reply in post.replies) {
+      var _loop2 = function _loop2() {
         replyCont.appendChild(postCont("reply", reply));
         if (post.replies[reply].user.username !== currentUser[0].username) {
-          replyCont.appendChild(createReplyForm("reply"));
+          var _replyForm = createReplyForm("replytoreply");
+          replyCont.appendChild(_replyForm);
+          var _replyBtn = _replyForm.previousElementSibling.childNodes[5].childNodes[0];
+          _replyBtn.addEventListener("click", function () {
+            return _crud.toggles.reply(_replyForm);
+          });
         }
+      };
+      for (var reply in post.replies) {
+        _loop2();
       }
 
-      // Generates hr hight for reply container
+      // Generates hr height for reply container
       replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
 
       // Generates reply forms
       if (post.user.username !== currentUser[0].username) {
-        container.appendChild(createReplyForm());
+        var replyForm = createReplyForm("reply");
+        container.appendChild(replyForm);
+        var replyBtn = document.getElementsByClassName("CRUD--reply")[comment];
+        replyBtn.addEventListener("click", function () {
+          return _crud.toggles.reply(replyForm);
+        });
       }
-    } else {
+    } else if (post.replies.length === 0) {
       container.appendChild(postCont("comment"));
       if (post.user.username !== currentUser[0].username) {
-        container.appendChild(createReplyForm());
+        var _replyForm2 = createReplyForm("reply");
+        container.appendChild(_replyForm2);
+        var _replyBtn2 = document.getElementsByClassName("CRUD--reply")[comment];
+        _replyBtn2.addEventListener("click", function () {
+          return _crud.toggles.reply(_replyForm2);
+        });
       }
     }
   };
@@ -579,7 +597,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58480" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61664" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

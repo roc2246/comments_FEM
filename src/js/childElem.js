@@ -1,4 +1,4 @@
-export const element = {
+export const childElement = {
   content: function (source) {
     const content = document.createElement("p");
     content.classList.add("comment__content");

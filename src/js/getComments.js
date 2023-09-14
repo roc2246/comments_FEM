@@ -1,5 +1,5 @@
-import { element } from "./childElem";
-import { CRUDFunction, toggle} from "./crud"
+import { childElement } from "./childElem";
+import { CRUDFunction, toggles } from "./crud";
 
 async function fetchData() {
   try {
@@ -34,8 +34,7 @@ async function fetchData() {
 
 // GENERATES COMMENTS
 fetchData()
-  .then((data) => {
-    const { comments, currentUser } = data;
+  .then(({ comments, currentUser }) => {
     for (let comment in comments) {
       const container = document.getElementById("comment-wrapper");
       const post = comments[comment];
@@ -61,13 +60,13 @@ fetchData()
 
         // creates child elements for post
         const newComment = {
-          avatar: element.avatar(post),
-          username: element.username(post, currentUser),
-          createdAt: element.createdAt(post),
-          content: element.content(post),
-          updateForm: element.updateForm(post),
-          vote: element.vote(post),
-          CRUD: element.CRUD(post, currentUser),
+          avatar: childElement.avatar(post),
+          username: childElement.username(post, currentUser),
+          createdAt: childElement.createdAt(post),
+          content: childElement.content(post),
+          updateForm: childElement.updateForm(post),
+          vote: childElement.vote(post),
+          CRUD: childElement.CRUD(post, currentUser),
         };
         for (let ele in newComment) {
           if (newComment[ele] !== newComment.updateForm) {
@@ -99,9 +98,9 @@ fetchData()
         replyForm.classList.add("new-comment--reply");
 
         // sets extra class if form is for a reply to reply
-        if (type === "reply") {
+        if (type === "replytoreply") {
           replyForm.classList.add("new-comment--replytoreply");
-        } else {
+        } else if ((type = "reply")) {
           type = null;
         }
 
@@ -142,21 +141,33 @@ fetchData()
         for (let reply in post.replies) {
           replyCont.appendChild(postCont("reply", reply));
           if (post.replies[reply].user.username !== currentUser[0].username) {
-            replyCont.appendChild(createReplyForm("reply"));
+            const replyForm = createReplyForm("replytoreply");
+            replyCont.appendChild(replyForm);
+            const replyBtn =
+              replyForm.previousElementSibling.childNodes[5].childNodes[0];
+            replyBtn.addEventListener("click", () => toggles.reply(replyForm));
           }
         }
 
-        // Generates hr hight for reply container
+        // Generates hr height for reply container
         replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
 
         // Generates reply forms
         if (post.user.username !== currentUser[0].username) {
-          container.appendChild(createReplyForm());
+          const replyForm = createReplyForm("reply");
+          container.appendChild(replyForm);
+          const replyBtn =
+            document.getElementsByClassName("CRUD--reply")[comment];
+          replyBtn.addEventListener("click", () => toggles.reply(replyForm));
         }
-      } else {
+      } else if (post.replies.length === 0) {
         container.appendChild(postCont("comment"));
         if (post.user.username !== currentUser[0].username) {
-          container.appendChild(createReplyForm());
+          const replyForm = createReplyForm("reply");
+          container.appendChild(replyForm);
+          const replyBtn =
+            document.getElementsByClassName("CRUD--reply")[comment];
+          replyBtn.addEventListener("click", () => toggles.reply(replyForm));
         }
       }
     }

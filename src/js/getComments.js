@@ -85,6 +85,13 @@ fetchData()
 
         // Adds CRUD functionality
         if (currentUser[0].username === post.user.username) {
+          const editFormToggle = container.childNodes[5].childNodes[1]
+          editFormToggle.addEventListener("click", ()=> toggles.edit(container))
+
+          const deleteModalToggle = container.childNodes[5].childNodes[0]
+          const deleteModal = document.getElementsByClassName("modal")[0]
+          deleteModalToggle.addEventListener("click", ()=> toggles.delete(deleteModal))
+
           CRUDFunction.delete(container);
         }
 

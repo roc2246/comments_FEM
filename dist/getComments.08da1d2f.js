@@ -478,6 +478,15 @@ fetchData().then(function (_ref) {
 
       // Adds CRUD functionality
       if (currentUser[0].username === post.user.username) {
+        var editFormToggle = container.childNodes[5].childNodes[1];
+        editFormToggle.addEventListener("click", function () {
+          return _crud.toggles.edit(container);
+        });
+        var deleteModalToggle = container.childNodes[5].childNodes[0];
+        var deleteModal = document.getElementsByClassName("modal")[0];
+        deleteModalToggle.addEventListener("click", function () {
+          return _crud.toggles.delete(deleteModal);
+        });
         _crud.CRUDFunction.delete(container);
       }
       return container;

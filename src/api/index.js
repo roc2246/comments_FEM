@@ -100,16 +100,16 @@ const controller = {
           if (commentData.replyingTo === undefined) {
             result = await collection.insertOne(commentData);
           } else {
-            let query
-            if(commentData.parentUser === undefined){
+            let query;
+            if (commentData.parentUser === undefined) {
               query = { "user.username": commentData.replyingTo };
             } else {
-              query = { "user.username": commentData.parentUser};
+              query = { "user.username": commentData.parentUser };
             }
             const update = {
-              $push: { "replies": commentData },
+              $push: { replies: commentData },
             };
-             result = await collection.updateOne(query, update);
+            result = await collection.updateOne(query, update);
           }
 
           // Set the response headers
@@ -129,44 +129,67 @@ const controller = {
       res.end("Internal Server Error");
     }
   },
-    PUT: async function (req, res, documentId) {
-      try {
-        let incomingData = "";
-        req.on("data", (chunk) => {
-          incomingData += chunk.toString("utf8");
-        });
-    
-        req.on("end", async () => {
-          try {
-            const updatedData = JSON.parse(incomingData);
-    
-            const db = await connectToDB();
-            const collection = db.collection(collectionName.comments);
-    
-            // Assuming you have an '_id' field in your data to identify the document to update
-            const filter = { id: parseInt(documentId) };
-            const update = { $set:{ "content":updatedData.content} };
-    
-            const result = await collection.updateOne(filter, update);
-    
-            if (result.matchedCount === 1 && result.modifiedCount === 1) {
-              res.writeHead(200, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ success: true, message: 'Document updated successfully' }));
-            } else {
-              res.writeHead(404, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ success: false, message: 'Document not found or not updated' }));
-            }
-          } catch (error) {
-            console.error("Error while processing the PUT request:", error);
-            res.writeHead(400, { "Content-Type": "text/plain" });
-            res.end("Bad Request: " + error.message);
+  PUT: async function (req, res, documentId) {
+    try {
+      let incomingData = "";
+      req.on("data", (chunk) => {
+        incomingData += chunk.toString("utf8");
+      });
+
+      req.on("end", async () => {
+        try {
+          const updatedData = JSON.parse(incomingData);
+
+          const db = await connectToDB();
+          const collection = db.collection(collectionName.comments);
+
+          let isComment = false;
+          let filter = { id: parseInt(documentId) };;
+          const findComment = await collection.find(filter).toArray();
+          if (findComment.length > 0) {
+            isComment = true;
           }
-        });
-      } catch (err) {
-        console.error("Error while handling PUT request:", err);
-        res.writeHead(500, { "Content-Type": "text/plain" });
-        res.end("Internal Server Error");
-      }
+
+          let update;
+          if (isComment === true) {
+            filter = { id: parseInt(documentId) };
+            update = { $set: { content: updatedData.content } };
+          } else {
+            filter = { "replies.id": parseInt(documentId) };
+            update = { $set: { "replies.$.content": updatedData.content } };
+          }
+
+          const result = await collection.updateOne(filter, update);
+
+          console.log(documentId)
+          if (result.matchedCount === 1 && result.modifiedCount === 1) {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: true,
+                message: "Document updated successfully",
+              })
+            );
+          } else {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: "Document not found or not updated",
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Error while processing the PUT request:", error);
+          res.writeHead(400, { "Content-Type": "text/plain" });
+          res.end("Bad Request: " + error.message);
+        }
+      });
+    } catch (err) {
+      console.error("Error while handling PUT request:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Internal Server Error");
+    }
   },
   DELETE: async function (res, col, documentId) {
     try {
@@ -248,15 +271,15 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
-    } else if(req.method === 'PUT'){
-      if(req.url.startsWith("/update/")){
+    } else if (req.method === "PUT") {
+      if (req.url.startsWith("/update/")) {
         const documentId = req.url.split("/").pop();
-        controller.PUT(req, res, documentId)
-      }else {
+        controller.PUT(req, res, documentId);
+      } else {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
-    }else if (req.method === "DELETE") {
+    } else if (req.method === "DELETE") {
       if (req.url.startsWith("/delete/")) {
         const documentId = req.url.split("/").pop();
         controller.DELETE(res, "comments", documentId);

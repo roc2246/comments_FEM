@@ -842,9 +842,14 @@ fetchData()
         // Sets id of updated comment
         let id
         for(let x in comments){
-          console.log(oldContent)
           if (oldContent.innerText ===comments[x].content){
             id = comments[x].id
+          } else {
+            for(let y in comments[x].replies){
+              if (oldContent.innerText ===comments[x].replies[y].content){
+                id = comments[x].replies[y].id
+              }
+            }
           }
         }
 

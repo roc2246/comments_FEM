@@ -959,9 +959,14 @@ fetchData().then(function (data) {
       // Sets id of updated comment
       var id;
       for (var _x9 in comments) {
-        console.log(oldContent);
         if (oldContent.innerText === comments[_x9].content) {
           id = comments[_x9].id;
+        } else {
+          for (var y in comments[_x9].replies) {
+            if (oldContent.innerText === comments[_x9].replies[y].content) {
+              id = comments[_x9].replies[y].id;
+            }
+          }
         }
       }
 

@@ -441,18 +441,26 @@ fetchData()
 
     // METHODS - HTTP REQUESTS
     const httpRequest = {
-      update: function (oldContent, newContent) {
-        for (let x in comments) {
-          if (comments[x].content === oldContent.innerText) {
-            comments[x].content = newContent;
-          } else {
-            for (let y in comments[x].replies) {
-              if (comments[x].replies[y].content === oldContent.innerText) {
-                comments[x].replies[y].content = newContent;
-              }
+      update: function (id, update) {
+        fetch(`http://localhost:3000/update/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json', // You may need to adjust the content type based on your application's needs
+          },
+          body: JSON.stringify(update) // If you have data to send in the request, it needs to be converted to a JSON string
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
             }
-          }
-        }
+            return response.json(); // If you expect JSON data in the response
+          })
+          .then(data => {
+            // Handle the response data here
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
       },
       vote: function (scoreContianer, mode) {
         const postContainer = scoreContianer.parentElement.parentElement;
@@ -831,11 +839,20 @@ fetchData()
               .childNodes[0];
         }
 
+        // Sets id of updated comment
+        let id
+        for(let x in comments){
+          console.log(oldContent)
+          if (oldContent.innerText ===comments[x].content){
+            id = comments[x].id
+          }
+        }
+
         // Stores new text for content
         const newContent = container.input.update[x].value;
 
         // Updates post in data
-        httpRequest.update(oldContent, newContent);
+        httpRequest.update(id, {content: newContent});
 
         // Updates post in DOM
         oldContent.innerText = newContent;

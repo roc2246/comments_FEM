@@ -179,7 +179,7 @@ function _fetchData() {
                 }
               }, _callee);
             }));
-            return function (_x9) {
+            return function (_x10) {
               return _ref2.apply(this, arguments);
             };
           }()); // Use Promise.all() to wait for all Promises to resolve
@@ -580,18 +580,24 @@ fetchData().then(function (data) {
 
   // METHODS - HTTP REQUESTS
   var httpRequest = {
-    update: function update(oldContent, newContent) {
-      for (var x in comments) {
-        if (comments[x].content === oldContent.innerText) {
-          comments[x].content = newContent;
-        } else {
-          for (var y in comments[x].replies) {
-            if (comments[x].replies[y].content === oldContent.innerText) {
-              comments[x].replies[y].content = newContent;
-            }
-          }
+    update: function update(id, _update) {
+      fetch("http://localhost:3000/update/".concat(id), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json' // You may need to adjust the content type based on your application's needs
+        },
+
+        body: JSON.stringify(_update) // If you have data to send in the request, it needs to be converted to a JSON string
+      }).then(function (response) {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      }
+        return response.json(); // If you expect JSON data in the response
+      }).then(function (data) {
+        // Handle the response data here
+      }).catch(function (error) {
+        console.error('Error:', error);
+      });
     },
     vote: function vote(scoreContianer, mode) {
       var postContainer = scoreContianer.parentElement.parentElement;
@@ -950,11 +956,22 @@ fetchData().then(function (data) {
         oldContent = container.input.update[_x6].parentElement.parentElement.childNodes[3].childNodes[0];
       }
 
+      // Sets id of updated comment
+      var id;
+      for (var _x9 in comments) {
+        console.log(oldContent);
+        if (oldContent.innerText === comments[_x9].content) {
+          id = comments[_x9].id;
+        }
+      }
+
       // Stores new text for content
       var newContent = container.input.update[_x6].value;
 
       // Updates post in data
-      httpRequest.update(oldContent, newContent);
+      httpRequest.update(id, {
+        content: newContent
+      });
 
       // Updates post in DOM
       oldContent.innerText = newContent;
@@ -1021,7 +1038,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58958" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49393" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

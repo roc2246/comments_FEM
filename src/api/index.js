@@ -129,8 +129,44 @@ const controller = {
       res.end("Internal Server Error");
     }
   },
-  PUT: async function(req, res){
-
+    PUT: async function (req, res, documentId) {
+      try {
+        let incomingData = "";
+        req.on("data", (chunk) => {
+          incomingData += chunk.toString("utf8");
+        });
+    
+        req.on("end", async () => {
+          try {
+            const updatedData = JSON.parse(incomingData);
+    
+            const db = await connectToDB();
+            const collection = db.collection(collectionName.comments);
+    
+            // Assuming you have an '_id' field in your data to identify the document to update
+            const filter = { id: parseInt(documentId) };
+            const update = { $set:{ "content":updatedData.content} };
+    
+            const result = await collection.updateOne(filter, update);
+    
+            if (result.matchedCount === 1 && result.modifiedCount === 1) {
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ success: true, message: 'Document updated successfully' }));
+            } else {
+              res.writeHead(404, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ success: false, message: 'Document not found or not updated' }));
+            }
+          } catch (error) {
+            console.error("Error while processing the PUT request:", error);
+            res.writeHead(400, { "Content-Type": "text/plain" });
+            res.end("Bad Request: " + error.message);
+          }
+        });
+      } catch (err) {
+        console.error("Error while handling PUT request:", err);
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal Server Error");
+      }
   },
   DELETE: async function (res, col, documentId) {
     try {
@@ -212,7 +248,15 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("Not Found");
       }
-    } else if (req.method === "DELETE") {
+    } else if(req.method === 'PUT'){
+      if(req.url.startsWith("/update/")){
+        const documentId = req.url.split("/").pop();
+        controller.PUT(req, res, documentId)
+      }else {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
+      }
+    }else if (req.method === "DELETE") {
       if (req.url.startsWith("/delete/")) {
         const documentId = req.url.split("/").pop();
         controller.DELETE(res, "comments", documentId);

@@ -596,13 +596,13 @@ fetchData().then(function (_ref) {
 
     // function for generating comments and replies
     function postCont(type, counter) {
-      var container = document.createElement("div");
-      container.classList.add("comment");
+      var postContainer = document.createElement("div");
+      postContainer.classList.add("comment");
 
       // sets the type of post (i.e; reply, comment, etc.)
       var post;
       if (type === "reply") {
-        container.classList.add("comment--reply");
+        postContainer.classList.add("comment--reply");
         post = comments[comment].replies[counter];
       } else if (type === "comment") {
         post = comments[comment];
@@ -621,12 +621,12 @@ fetchData().then(function (_ref) {
       };
       for (var ele in newComment) {
         if (newComment[ele] !== newComment.updateForm) {
-          container.append(newComment[ele]);
+          postContainer.append(newComment[ele]);
         }
       }
       if (currentUser[0].username === post.user.username) {
-        container.append(newComment.updateForm);
-        container.classList.add("comment--you");
+        postContainer.append(newComment.updateForm);
+        postContainer.classList.add("comment--you");
       }
 
       // adds other classes if post is reply
@@ -636,18 +636,18 @@ fetchData().then(function (_ref) {
 
       // Adds CRUD functionality
       if (currentUser[0].username === post.user.username) {
-        var editFormToggle = container.childNodes[5].childNodes[1];
+        var editFormToggle = postContainer.childNodes[5].childNodes[1];
         editFormToggle.addEventListener("click", function () {
-          return _crud.toggles.edit(container);
+          return _crud.toggles.edit(postContainer);
         });
-        var deleteModalToggle = container.childNodes[5].childNodes[0];
+        var deleteModalToggle = postContainer.childNodes[5].childNodes[0];
         var deleteModal = document.getElementsByClassName("modal")[0];
         deleteModalToggle.addEventListener("click", function () {
           return _crud.toggles.delete(deleteModal);
         });
-        _crud.CRUDFunction.delete(container);
+        _crud.CRUDFunction.delete(postContainer);
       }
-      return container;
+      return postContainer;
     }
 
     // function for creating reply form

@@ -50,13 +50,13 @@ fetchData()
 
       // function for generating comments and replies
       function postCont(type, counter) {
-        const container = document.createElement("div");
-        container.classList.add("comment");
+        const postContainer = document.createElement("div");
+        postContainer.classList.add("comment");
 
         // sets the type of post (i.e; reply, comment, etc.)
         let post;
         if (type === "reply") {
-          container.classList.add("comment--reply");
+          postContainer.classList.add("comment--reply");
           post = comments[comment].replies[counter];
         } else if (type === "comment") {
           post = comments[comment];
@@ -75,12 +75,12 @@ fetchData()
         };
         for (let ele in newComment) {
           if (newComment[ele] !== newComment.updateForm) {
-            container.append(newComment[ele]);
+            postContainer.append(newComment[ele]);
           }
         }
         if (currentUser[0].username === post.user.username) {
-          container.append(newComment.updateForm);
-          container.classList.add("comment--you");
+          postContainer.append(newComment.updateForm);
+          postContainer.classList.add("comment--you");
         }
 
         // adds other classes if post is reply
@@ -90,21 +90,21 @@ fetchData()
 
         // Adds CRUD functionality
         if (currentUser[0].username === post.user.username) {
-          const editFormToggle = container.childNodes[5].childNodes[1];
+          const editFormToggle = postContainer.childNodes[5].childNodes[1];
           editFormToggle.addEventListener("click", () =>
-            toggles.edit(container)
+            toggles.edit(postContainer)
           );
 
-          const deleteModalToggle = container.childNodes[5].childNodes[0];
+          const deleteModalToggle = postContainer.childNodes[5].childNodes[0];
           const deleteModal = document.getElementsByClassName("modal")[0];
           deleteModalToggle.addEventListener("click", () =>
             toggles.delete(deleteModal)
           );
 
-          CRUDFunction.delete(container);
+          CRUDFunction.delete(postContainer);
         }
 
-        return container;
+        return postContainer;
       }
 
       // function for creating reply form

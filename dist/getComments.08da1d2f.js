@@ -582,13 +582,13 @@ function _fetchData() {
 fetchData().then(function (_ref) {
   var comments = _ref.comments,
     currentUser = _ref.currentUser;
+  // Sets stats.user property
   _crud.stats.users = {
     comments: comments,
     currentUser: currentUser
   };
   var _loop = function _loop(comment) {
     var container = document.getElementById("comment-wrapper");
-    var post = comments[comment];
 
     // sets current user's avatar in new comment form
     var newCommentAvatar = document.querySelector(".avatar--new-comment");
@@ -666,7 +666,7 @@ fetchData().then(function (_ref) {
       avatar.classList.add("avatar");
       avatar.classList.add("avatar--new-reply");
       avatar.src = currentUser[0].image.png;
-      avatar.alt = post.user.username;
+      avatar.alt = comments[comment].user.username;
       replyForm.appendChild(avatar);
       var replyInput = document.createElement("textarea");
       replyInput.classList.add("new-comment__input");
@@ -681,7 +681,7 @@ fetchData().then(function (_ref) {
     }
 
     // Generates comments
-    if (post.replies.length > 0) {
+    if (comments[comment].replies.length > 0) {
       container.appendChild(postCont("comment"));
 
       // Creates container for replies
@@ -695,7 +695,7 @@ fetchData().then(function (_ref) {
       // Generates replies
       var _loop2 = function _loop2() {
         replyCont.appendChild(postCont("reply", reply));
-        if (post.replies[reply].user.username !== currentUser[0].username) {
+        if (comments[comment].replies[reply].user.username !== currentUser[0].username) {
           var _replyForm = createReplyForm("replytoreply");
           replyCont.appendChild(_replyForm);
           var _replyBtn = _replyForm.previousElementSibling.childNodes[5].childNodes[0];
@@ -704,7 +704,7 @@ fetchData().then(function (_ref) {
           });
         }
       };
-      for (var reply in post.replies) {
+      for (var reply in comments[comment].replies) {
         _loop2();
       }
 
@@ -712,7 +712,7 @@ fetchData().then(function (_ref) {
       replyCont.style.gridTemplateRows = "repeat(".concat(replyCont.childElementCount, ", auto)");
 
       // Generates reply forms
-      if (post.user.username !== currentUser[0].username) {
+      if (comments[comment].user.username !== currentUser[0].username) {
         var replyForm = createReplyForm("reply");
         container.appendChild(replyForm);
         var replyBtn = document.getElementsByClassName("CRUD--reply")[comment];
@@ -720,9 +720,9 @@ fetchData().then(function (_ref) {
           return _crud.toggles.reply(replyForm);
         });
       }
-    } else if (post.replies.length === 0) {
+    } else if (comments[comment].replies.length === 0) {
       container.appendChild(postCont("comment"));
-      if (post.user.username !== currentUser[0].username) {
+      if (comments[comment].user.username !== currentUser[0].username) {
         var _replyForm2 = createReplyForm("reply");
         container.appendChild(_replyForm2);
         var _replyBtn2 = document.getElementsByClassName("CRUD--reply")[comment];
@@ -790,7 +790,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50870" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57341" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

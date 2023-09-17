@@ -43,7 +43,6 @@ fetchData()
     
     for (let comment in comments) {
       const container = document.getElementById("comment-wrapper");
-      const post = comments[comment];
 
       // sets current user's avatar in new comment form
       const newCommentAvatar = document.querySelector(".avatar--new-comment");
@@ -125,7 +124,7 @@ fetchData()
         avatar.classList.add("avatar");
         avatar.classList.add("avatar--new-reply");
         avatar.src = currentUser[0].image.png;
-        avatar.alt = post.user.username;
+        avatar.alt = comments[comment].user.username;
         replyForm.appendChild(avatar);
 
         const replyInput = document.createElement("textarea");
@@ -143,7 +142,7 @@ fetchData()
       }
 
       // Generates comments
-      if (post.replies.length > 0) {
+      if (comments[comment].replies.length > 0) {
         container.appendChild(postCont("comment"));
 
         // Creates container for replies
@@ -155,9 +154,9 @@ fetchData()
         container.appendChild(replyCont);
 
         // Generates replies
-        for (let reply in post.replies) {
+        for (let reply in comments[comment].replies) {
           replyCont.appendChild(postCont("reply", reply));
-          if (post.replies[reply].user.username !== currentUser[0].username) {
+          if (comments[comment].replies[reply].user.username !== currentUser[0].username) {
             const replyForm = createReplyForm("replytoreply");
             replyCont.appendChild(replyForm);
             const replyBtn =
@@ -170,16 +169,16 @@ fetchData()
         replyCont.style.gridTemplateRows = `repeat(${replyCont.childElementCount}, auto)`;
 
         // Generates reply forms
-        if (post.user.username !== currentUser[0].username) {
+        if (comments[comment].user.username !== currentUser[0].username) {
           const replyForm = createReplyForm("reply");
           container.appendChild(replyForm);
           const replyBtn =
             document.getElementsByClassName("CRUD--reply")[comment];
           replyBtn.addEventListener("click", () => toggles.reply(replyForm));
         }
-      } else if (post.replies.length === 0) {
+      } else if (comments[comment].replies.length === 0) {
         container.appendChild(postCont("comment"));
-        if (post.user.username !== currentUser[0].username) {
+        if (comments[comment].user.username !== currentUser[0].username) {
           const replyForm = createReplyForm("reply");
           container.appendChild(replyForm);
           const replyBtn =

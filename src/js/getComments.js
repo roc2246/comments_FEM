@@ -1,5 +1,7 @@
 import { childElement } from "./childElem";
-import { CRUDFunction, toggles } from "./crud";
+import { CRUDFunction, stats, toggles, httpRequest } from "./crud";
+
+// GET NEW COMMENT IN DOM FIXED
 
 async function fetchData() {
   try {
@@ -35,6 +37,10 @@ async function fetchData() {
 // GENERATES COMMENTS
 fetchData()
   .then(({ comments, currentUser }) => {
+
+    // Sets stats.user property
+    stats.users = { comments, currentUser };
+    
     for (let comment in comments) {
       const container = document.getElementById("comment-wrapper");
       const post = comments[comment];
@@ -61,12 +67,12 @@ fetchData()
         // creates child elements for post
         const newComment = {
           avatar: childElement.avatar(post),
-          username: childElement.username(post, currentUser),
+          username: childElement.username(post, currentUser[0]),
           createdAt: childElement.createdAt(post),
           content: childElement.content(post),
           updateForm: childElement.updateForm(post),
           vote: childElement.vote(post),
-          CRUD: childElement.CRUD(post, currentUser),
+          CRUD: childElement.CRUD(post, currentUser[0]),
         };
         for (let ele in newComment) {
           if (newComment[ele] !== newComment.updateForm) {
@@ -85,12 +91,16 @@ fetchData()
 
         // Adds CRUD functionality
         if (currentUser[0].username === post.user.username) {
-          const editFormToggle = container.childNodes[5].childNodes[1]
-          editFormToggle.addEventListener("click", ()=> toggles.edit(container))
+          const editFormToggle = container.childNodes[5].childNodes[1];
+          editFormToggle.addEventListener("click", () =>
+            toggles.edit(container)
+          );
 
-          const deleteModalToggle = container.childNodes[5].childNodes[0]
-          const deleteModal = document.getElementsByClassName("modal")[0]
-          deleteModalToggle.addEventListener("click", ()=> toggles.delete(deleteModal))
+          const deleteModalToggle = container.childNodes[5].childNodes[0];
+          const deleteModal = document.getElementsByClassName("modal")[0];
+          deleteModalToggle.addEventListener("click", () =>
+            toggles.delete(deleteModal)
+          );
 
           CRUDFunction.delete(container);
         }
@@ -182,4 +192,33 @@ fetchData()
   .catch((error) => {
     // Handle any errors that occurred during the fetch
     console.error("There was a problem with the fetch operation:", error);
+  });
+
+const form = document
+.getElementsByClassName("new-comment")[0]
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const newComment = {
+      id: stats.generateID(),
+      content: document.getElementsByClassName("new-comment")[0].value,
+      createdAt: "TEST",
+      score: 0,
+      user: {
+        image: {
+          png: stats.users.currentUser[0].image.png,
+          webp: stats.users.currentUser[0].image.webp,
+        },
+        username: stats.users.currentUser[0].username,
+      },
+      replies: [],
+    };
+
+    // Adds comment in data
+    httpRequest.post(newComment);
+    stats.users.comments.push(newComment);
+
+    // Adds comment in DOM
+    const wrapper = document.getElementById("comment-wrapper");
+    wrapper.appendChild(CRUDFunction.POST("comment", newComment));
   });

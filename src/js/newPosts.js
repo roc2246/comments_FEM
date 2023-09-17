@@ -2,108 +2,16 @@
 
 //     // CRUD - FUNCTIONS
 
-//     // CRUD - FUNCTIONS - GET REPLY COUNT
-//     function replyCount(no, type) {
-//         let replyCont;
-//         if (type === "reply") {
-//           replyCont = container.form.reply[no].previousElementSibling;
-//         } else if (type === "replytoreply") {
-//           replyCont = container.form.replyToReply[no].parentElement;
-//         }
-//         return replyCont.childElementCount;
-//       }
+    // CRUD - FUNCTIONS - GET REPLY COUNT
+
   
-//       // CRUD - FUNCTIONS - GENERATE ID
-//       function generateID() {
-//         let IDarray = [];
-//         for (let id in comments) {
-//           IDarray.push(comments[id].id);
-//           if (comments[id].replies.length > 0) {
-//             for (let reply in comments[id].replies)
-//               IDarray.push(comments[id].replies[reply].id);
-//           }
-//         }
-//         const ID = Math.max(...IDarray) + 1;
-//         return ID;
-//       }
+
   
-//       // CRUD - FUNCTIONS - NEW POST
-//       function newPost(type, source) {
-//         const { currentUser } = data;
-  
-//         const postContainer = document.createElement("div");
-//         postContainer.classList.add("comment");
-  
-//         // adds extra classes if post isn't a comment
-//         if (type === "reply") {
-//           postContainer.classList.add("comment--reply");
-//         } else if (type === "replytoreply") {
-//           postContainer.classList.add("comment--reply");
-//           postContainer.classList.add("comment--replytoreply");
-//         }
-//         postContainer.classList.add("comment--you");
-  
-//         // generates child elements for new post
-//         const newComment = {
-//           avatar: element.avatar(source),
-//           username: element.username(source),
-//           createdAt: element.createdAt(source),
-//           content: element.content(source),
-//           updateForm: element.updateForm(source),
-//           vote: element.vote(source),
-//           CRUD: element.CRUD(source),
-//         };
-//         for (let ele in newComment) {
-//           if (newComment[ele] !== newComment.updateForm) {
-//             postContainer.append(newComment[ele]);
-//           }
-//         }
-//         if (currentUser[0].username === source.user.username) {
-//           postContainer.append(newComment.updateForm);
-//         }
-  
-//         // adds reply class to crud container
-//         if (type === "reply") {
-//           newComment.CRUD.classList.add("CRUD-container--reply");
-//         }
-  
-//         // Adds CRUD functionality
-//         CRUDFunction.delete(postContainer);
-  
-//         return postContainer;
-//       }
+
   
 //       // CRUD - DOM MANIPULATION
 //       // CRUD - DOM MANIPULATION - NEW COMMENT
-//       container.form.comment.addEventListener("submit", (e) => {
-//         e.preventDefault();
-  
-//         const { comments, currentUser } = data;
-//         const content = document.querySelector(selectors.input.comment).value;
-  
-//         const newComment = {
-//           id: generateID(),
-//           content: content,
-//           createdAt: "TEST",
-//           score: 0,
-//           user: {
-//             image: {
-//               png: currentUser[0].image.png,
-//               webp: currentUser[0].image.webp,
-//             },
-//             username: currentUser[0].username,
-//           },
-//           replies: [],
-//         };
-  
-//         // Adds comment in data
-//         httpRequest.post(newComment);
-//         comments.push(newComment);
-  
-//         // Adds comment in DOM
-//         const wrapper = document.getElementById("comment-wrapper");
-//         wrapper.appendChild(newPost("comment", newComment));
-//       });
+     
   
 //       // CRUD - DOM MANIPULATION - NEW REPLY
 //       for (let x = 0; x < container.form.reply.length; x++) {

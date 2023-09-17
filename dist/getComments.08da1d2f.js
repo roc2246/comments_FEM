@@ -184,7 +184,7 @@ var childElement = {
   username: function username(source, currentUser) {
     var username = document.createElement("span");
     username.classList.add("username");
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser.username) {
       username.classList.add("username--you");
       var name = document.createElement("span");
       name.classList.add("username__name");
@@ -239,7 +239,7 @@ var childElement = {
       btn.appendChild(btnTxt);
       return btn;
     }
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser.username) {
       CRUD.appendChild(createCRUDbtn("delete"));
       CRUD.appendChild(createCRUDbtn("edit"));
     } else {
@@ -255,7 +255,8 @@ exports.childElement = childElement;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.toggles = exports.CRUDFunction = void 0;
+exports.toggles = exports.stats = exports.httpRequest = exports.CRUDFunction = void 0;
+var _childElem = require("./childElem");
 var toggles = {
   edit: function edit(container) {
     if (!container.classList.contains("comment--edit")) {
@@ -278,6 +279,30 @@ var toggles = {
   }
 };
 exports.toggles = toggles;
+var stats = {
+  users: null,
+  generateID: function generateID() {
+    var IDarray = [];
+    for (var id in this.users.comments) {
+      IDarray.push(this.users.comments[id].id);
+      if (this.users.comments[id].replies.length > 0) {
+        for (var reply in this.users.comments[id].replies) IDarray.push(this.users.comments[id].replies[reply].id);
+      }
+    }
+    var ID = Math.max.apply(Math, IDarray) + 1;
+    return ID;
+  },
+  replyCount: function replyCount(no, type) {
+    var replyCont;
+    if (type === "reply") {
+      replyCont = container.form.reply[no].previousElementSibling;
+    } else if (type === "replytoreply") {
+      replyCont = container.form.replyToReply[no].parentElement;
+    }
+    return replyCont.childElementCount;
+  }
+};
+exports.stats = stats;
 var CRUDFunction = {
   delete: function _delete(source) {
     var chosen;
@@ -321,9 +346,9 @@ var CRUDFunction = {
             break;
           }
         }
-        for (var i = 0; i < comments.length; i++) {
-          if (comments[i].id === id) {
-            comments.splice(i, 1); // Remove the object at index i
+        for (var i = 0; i < stats.users.comments.length; i++) {
+          if (stats.users.comments[i].id === id) {
+            stats.users.comments.splice(i, 1); // Remove the object at index i
             break; // Stop searching after removal
           }
         }
@@ -331,10 +356,138 @@ var CRUDFunction = {
         httpRequest.delete(id);
       }
     });
+  },
+  POST: function POST(type, source) {
+    var currentUser = stats.users.currentUser;
+    var postContainer = document.createElement("div");
+    postContainer.classList.add("comment");
+
+    // adds extra classes if post isn't a comment
+    if (type === "reply") {
+      postContainer.classList.add("comment--reply");
+    } else if (type === "replytoreply") {
+      postContainer.classList.add("comment--reply");
+      postContainer.classList.add("comment--replytoreply");
+    }
+    postContainer.classList.add("comment--you");
+
+    // generates child elements for new post
+    var newComment = {
+      avatar: _childElem.childElement.avatar(source),
+      username: _childElem.childElement.username(source, currentUser[0]),
+      createdAt: _childElem.childElement.createdAt(source),
+      content: _childElem.childElement.content(source),
+      updateForm: _childElem.childElement.updateForm(source),
+      vote: _childElem.childElement.vote(source),
+      CRUD: _childElem.childElement.CRUD(source)
+    };
+    for (var ele in newComment) {
+      if (newComment[ele] !== newComment.updateForm) {
+        postContainer.append(newComment[ele]);
+      }
+    }
+    if (currentUser[0].username === source.username) {
+      postContainer.append(newComment.updateForm);
+    }
+
+    // adds reply class to crud container
+    if (type === "reply") {
+      newComment.CRUD.classList.add("CRUD-container--reply");
+    }
+
+    // Adds CRUD functionality
+    CRUDFunction.delete(postContainer);
+    return postContainer;
   }
 };
 exports.CRUDFunction = CRUDFunction;
-},{}],"js/getComments.js":[function(require,module,exports) {
+var httpRequest = {
+  update: function update(id, _update) {
+    fetch("http://localhost:3000/update/".concat(id), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json' // You may need to adjust the content type based on your application's needs
+      },
+
+      body: JSON.stringify(_update) // If you have data to send in the request, it needs to be converted to a JSON string
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // If you expect JSON data in the response
+    }).then(function (data) {
+      // Handle the response data here
+    }).catch(function (error) {
+      console.error('Error:', error);
+    });
+  },
+  // vote: function (scoreContianer, mode) {
+  //   const postContainer = scoreContianer.parentElement.parentElement;
+  //   let content;
+  //   let change;
+  //   let score = scoreContianer.innerText;
+  //   mode === "upvote" ? (change = score++) : (change = score--);
+  //   if (postContainer.childNodes[3].childNodes[1]) {
+  //     content = postContainer.childNodes[3].childNodes[1];
+  //   } else {
+  //     content = postContainer.childNodes[3];
+  //   }
+  //   for (let x in comments) {
+  //     if (comments[x].content === content) {
+  //       comments[x].score = change;
+  //     } else {
+  //       for (let y in comments[x].replies[y]) {
+  //         const reply = comments[x].replies[y];
+  //         if ((reply.content = content)) {
+  //           reply.score = change;
+  //         }
+  //       }
+  //     }
+  //   }
+  // },
+  post: function post(src) {
+    var postData = src;
+    var params = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    };
+    // Possible put id here to insert new replies and replytoreplies to database
+    fetch("http://localhost:3000/newPost", params).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    });
+  },
+  delete: function _delete(id) {
+    var options = {
+      method: "DELETE",
+      // Use the DELETE HTTP method
+      headers: {
+        "Content-Type": "application/json" // Set the content type if needed
+        // You may also need to include authentication headers or other headers here
+      }
+    };
+
+    // Send the DELETE request
+    fetch("http://localhost:3000/delete/".concat(id), options).then(function (response) {
+      if (response.ok) {
+        // Resource successfully deleted
+        console.log("Resource deleted successfully");
+      } else {
+        // Handle error cases here
+        console.error("Error deleting resource");
+      }
+    }).catch(function (error) {
+      console.error("Fetch error:", error);
+    });
+  }
+};
+exports.httpRequest = httpRequest;
+},{"./childElem":"js/childElem.js"}],"js/getComments.js":[function(require,module,exports) {
 "use strict";
 
 var _childElem = require("./childElem");
@@ -354,6 +507,7 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+// GET NEW COMMENT IN DOM FIXED
 function fetchData() {
   return _fetchData.apply(this, arguments);
 } // GENERATES COMMENTS
@@ -428,6 +582,10 @@ function _fetchData() {
 fetchData().then(function (_ref) {
   var comments = _ref.comments,
     currentUser = _ref.currentUser;
+  _crud.stats.users = {
+    comments: comments,
+    currentUser: currentUser
+  };
   var _loop = function _loop(comment) {
     var container = document.getElementById("comment-wrapper");
     var post = comments[comment];
@@ -454,12 +612,12 @@ fetchData().then(function (_ref) {
       // creates child elements for post
       var newComment = {
         avatar: _childElem.childElement.avatar(post),
-        username: _childElem.childElement.username(post, currentUser),
+        username: _childElem.childElement.username(post, currentUser[0]),
         createdAt: _childElem.childElement.createdAt(post),
         content: _childElem.childElement.content(post),
         updateForm: _childElem.childElement.updateForm(post),
         vote: _childElem.childElement.vote(post),
-        CRUD: _childElem.childElement.CRUD(post, currentUser)
+        CRUD: _childElem.childElement.CRUD(post, currentUser[0])
       };
       for (var ele in newComment) {
         if (newComment[ele] !== newComment.updateForm) {
@@ -581,6 +739,32 @@ fetchData().then(function (_ref) {
   // Handle any errors that occurred during the fetch
   console.error("There was a problem with the fetch operation:", error);
 });
+var form = document.getElementsByClassName("new-comment")[0];
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var newComment = {
+    id: _crud.stats.generateID(),
+    content: document.getElementsByClassName("new-comment")[0].value,
+    createdAt: "TEST",
+    score: 0,
+    user: {
+      image: {
+        png: _crud.stats.users.currentUser[0].image.png,
+        webp: _crud.stats.users.currentUser[0].image.webp
+      },
+      username: _crud.stats.users.currentUser[0].username
+    },
+    replies: []
+  };
+
+  // Adds comment in data
+  _crud.httpRequest.post(newComment);
+  _crud.stats.users.comments.push(newComment);
+
+  // Adds comment in DOM
+  var wrapper = document.getElementById("comment-wrapper");
+  wrapper.appendChild(_crud.CRUDFunction.POST("comment", newComment));
+});
 },{"./childElem":"js/childElem.js","./crud":"js/crud.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -606,7 +790,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65219" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50870" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -67,7 +67,7 @@ export const childElement = {
     const username = document.createElement("span");
     username.classList.add("username");
 
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser.username) {
       username.classList.add("username--you");
       const name = document.createElement("span");
       name.classList.add("username__name");
@@ -131,7 +131,7 @@ export const childElement = {
 
       return btn;
     }
-    if (source.user.username === currentUser[0].username) {
+    if (source.user.username === currentUser.username) {
       CRUD.appendChild(createCRUDbtn("delete"));
       CRUD.appendChild(createCRUDbtn("edit"));
     } else {

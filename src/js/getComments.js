@@ -37,10 +37,9 @@ async function fetchData() {
 // GENERATES COMMENTS
 fetchData()
   .then(({ comments, currentUser }) => {
-
     // Sets stats.user property
     stats.users = { comments, currentUser };
-    
+
     for (let comment in comments) {
       const container = document.getElementById("comment-wrapper");
 
@@ -116,7 +115,7 @@ fetchData()
         // sets extra class if form is for a reply to reply
         if (type === "replytoreply") {
           replyForm.classList.add("new-comment--replytoreply");
-        } else if ((type = "reply")) {
+        } else if (type = "reply") {
           type = null;
         }
 
@@ -156,7 +155,10 @@ fetchData()
         // Generates replies
         for (let reply in comments[comment].replies) {
           replyCont.appendChild(postCont("reply", reply));
-          if (comments[comment].replies[reply].user.username !== currentUser[0].username) {
+          if (
+            comments[comment].replies[reply].user.username !==
+            currentUser[0].username
+          ) {
             const replyForm = createReplyForm("replytoreply");
             replyCont.appendChild(replyForm);
             const replyBtn =
@@ -193,31 +195,30 @@ fetchData()
     console.error("There was a problem with the fetch operation:", error);
   });
 
-const form = document
-.getElementsByClassName("new-comment")[0]
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+const form = document.getElementsByClassName("new-comment")[0];
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    const newComment = {
-      id: stats.generateID(),
-      content: document.getElementsByClassName("new-comment")[0].value,
-      createdAt: "TEST",
-      score: 0,
-      user: {
-        image: {
-          png: stats.users.currentUser[0].image.png,
-          webp: stats.users.currentUser[0].image.webp,
-        },
-        username: stats.users.currentUser[0].username,
+  const newComment = {
+    id: stats.generateID(),
+    content: document.getElementsByClassName("new-comment")[0].value,
+    createdAt: "TEST",
+    score: 0,
+    user: {
+      image: {
+        png: stats.users.currentUser[0].image.png,
+        webp: stats.users.currentUser[0].image.webp,
       },
-      replies: [],
-    };
+      username: stats.users.currentUser[0].username,
+    },
+    replies: [],
+  };
 
-    // Adds comment in data
-    httpRequest.post(newComment);
-    stats.users.comments.push(newComment);
+  // Adds comment in data
+  httpRequest.post(newComment);
+  stats.users.comments.push(newComment);
 
-    // Adds comment in DOM
-    const wrapper = document.getElementById("comment-wrapper");
-    wrapper.appendChild(CRUDFunction.POST("comment", newComment));
-  });
+  // Adds comment in DOM
+  const wrapper = document.getElementById("comment-wrapper");
+  wrapper.appendChild(CRUDFunction.POST("comment", newComment));
+});

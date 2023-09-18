@@ -310,15 +310,15 @@ var CRUDFunction = {
     var content;
     var deleteBtn = source.childNodes[5].childNodes[0];
     deleteBtn.addEventListener("click", function () {
-      return toggles.delete();
+      toggles.delete();
+      content = source.childNodes[3].innerText;
+      // Sets post content
+      // if (source.childNodes[3].childNodes[1]) {
+      //   content = source.childNodes[3].childNodes[1].innerText;
+      // } else {
+      //   content = source.childNodes[3].childNodes[0].innerText;
+      // }
     });
-    content = source.childNodes[3].innerText;
-    // Sets post content
-    // if (source.childNodes[3].childNodes[1]) {
-    //   content = source.childNodes[3].childNodes[1].innerText;
-    // } else {
-    //   content = source.childNodes[3].childNodes[0].innerText;
-    // }
 
     var deleteComment = document.getElementsByClassName("modal__btn-box--delete")[0];
     deleteComment.addEventListener("click", function () {
@@ -327,6 +327,7 @@ var CRUDFunction = {
       for (var x in comments) {
         if (content === comments[x].content) {
           id = comments[x].id;
+          console.log(id);
           break;
         } else {
           for (var y in comments[x].replies) {

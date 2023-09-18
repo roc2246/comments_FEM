@@ -57,15 +57,18 @@ export const CRUDFunction = {
     let content;
 
     const deleteBtn = source.childNodes[5].childNodes[0];
-    deleteBtn.addEventListener("click", () => toggles.delete());
+    deleteBtn.addEventListener("click", () => {
+      toggles.delete()
+      content = source.childNodes[3].innerText;
+      // Sets post content
+      // if (source.childNodes[3].childNodes[1]) {
+      //   content = source.childNodes[3].childNodes[1].innerText;
+      // } else {
+      //   content = source.childNodes[3].childNodes[0].innerText;
+      // }
+    });
 
-    content = source.childNodes[3].innerText;
-    // Sets post content
-    // if (source.childNodes[3].childNodes[1]) {
-    //   content = source.childNodes[3].childNodes[1].innerText;
-    // } else {
-    //   content = source.childNodes[3].childNodes[0].innerText;
-    // }
+   
 
     const deleteComment = document.getElementsByClassName(
       "modal__btn-box--delete"
@@ -77,6 +80,7 @@ export const CRUDFunction = {
       for (let x in comments) {
         if (content === comments[x].content) {
           id = comments[x].id;
+      console.log(id)
           break;
         } else {
           for (let y in comments[x].replies) {

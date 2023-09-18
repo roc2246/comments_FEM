@@ -739,12 +739,12 @@ fetchData().then(function (_ref) {
   // Handle any errors that occurred during the fetch
   console.error("There was a problem with the fetch operation:", error);
 });
-var form = document.getElementsByClassName("new-comment")[0];
+var form = document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)");
 form.addEventListener("submit", function (e) {
   e.preventDefault();
   var newComment = {
     id: _crud.stats.generateID(),
-    content: document.getElementsByClassName("new-comment")[0].value,
+    content: document.getElementById("new-comment-input").value,
     createdAt: "TEST",
     score: 0,
     user: {
@@ -790,7 +790,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57341" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58899" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

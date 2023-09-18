@@ -195,13 +195,13 @@ fetchData()
     console.error("There was a problem with the fetch operation:", error);
   });
 
-const form = document.getElementsByClassName("new-comment")[0];
+const form = document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const newComment = {
     id: stats.generateID(),
-    content: document.getElementsByClassName("new-comment")[0].value,
+    content: document.getElementById("new-comment-input").value,
     createdAt: "TEST",
     score: 0,
     user: {

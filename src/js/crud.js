@@ -131,14 +131,12 @@ export const CRUDFunction = {
       content: childElement.content(source),
       updateForm: childElement.updateForm(source),
       vote: childElement.vote(source),
-      CRUD: childElement.CRUD(source),
+      CRUD: childElement.CRUD(source, currentUser[0]),
     };
     for (let ele in newComment) {
-      if (newComment[ele] !== newComment.updateForm) {
         postContainer.append(newComment[ele]);
-      }
     }
-    if (currentUser[0].username === source.username) {
+    if (currentUser[0].username === source.user.username) {
       postContainer.append(newComment.updateForm);
     }
 
@@ -176,30 +174,30 @@ export const httpRequest = {
           console.error('Error:', error);
         });
     },
-    // vote: function (scoreContianer, mode) {
-    //   const postContainer = scoreContianer.parentElement.parentElement;
-    //   let content;
-    //   let change;
-    //   let score = scoreContianer.innerText;
-    //   mode === "upvote" ? (change = score++) : (change = score--);
-    //   if (postContainer.childNodes[3].childNodes[1]) {
-    //     content = postContainer.childNodes[3].childNodes[1];
-    //   } else {
-    //     content = postContainer.childNodes[3];
-    //   }
-    //   for (let x in comments) {
-    //     if (comments[x].content === content) {
-    //       comments[x].score = change;
-    //     } else {
-    //       for (let y in comments[x].replies[y]) {
-    //         const reply = comments[x].replies[y];
-    //         if ((reply.content = content)) {
-    //           reply.score = change;
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
+    vote: function (scoreContianer, mode) {
+      const postContainer = scoreContianer.parentElement.parentElement;
+      let content;
+      let change;
+      let score = scoreContianer.innerText;
+      mode === "upvote" ? (change = score++) : (change = score--);
+      if (postContainer.childNodes[3].childNodes[1]) {
+        content = postContainer.childNodes[3].childNodes[1];
+      } else {
+        content = postContainer.childNodes[3];
+      }
+      for (let x in comments) {
+        if (comments[x].content === content) {
+          comments[x].score = change;
+        } else {
+          for (let y in comments[x].replies[y]) {
+            const reply = comments[x].replies[y];
+            if ((reply.content = content)) {
+              reply.score = change;
+            }
+          }
+        }
+      }
+    },
     post: function (src) {
       const postData = src;
       const params = {

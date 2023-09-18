@@ -272,9 +272,10 @@ var toggles = {
       container.style.display = "";
     }
   },
-  delete: function _delete(container) {
-    if (container.style.display === "none" || container.style.display === "") {
-      container.style.display = "flex";
+  delete: function _delete() {
+    var deleteModal = document.getElementsByClassName("modal")[0];
+    if (deleteModal.style.display === "none" || deleteModal.style.display === "") {
+      deleteModal.style.display = "flex";
     }
   }
 };
@@ -304,33 +305,33 @@ var stats = {
 };
 exports.stats = stats;
 var CRUDFunction = {
-  delete: function _delete(source) {
-    var chosen;
+  DELETE: function DELETE(source) {
+    var comments = stats.users.comments;
     var content;
     var deleteBtn = source.childNodes[5].childNodes[0];
-    var deleteModal = document.getElementsByClassName("modal")[0];
-    var deleteComment = document.getElementsByClassName("modal__btn-box--delete")[0];
     deleteBtn.addEventListener("click", function () {
-      toggles.delete(deleteModal);
-      chosen = source.childNodes[3];
-      // Sets post content
-      if (chosen.childNodes[1]) {
-        content = chosen.childNodes[1].innerText;
-      } else {
-        content = chosen.childNodes[0].innerText;
-      }
+      return toggles.delete();
     });
+    content = source.childNodes[3].innerText;
+    // Sets post content
+    // if (source.childNodes[3].childNodes[1]) {
+    //   content = source.childNodes[3].childNodes[1].innerText;
+    // } else {
+    //   content = source.childNodes[3].childNodes[0].innerText;
+    // }
+
+    var deleteComment = document.getElementsByClassName("modal__btn-box--delete")[0];
     deleteComment.addEventListener("click", function () {
       var comment = document.getElementsByClassName("comment");
       var id;
-      for (var x in source) {
-        if (content === source[x].content) {
-          id = source[x].id;
+      for (var x in comments) {
+        if (content === comments[x].content) {
+          id = comments[x].id;
           break;
         } else {
-          for (var y in source[x].replies) {
-            if (content === source[x].replies[y].content) {
-              id = source[x].replies[y].id;
+          for (var y in comments[x].replies) {
+            if (content === comments[x].replies[y].content) {
+              id = comments[x].replies[y].id;
               break;
             }
           }
@@ -402,21 +403,21 @@ exports.CRUDFunction = CRUDFunction;
 var httpRequest = {
   update: function update(id, _update) {
     fetch("http://localhost:3000/update/".concat(id), {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json' // You may need to adjust the content type based on your application's needs
+        "Content-Type": "application/json" // You may need to adjust the content type based on your application's needs
       },
 
       body: JSON.stringify(_update) // If you have data to send in the request, it needs to be converted to a JSON string
     }).then(function (response) {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       return response.json(); // If you expect JSON data in the response
     }).then(function (data) {
       // Handle the response data here
     }).catch(function (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
   },
   vote: function vote(scoreContianer, mode) {
@@ -643,7 +644,7 @@ fetchData().then(function (_ref) {
         deleteModalToggle.addEventListener("click", function () {
           return _crud.toggles.delete(deleteModal);
         });
-        _crud.CRUDFunction.delete(postContainer);
+        _crud.CRUDFunction.DELETE(postContainer);
       }
       return postContainer;
     }
@@ -788,7 +789,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58899" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49685" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

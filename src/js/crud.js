@@ -147,7 +147,7 @@ export const CRUDFunction = {
     }
 
     // Adds CRUD functionality
-    CRUDFunction.delete(postContainer);
+    CRUDFunction.DELETE(postContainer);
 
     return postContainer;
   },

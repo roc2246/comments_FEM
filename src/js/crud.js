@@ -48,7 +48,7 @@ export const stats = {
 };
 
 export const CRUDFunction = {
-  delete: function (source) {
+  DELETE: function (source) {
     let chosen;
     let content;
     const deleteBtn = source.childNodes[5].childNodes[0];

@@ -100,7 +100,7 @@ fetchData()
             toggles.delete(deleteModal)
           );
 
-          CRUDFunction.delete(postContainer);
+          CRUDFunction.DELETE(postContainer);
         }
 
         return postContainer;

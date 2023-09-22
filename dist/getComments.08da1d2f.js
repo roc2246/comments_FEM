@@ -677,6 +677,10 @@ fetchData().then(function (_ref) {
       replySend.classList.add("new-comment__send");
       replySend.innerText = "REPLY";
       replyForm.appendChild(replySend);
+      replyForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log("TEST");
+      });
       return replyForm;
     }
 
@@ -739,8 +743,11 @@ fetchData().then(function (_ref) {
   // Handle any errors that occurred during the fetch
   console.error("There was a problem with the fetch operation:", error);
 });
-var form = document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)");
-form.addEventListener("submit", function (e) {
+var forms = {
+  newComment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)"),
+  newReply: document.getElementsByClassName("new-comment--reply")
+};
+forms.newComment.addEventListener("submit", function (e) {
   e.preventDefault();
   var newComment = {
     id: _crud.stats.generateID(),
@@ -765,6 +772,69 @@ form.addEventListener("submit", function (e) {
   var wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(_crud.CRUDFunction.POST("comment", newComment));
 });
+
+// CRUD - DOM MANIPULATION - NEW REPLY
+// REFACTOR INTO ASYNCRONOUS FOR LOOP
+// for (let x = 0; x < forms.newReply.length; x++) {
+//   forms.newReply[x].addEventListener("submit", (e) => {
+//     e.preventDefault();
+
+//     const { comments, currentUser } = data;
+//     const replyTo = container.input.replyTo[x].innerText;
+//     const content = container.input.replyContent[x].value;
+
+//     const newReply = {
+//       id: generateID(),
+//       content: content,
+//       createdAt: "TEST",
+//       replyingTo: replyTo,
+//       replies: {},
+//       score: 0,
+//       user: {
+//         image: {
+//           png: currentUser[0].image.png,
+//           webp: currentUser[0].image.webp,
+//         },
+//         username: currentUser[0].username,
+//       },
+//     };
+
+//     if (comments[x].replies.length === 0) {
+//       // Creates container for replies
+//       const replyCont = document.createElement("div");
+//       replyCont.classList.add("reply-wrapper");
+//       const hr = document.createElement("hr");
+//       hr.classList.add("reply-wrapper__ruler");
+//       replyCont.appendChild(hr);
+//       container.comments[x].insertAdjacentElement("afterend", replyCont);
+
+//       // Adds reply in data
+//       comments[x].replies[newReply.id] = newReply;
+
+//       // Adds reply in DOM
+//       replyCont.appendChild(CRUDFunction.POST("reply", newReply));
+
+//       // Generates hr height for reply container
+//       replyCont.style.gridTemplateRows = `repeat(${replyCount(
+//         x,
+//         "reply"
+//       )}, auto)`;
+//     } else {
+//       comments[x].replies[newReply.id] = newReply;
+
+//       const replyWrapper = container.form.reply[x].previousElementSibling;
+//       replyWrapper.appendChild(CRUDFunction.POST("reply", newReply));
+
+//       // Generates hr height for reply container
+//       replyWrapper.style.gridTemplateRows = `repeat(${replyCount(
+//         x,
+//         "reply"
+//       )}, auto)`;
+//     }
+//     // comments[x].replies[comments[x].replies.length + 1].push(newReply);
+//     httpRequest.post(newReply);
+//   });
+// }
 },{"./childElem":"js/childElem.js","./crud":"js/crud.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -790,7 +860,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49685" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54525" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

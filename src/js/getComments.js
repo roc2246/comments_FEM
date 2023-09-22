@@ -115,7 +115,7 @@ fetchData()
         // sets extra class if form is for a reply to reply
         if (type === "replytoreply") {
           replyForm.classList.add("new-comment--replytoreply");
-        } else if (type = "reply") {
+        } else if ((type = "reply")) {
           type = null;
         }
 
@@ -136,6 +136,11 @@ fetchData()
         replySend.classList.add("new-comment__send");
         replySend.innerText = "REPLY";
         replyForm.appendChild(replySend);
+
+        replyForm.addEventListener("submit", (e)=>{
+          e.preventDefault()
+          console.log("TEST")
+        })
 
         return replyForm;
       }
@@ -195,8 +200,14 @@ fetchData()
     console.error("There was a problem with the fetch operation:", error);
   });
 
-const form = document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)");
-form.addEventListener("submit", (e) => {
+const forms = {
+  newComment: document.querySelector(
+    ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
+  ),
+  newReply: document.getElementsByClassName("new-comment--reply")
+};
+
+forms.newComment.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const newComment = {
@@ -222,3 +233,66 @@ form.addEventListener("submit", (e) => {
   const wrapper = document.getElementById("comment-wrapper");
   wrapper.appendChild(CRUDFunction.POST("comment", newComment));
 });
+
+// CRUD - DOM MANIPULATION - NEW REPLY
+// REFACTOR INTO ASYNCRONOUS FOR LOOP
+// for (let x = 0; x < forms.newReply.length; x++) {
+//   forms.newReply[x].addEventListener("submit", (e) => {
+//     e.preventDefault();
+
+//     const { comments, currentUser } = data;
+//     const replyTo = container.input.replyTo[x].innerText;
+//     const content = container.input.replyContent[x].value;
+
+//     const newReply = {
+//       id: generateID(),
+//       content: content,
+//       createdAt: "TEST",
+//       replyingTo: replyTo,
+//       replies: {},
+//       score: 0,
+//       user: {
+//         image: {
+//           png: currentUser[0].image.png,
+//           webp: currentUser[0].image.webp,
+//         },
+//         username: currentUser[0].username,
+//       },
+//     };
+
+//     if (comments[x].replies.length === 0) {
+//       // Creates container for replies
+//       const replyCont = document.createElement("div");
+//       replyCont.classList.add("reply-wrapper");
+//       const hr = document.createElement("hr");
+//       hr.classList.add("reply-wrapper__ruler");
+//       replyCont.appendChild(hr);
+//       container.comments[x].insertAdjacentElement("afterend", replyCont);
+
+//       // Adds reply in data
+//       comments[x].replies[newReply.id] = newReply;
+
+//       // Adds reply in DOM
+//       replyCont.appendChild(CRUDFunction.POST("reply", newReply));
+
+//       // Generates hr height for reply container
+//       replyCont.style.gridTemplateRows = `repeat(${replyCount(
+//         x,
+//         "reply"
+//       )}, auto)`;
+//     } else {
+//       comments[x].replies[newReply.id] = newReply;
+
+//       const replyWrapper = container.form.reply[x].previousElementSibling;
+//       replyWrapper.appendChild(CRUDFunction.POST("reply", newReply));
+
+//       // Generates hr height for reply container
+//       replyWrapper.style.gridTemplateRows = `repeat(${replyCount(
+//         x,
+//         "reply"
+//       )}, auto)`;
+//     }
+//     // comments[x].replies[comments[x].replies.length + 1].push(newReply);
+//     httpRequest.post(newReply);
+//   });
+// }

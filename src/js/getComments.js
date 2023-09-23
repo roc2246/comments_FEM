@@ -137,10 +137,63 @@ fetchData()
         replySend.innerText = "REPLY";
         replyForm.appendChild(replySend);
 
-        replyForm.addEventListener("submit", (e)=>{
-          e.preventDefault()
-          console.log("TEST")
-        })
+        // Reply Form
+        replyForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Sets content and ReplyTo
+          let replyTo = replyForm.previousSibling;
+          const isWrapper = replyTo.classList.contains("reply-wrapper");
+          const content = replyForm.childNodes[2].value;
+          !isWrapper
+            ? (replyTo = replyTo.childNodes[1].innerText)
+            : replyTo = replyTo.previousSibling.childNodes[1].innerText;
+    
+          const newReply = {
+            id: stats.generateID(),
+            content: content,
+            createdAt: "TEST",
+            replyingTo: replyTo,
+            replies: {},
+            score: 0,
+            user: {
+              image: {
+                png: currentUser[0].image.png,
+                webp: currentUser[0].image.webp,
+              },
+              username: currentUser[0].username,
+            },
+          };
+
+          if (comments[comment].replies.length === 0) {
+            // Creates container for replies
+            const commentCont = replyForm.previousSibling
+            const replyCont = document.createElement("div");
+            replyCont.classList.add("reply-wrapper");
+            const hr = document.createElement("hr");
+            hr.classList.add("reply-wrapper__ruler");
+            replyCont.appendChild(hr);
+            commentCont.insertAdjacentElement("afterend", replyCont);
+
+            // Adds reply in data
+            comments[comment].replies[newReply.id] = newReply;
+
+            // Adds reply in DOM
+            replyCont.appendChild(CRUDFunction.POST("reply", newReply));
+
+          } else {
+            comments[comment].replies[newReply.id] = newReply;
+
+            const replyWrapper = replyForm.previousElementSibling;
+            replyWrapper.appendChild(CRUDFunction.POST("reply", newReply));
+          }
+
+          // comments[comment].replies[comments[comment].replies.length + 1].push(newReply);
+         
+          httpRequest.post(newReply);
+
+        });
+        // END REPLY FORM
 
         return replyForm;
       }
@@ -204,7 +257,7 @@ const forms = {
   newComment: document.querySelector(
     ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
   ),
-  newReply: document.getElementsByClassName("new-comment--reply")
+  newReply: document.getElementsByClassName("new-comment--reply"),
 };
 
 forms.newComment.addEventListener("submit", (e) => {

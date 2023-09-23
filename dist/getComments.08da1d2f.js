@@ -677,10 +677,58 @@ fetchData().then(function (_ref) {
       replySend.classList.add("new-comment__send");
       replySend.innerText = "REPLY";
       replyForm.appendChild(replySend);
+
+      // Reply Form
       replyForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        console.log("TEST");
+
+        // Sets content and ReplyTo
+        var replyTo = replyForm.previousSibling;
+        var isWrapper = replyTo.classList.contains("reply-wrapper");
+        var content = replyForm.childNodes[2].value;
+        !isWrapper ? replyTo = replyTo.childNodes[1].innerText : replyTo = replyTo.previousSibling.childNodes[1].innerText;
+        var newReply = {
+          id: _crud.stats.generateID(),
+          content: content,
+          createdAt: "TEST",
+          replyingTo: replyTo,
+          replies: {},
+          score: 0,
+          user: {
+            image: {
+              png: currentUser[0].image.png,
+              webp: currentUser[0].image.webp
+            },
+            username: currentUser[0].username
+          }
+        };
+        if (comments[comment].replies.length === 0) {
+          // Creates container for replies
+          var commentCont = replyForm.previousSibling;
+          var replyCont = document.createElement("div");
+          replyCont.classList.add("reply-wrapper");
+          var hr = document.createElement("hr");
+          hr.classList.add("reply-wrapper__ruler");
+          replyCont.appendChild(hr);
+          commentCont.insertAdjacentElement("afterend", replyCont);
+
+          // Adds reply in data
+          comments[comment].replies[newReply.id] = newReply;
+
+          // Adds reply in DOM
+          replyCont.appendChild(_crud.CRUDFunction.POST("reply", newReply));
+        } else {
+          comments[comment].replies[newReply.id] = newReply;
+          var replyWrapper = replyForm.previousElementSibling;
+          replyWrapper.appendChild(_crud.CRUDFunction.POST("reply", newReply));
+        }
+
+        // comments[comment].replies[comments[comment].replies.length + 1].push(newReply);
+
+        _crud.httpRequest.post(newReply);
       });
+      // END REPLY FORM
+
       return replyForm;
     }
 
@@ -860,7 +908,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54525" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55576" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

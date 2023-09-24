@@ -61,11 +61,11 @@ export const CRUDFunction = {
       toggles.delete()
       content = source.childNodes[3].innerText;
       // Sets post content
-      // if (source.childNodes[3].childNodes[1]) {
-      //   content = source.childNodes[3].childNodes[1].innerText;
-      // } else {
-      //   content = source.childNodes[3].childNodes[0].innerText;
-      // }
+      if (source.childNodes[3].childNodes[1]) {
+        content = source.childNodes[3].childNodes[1].innerText;
+      } else {
+        content = source.childNodes[3].childNodes[0].innerText;
+      }
     });
 
    

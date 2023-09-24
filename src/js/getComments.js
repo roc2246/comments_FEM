@@ -181,6 +181,9 @@ fetchData()
             // Adds reply in DOM
             replyCont.appendChild(CRUDFunction.POST("reply", newReply));
 
+            // Adds delete functionality to reply
+          CRUDFunction.DELETE(CRUDFunction.POST("reply", newReply));
+
           } else {
             comments[comment].replies[newReply.id] = newReply;
 
@@ -188,10 +191,7 @@ fetchData()
             replyWrapper.appendChild(CRUDFunction.POST("reply", newReply));
           }
 
-          // comments[comment].replies[comments[comment].replies.length + 1].push(newReply);
-         
           httpRequest.post(newReply);
-          CRUDFunction.DELETE(newReply);
 
 
         });

@@ -80,7 +80,6 @@ export const CRUDFunction = {
       for (let x in comments) {
         if (content === comments[x].content) {
           id = comments[x].id;
-      console.log(id)
           break;
         } else {
           for (let y in comments[x].replies) {

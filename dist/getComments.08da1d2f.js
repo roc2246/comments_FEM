@@ -326,7 +326,6 @@ var CRUDFunction = {
       for (var x in comments) {
         if (content === comments[x].content) {
           id = comments[x].id;
-          console.log(id);
           break;
         } else {
           for (var y in comments[x].replies) {
@@ -716,16 +715,15 @@ fetchData().then(function (_ref) {
 
           // Adds reply in DOM
           replyCont.appendChild(_crud.CRUDFunction.POST("reply", newReply));
+
+          // Adds delete functionality to reply
+          _crud.CRUDFunction.DELETE(_crud.CRUDFunction.POST("reply", newReply));
         } else {
           comments[comment].replies[newReply.id] = newReply;
           var replyWrapper = replyForm.previousElementSibling;
           replyWrapper.appendChild(_crud.CRUDFunction.POST("reply", newReply));
         }
-
-        // comments[comment].replies[comments[comment].replies.length + 1].push(newReply);
-
         _crud.httpRequest.post(newReply);
-        _crud.CRUDFunction.DELETE(newReply);
       });
       // END REPLY FORM
 

@@ -386,6 +386,20 @@ var CRUDFunction = {
     }
     if (currentUser[0].username === source.user.username) {
       postContainer.append(newComment.updateForm);
+      newComment.updateForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var input = newComment.updateForm.childNodes[0].value;
+        var comments = stats.users.comments;
+        for (var x in comments) {
+          if (comments[x].content === newComment.content) {
+            newComment.content = input;
+          } else {
+            for (var y in comments[x].replies) if (comments[x].replies[y].content === newComment.content.innerText) {
+              console.log("match");
+            }
+          }
+        }
+      });
     }
     var editBtn = postContainer.childNodes[5].childNodes[1];
     editBtn.addEventListener("click", function () {
@@ -860,7 +874,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64798" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52360" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

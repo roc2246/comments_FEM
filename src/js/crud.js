@@ -143,6 +143,23 @@ export const CRUDFunction = {
     }
     if (currentUser[0].username === source.user.username) {
       postContainer.append(newComment.updateForm);
+      newComment.updateForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const input = newComment.updateForm.childNodes[0].value
+            const comments = stats.users.comments
+        for (let x in comments) {
+          if (comments[x].content === newComment.content) {
+            newComment.content = input;
+          } else {
+            for (let y in comments[x].replies)
+            if (comments[x].replies[y].content === newComment.content.innerText){
+              console.log("match")
+            }
+             
+          }
+        }
+      });
     }
 
     const editBtn = postContainer.childNodes[5].childNodes[1];

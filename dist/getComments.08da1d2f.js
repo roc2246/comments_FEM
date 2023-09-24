@@ -683,7 +683,7 @@ fetchData().then(function (_ref) {
         // Sets content and ReplyTo
         var replyTo = replyForm.previousSibling;
         var isWrapper = replyTo.classList.contains("reply-wrapper");
-        var content = replyForm.childNodes[2].value;
+        var content = replyForm.childNodes[1].value;
         !isWrapper ? replyTo = replyTo.childNodes[1].innerText : replyTo = replyTo.previousSibling.childNodes[1].innerText;
         var newReply = {
           id: _crud.stats.generateID(),
@@ -843,7 +843,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59202" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62831" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

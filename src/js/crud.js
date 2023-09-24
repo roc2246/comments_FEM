@@ -59,6 +59,7 @@ export const CRUDFunction = {
     const deleteBtn = source.childNodes[5].childNodes[0];
     deleteBtn.addEventListener("click", () => {
       toggles.delete()
+
       content = source.childNodes[3].innerText;
       // Sets post content
       if (source.childNodes[3].childNodes[1]) {

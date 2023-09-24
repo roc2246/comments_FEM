@@ -144,11 +144,11 @@ fetchData()
           // Sets content and ReplyTo
           let replyTo = replyForm.previousSibling;
           const isWrapper = replyTo.classList.contains("reply-wrapper");
-          const content = replyForm.childNodes[2].value;
+          const content = replyForm.childNodes[1].value;
           !isWrapper
             ? (replyTo = replyTo.childNodes[1].innerText)
-            : replyTo = replyTo.previousSibling.childNodes[1].innerText;
-    
+            : (replyTo = replyTo.previousSibling.childNodes[1].innerText);
+
           const newReply = {
             id: stats.generateID(),
             content: content,
@@ -167,7 +167,7 @@ fetchData()
 
           if (comments[comment].replies.length === 0) {
             // Creates container for replies
-            const commentCont = replyForm.previousSibling
+            const commentCont = replyForm.previousSibling;
             const replyCont = document.createElement("div");
             replyCont.classList.add("reply-wrapper");
             const hr = document.createElement("hr");
@@ -182,8 +182,7 @@ fetchData()
             replyCont.appendChild(CRUDFunction.POST("reply", newReply));
 
             // Adds delete functionality to reply
-          CRUDFunction.DELETE(CRUDFunction.POST("reply", newReply));
-
+            CRUDFunction.DELETE(CRUDFunction.POST("reply", newReply));
           } else {
             comments[comment].replies[newReply.id] = newReply;
 
@@ -192,8 +191,6 @@ fetchData()
           }
 
           httpRequest.post(newReply);
-
-
         });
         // END REPLY FORM
 

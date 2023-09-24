@@ -80,6 +80,26 @@ fetchData()
         if (currentUser[0].username === post.user.username) {
           postContainer.append(newComment.updateForm);
           postContainer.classList.add("comment--you");
+
+          newComment.updateForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const input = newComment.updateForm.childNodes[0].value
+              .split(" ")
+              .slice(1)
+              .join(" ");
+            for (let x in comments) {
+              if (comments[x].content === newComment.content) {
+                console.log(newComment.content);
+              } else {
+                for (let y in comments[x].replies)
+                if (comments[x].replies[y].content === newComment.content.childNodes[1].innerText){
+                  console.log("match")
+                }
+                 
+              }
+            }
+          });
         }
 
         // adds other classes if post is reply

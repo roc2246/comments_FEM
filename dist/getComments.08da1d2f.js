@@ -387,6 +387,10 @@ var CRUDFunction = {
     if (currentUser[0].username === source.user.username) {
       postContainer.append(newComment.updateForm);
     }
+    var editBtn = postContainer.childNodes[5].childNodes[1];
+    editBtn.addEventListener("click", function () {
+      toggles.edit(postContainer);
+    });
 
     // adds reply class to crud container
     if (type === "reply") {
@@ -627,10 +631,10 @@ fetchData().then(function (_ref) {
         postContainer.classList.add("comment--you");
         newComment.updateForm.addEventListener("submit", function (e) {
           e.preventDefault();
-          var input = newComment.updateForm.childNodes[0].value.split(" ").slice(1).join(" ");
+          var input = newComment.updateForm.childNodes[0].value;
           for (var x in comments) {
             if (comments[x].content === newComment.content) {
-              console.log(newComment.content);
+              newComment.content = input;
             } else {
               for (var y in comments[x].replies) if (comments[x].replies[y].content === newComment.content.childNodes[1].innerText) {
                 console.log("match");

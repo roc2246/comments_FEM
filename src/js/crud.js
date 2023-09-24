@@ -145,6 +145,11 @@ export const CRUDFunction = {
       postContainer.append(newComment.updateForm);
     }
 
+    const editBtn = postContainer.childNodes[5].childNodes[1];
+    editBtn.addEventListener("click", ()=>{
+      toggles.edit(postContainer)
+    })
+
     // adds reply class to crud container
     if (type === "reply") {
       newComment.CRUD.classList.add("CRUD-container--reply");

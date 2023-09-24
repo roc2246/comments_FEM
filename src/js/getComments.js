@@ -85,12 +85,10 @@ fetchData()
             e.preventDefault();
 
             const input = newComment.updateForm.childNodes[0].value
-              .split(" ")
-              .slice(1)
-              .join(" ");
+             
             for (let x in comments) {
               if (comments[x].content === newComment.content) {
-                console.log(newComment.content);
+                newComment.content = input;
               } else {
                 for (let y in comments[x].replies)
                 if (comments[x].replies[y].content === newComment.content.childNodes[1].innerText){

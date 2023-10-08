@@ -649,10 +649,6 @@ fetchData().then(function (_ref) {
 }).catch(function (error) {
   console.error("There was a problem with the fetch operation:", error);
 });
-var forms = {
-  newComment: document.querySelector(".new-comment:not(.new-comment--reply):not(.new-comment--update)"),
-  newReply: document.getElementsByClassName("new-comment--reply")
-};
 },{"./childElem":"js/childElem.js","./crud":"js/crud.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

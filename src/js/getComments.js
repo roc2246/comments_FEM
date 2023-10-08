@@ -96,10 +96,3 @@ fetchData()
   .catch((error) => {
     console.error("There was a problem with the fetch operation:", error);
   });
-
-const forms = {
-  newComment: document.querySelector(
-    ".new-comment:not(.new-comment--reply):not(.new-comment--update)"
-  ),
-  newReply: document.getElementsByClassName("new-comment--reply"),
-};

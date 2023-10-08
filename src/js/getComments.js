@@ -48,7 +48,7 @@ function createPost(type) {
     CRUD: childElement.CRUD(type, stats.users.currentUser[0]),
   };
 
-  if(content.content.childElementCount === 2){
+  if (content.content.childElementCount === 2) {
     container.classList.add("comment--reply");
   }
 
@@ -66,8 +66,6 @@ function createReplyWrapper() {
   replyWrapper.classList.add("reply-wrapper");
   replyHR.classList.add("reply-wrapper__ruler");
   replyWrapper.appendChild(replyHR);
-  replyWrapper.style.gridTemplateColumns = `repeat(${replyWrapper.childElementCount}, auto)`;
-
 
   return replyWrapper;
 }
@@ -88,6 +86,7 @@ fetchData()
         for (let reply in replies) {
           replyContainer.appendChild(createPost(replies[reply]));
         }
+        replyContainer.style.gridTemplateRows = `repeat(${(replyContainer.childElementCount - 1)}, auto)`;
         commentContainer.appendChild(replyContainer);
       }
     }

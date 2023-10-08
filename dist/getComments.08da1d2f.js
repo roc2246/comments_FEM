@@ -621,7 +621,6 @@ function createReplyWrapper() {
   replyWrapper.classList.add("reply-wrapper");
   replyHR.classList.add("reply-wrapper__ruler");
   replyWrapper.appendChild(replyHR);
-  replyWrapper.style.gridTemplateColumns = "repeat(".concat(replyWrapper.childElementCount, ", auto)");
   return replyWrapper;
 }
 
@@ -643,6 +642,7 @@ fetchData().then(function (_ref) {
       for (var reply in replies) {
         replyContainer.appendChild(createPost(replies[reply]));
       }
+      replyContainer.style.gridTemplateRows = "repeat(".concat(replyContainer.childElementCount - 1, ", auto)");
       commentContainer.appendChild(replyContainer);
     }
   }
@@ -927,7 +927,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59161" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65174" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

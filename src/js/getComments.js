@@ -1,5 +1,5 @@
 import { childElement } from "./childElem";
-import { CRUDFunction, stats, toggles, httpRequest } from "./crud";
+import { stats } from "./crud";
 
 // GET NEW COMMENT IN DOM FIXED
 
@@ -86,7 +86,9 @@ fetchData()
         for (let reply in replies) {
           replyContainer.appendChild(createPost(replies[reply]));
         }
-        replyContainer.style.gridTemplateRows = `repeat(${(replyContainer.childElementCount - 1)}, auto)`;
+        replyContainer.style.gridTemplateRows = `repeat(${
+          replyContainer.childElementCount - 1
+        }, auto)`;
         commentContainer.appendChild(replyContainer);
       }
     }
